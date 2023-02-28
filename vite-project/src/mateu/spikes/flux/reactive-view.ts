@@ -1,5 +1,5 @@
 import {html, LitElement} from "lit";
-import {customElement} from "lit/decorators.js";
+import {customElement, property} from "lit/decorators.js";
 import {store} from "./store";
 import {connect} from "pwa-helpers";
 
@@ -7,13 +7,10 @@ import {connect} from "pwa-helpers";
 @customElement("reactive-view")
 export class ReactiveView extends connect(store)(LitElement) {
 
-    static get properties() {
-        return {
-            estaAutenticado: Boolean,
-        }
-    }
+    @property()
+    estaAutenticado: boolean | undefined;
 
-    stateChanged(state) {
+    stateChanged(state: any) {
         this.estaAutenticado = state.isAuthenticated;
     }
 

@@ -1,5 +1,5 @@
 import {html, LitElement} from "lit";
-import {customElement} from "lit/decorators.js";
+import {customElement, property} from "lit/decorators.js";
 import {connect} from "pwa-helpers";
 import {signIn, signOut, store} from "./store";
 
@@ -7,13 +7,10 @@ import {signIn, signOut, store} from "./store";
 @customElement("auth-control")
 export class AuthControl extends connect(store)(LitElement) {
 
-    static get properties() {
-        return {
-            estaAutenticado: Boolean,
-        }
-    }
+    @property()
+    estaAutenticado: boolean | undefined;
 
-    stateChanged(state) {
+    stateChanged(state: any) {
         this.estaAutenticado = state.isAuthenticated;
     }
 
