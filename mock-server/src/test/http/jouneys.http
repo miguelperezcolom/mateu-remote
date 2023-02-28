@@ -1,0 +1,33 @@
+GET https://remote.mateu.io/mateu/v1/journey-types
+Accept: application/json
+
+###
+POST https://remote.mateu.io/mateu/v1/journeys/202302271722
+Content-Type: application/json
+
+{
+  "journeyTypeId": "Process_0hdudqv:12:4b79f376-b69c-11ed-a424-960001f240a0",
+  "contextData": [
+    {
+      "key": "bokerId",
+      "value": "1234"
+    }
+  ]
+}
+
+
+###
+GET https://remote.mateu.io/mateu/v1/journeys/202302271722
+Accept: application/json
+
+###
+GET https://remote.mateu.io/mateu/v1/journeys/202302271722/steps/f8e3e379-b6ba-11ed-a424-960001f240a0
+Accept: application/json
+
+###
+
+###
+GET https://remote.mateu.io/mateu/v1/journeys/Process_08ykngf:1:d0b34fdc-b6c8-11ed-a424-960001f240a0/steps/bf12268f-5ad9-414b-869b-8038a0aeb764
+
+
+

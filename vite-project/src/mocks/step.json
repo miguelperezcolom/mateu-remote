@@ -1,0 +1,93 @@
+{
+  "name": "Preguntar cosas",
+  "view": {
+    "components": [
+      {
+        "metadata": {
+          "type": "Form",
+          "type": "Form",
+          "title": "Preguntar cosas",
+          "subtitle": "Activity_0xjw0lv",
+          "sections": [
+            {
+              "caption": "",
+              "type": "Card",
+              "actions": [],
+              "fieldGroups": [
+                {
+                  "caption": "",
+                  "fields": [
+                    {
+                      "id": "name",
+                      "type": "string",
+                      "caption": "Name",
+                      "description": null,
+                      "validations": [],
+                      "attributes": []
+                    },
+                    {
+                      "id": "age",
+                      "type": "long",
+                      "caption": "Age",
+                      "description": null,
+                      "validations": [],
+                      "attributes": []
+                    },
+                    {
+                      "id": "nationality",
+                      "type": "enum",
+                      "caption": "Nationality",
+                      "description": null,
+                      "validations": [],
+                      "attributes": [
+                        {
+                          "key": "choice",
+                          "value": {
+                            "key": "Spanish",
+                            "value": "es"
+                          }
+                        },
+                        {
+                          "key": "choice",
+                          "value": {
+                            "key": "German",
+                            "value": "de"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "prueba",
+                      "type": "string",
+                      "caption": "Prueba",
+                      "description": "Descripción del campo prueba",
+                      "validations": [
+                        {
+                          "type": "NotEmpty",
+                          "data": null
+                        }
+                      ],
+                      "attributes": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "actions": [],
+          "mainActions": [
+            {
+              "id": "complete",
+              "caption": "Complete",
+              "type": "Primary"
+            }
+          ]
+        },
+        "data": {
+          "prueba": "valor por defecto"
+        },
+        "rules": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+GET http://localhost:8080/mateu/v1/journey-types
+Accept: application/json
+
+###
+POST http://localhost:8080/mateu/v1/journeys/202302271831
+Content-Type: application/json
+
+{
+  "journeyTypeId": "Process_1ybmh0x:1:5f43dec1-b6c1-11ed-a424-960001f240a0",
+  "contextData": [
+    {
+      "key": "bokerId",
+      "value": "1234"
+    }
+  ]
+}
+
+
+###
+GET http://localhost:8080/mateu/v1/journeys/bfc44c44-b005-49d6-b5b7-495a686daf49
+Accept: application/json
+
+###
+GET http://localhost:8080/mateu/v1/journeys/bfc44c44-b005-49d6-b5b7-495a686daf49/steps/35e4d68a-b6c7-11ed-a424-960001f240a0
+Accept: application/json
+
+###
+POST http://localhost:8080/mateu/v1/journeys/202302271831/steps/84bf2cf9-b6c4-11ed-a424-960001f240a0/complete
+Content-Type: application/json
+
+{
+  "data" : {
+    "gender" : "woman",
+    "name" : "uiehwdiuweh",
+    "age" : "12"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+###
+GET http://localhost:8080/mateu/v1/journeys/202302251411/steps/f96bd855-b50d-11ed-a424-960001f240a0
+Accept: application/json
+
+
+###
+POST http://localhost:8080/mateu/v1/journeys/202302251411/steps/f96bd855-b50d-11ed-a424-960001f240a0/complete
+Content-Type: application/json
+
+{
+  "data": {
+    "sexo": "hombre"
+  }
+}
+
+
+
+
+###
+GET http://localhost:8080/mateu/v1/journeys/Process_08ykngf:1:d0b34fdc-b6c8-11ed-a424-960001f240a0/steps/bf12268f-5ad9-414b-869b-8038a0aeb764
+

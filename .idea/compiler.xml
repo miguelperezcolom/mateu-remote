@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mock-server" />
+        <module name="storage-server" />
+        <module name="openapi-java-client" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mock-server" target="17" />
+      <module name="openapi-java-client" target="1.7" />
+      <module name="storage-server" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mock-server" options="-parameters" />
+      <module name="openapi-java-client" options="-Xlint:all -J-Xss4m" />
+      <module name="storage-server" options="-parameters" />
+    </option>
+  </component>
+</project>

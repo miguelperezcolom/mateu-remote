@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    fetch('https://remote.mateu.io/mateu/v1/journey-types')
+        .then(response => response.json())
+        .then(data => console.log('journey-types', data));
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+{
+  "components": [
+    {
+      "label": "Name",
+      "type": "textfield",
+      "id": "Field_1iwp3kr",
+      "key": "name"
+    },
+    {
+      "label": "Age",
+      "type": "number",
+      "id": "Field_1s6xe85",
+      "key": "age"
+    },
+    {
+      "values": [
+        {
+          "label": "Spanish",
+          "value": "es"
+        },
+        {
+          "label": "German",
+          "value": "de"
+        }
+      ],
+      "label": "Nationality",
+      "type": "select",
+      "id": "Field_0qi1abm",
+      "key": "nationality"
+    },
+    {
+      "label": "Prueba",
+      "type": "textfield",
+      "id": "Field_09wbnks",
+      "key": "prueba",
+      "description": "Descripción del campo prueba",
+      "defaultValue": "valor por defecto",
+      "disabled": true,
+      "conditional": {
+        "hide": "=age > 20"
+      },
+      "validate": {
+        "required": true,
+        "minLength": 1,
+        "maxLength": 10,
+        "pattern": "#####-####-####"
+      }
+    }
+  ],
+  "type": "default",
+  "id": "formulario1",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.8.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.18.0",
+  "schemaVersion": 7
+}
