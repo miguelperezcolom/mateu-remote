@@ -23,7 +23,24 @@
     "nanoid": "^4.0.1",
     "pwa-helpers": "^0.9.1",
     "redux": "^4.2.1",
-    "reselect": "^4.1.7"
+    "reselect": "^4.1.7",
+
+    "@vaadin/app-layout": "^23.2.1",
+    "@vaadin/button": "^23.2.1",
+    "@vaadin/date-picker": "^23.2.1",
+    "@vaadin/form-layout": "^23.2.1",
+    "@vaadin/horizontal-layout": "^23.2.1",
+    "@vaadin/menu-bar": "^23.2.1",
+    "@vaadin/password-field": "^23.2.1",
+    "@vaadin/select": "^23.2.1",
+    "@vaadin/tabs": "^23.2.1",
+    "@vaadin/text-area": "^23.2.1",
+    "@vaadin/vaadin-grid": "^23.2.1",
+    "@vaadin/vaadin-icons": "^23.2.1",
+    "@vaadin/vaadin-lumo-styles": "^23.2.1",
+    "@vaadin/vertical-layout": "^23.2.1"
+
+
   },
   "devDependencies": {
     "typescript": "^4.9.3",
