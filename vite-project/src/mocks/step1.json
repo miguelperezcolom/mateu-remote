@@ -1,13 +1,13 @@
 {
-  "name": "Ask for basic data",
+  "name": "Preguntas básicas",
   "view": {
     "components": [
       {
         "metadata": {
           "type": "Form",
           "type": "Form",
-          "title": "Ask for basic data",
-          "subtitle": "Activity_1nzjz19",
+          "title": "Preguntas básicas",
+          "subtitle": "Activity_1nphpgy",
           "sections": [
             {
               "caption": "",
@@ -18,9 +18,9 @@
                   "caption": "",
                   "fields": [
                     {
-                      "id": "name",
+                      "id": "nombre",
                       "type": "string",
-                      "caption": "Your name",
+                      "caption": "Nombre",
                       "description": null,
                       "validations": [
                         {
@@ -31,48 +31,55 @@
                       "attributes": []
                     },
                     {
-                      "id": "age",
-                      "type": "long",
-                      "caption": "Your age",
-                      "description": null,
-                      "validations": [
-                        {
-                          "type": "NotEmpty",
-                          "data": null
-                        }
-                      ],
-                      "attributes": []
-                    },
-                    {
-                      "id": "fatherName",
-                      "type": "string",
-                      "caption": "Your father's name",
-                      "description": null,
-                      "validations": [],
-                      "attributes": []
-                    },
-                    {
-                      "id": "nationality",
+                      "id": "nacionalidad",
                       "type": "enum",
-                      "caption": "Your nationality",
+                      "caption": "Nacionalidad",
                       "description": null,
-                      "validations": [],
+                      "validations": [
+                        {
+                          "type": "NotEmpty",
+                          "data": null
+                        }
+                      ],
                       "attributes": [
                         {
                           "key": "choice",
                           "value": {
-                            "key": "Spanish",
+                            "key": "Español",
                             "value": "es"
                           }
                         },
                         {
                           "key": "choice",
                           "value": {
-                            "key": "German",
-                            "value": "de"
+                            "key": "Italiano",
+                            "value": "it"
+                          }
+                        },
+                        {
+                          "key": "choice",
+                          "value": {
+                            "key": "Alemán",
+                            "value": "ge"
                           }
                         }
                       ]
+                    },
+                    {
+                      "id": "edad",
+                      "type": "long",
+                      "caption": "Edad",
+                      "description": null,
+                      "validations": [],
+                      "attributes": []
+                    },
+                    {
+                      "id": "juegaTenis",
+                      "type": "boolean",
+                      "caption": "Le gusta jugar a tenis",
+                      "description": null,
+                      "validations": [],
+                      "attributes": []
                     }
                   ]
                 }
@@ -88,17 +95,11 @@
             }
           ]
         },
-        "data": {},
-        "rules": [
-          {
-            "filter": "!(age < 18)",
-            "action": "Hide",
-            "data": [
-              "fatherName"
-            ],
-            "result": "Continue"
-          }
-        ]
+        "data": {
+          "nombre": "Mateu",
+          "edad": "14"
+        },
+        "rules": []
       }
     ]
   }

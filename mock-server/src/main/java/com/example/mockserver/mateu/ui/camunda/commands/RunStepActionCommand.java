@@ -44,7 +44,8 @@ public class RunStepActionCommand {
                         VariableValueDto value = new VariableValueDto();
                         value.setType("string");
                         value.setValue(data.get(key));
-                        //todo: ver si hay que añadir algo comom ValueInfo
+                        //todo: ver si hay que añadir algo como
+                        // ValueInfo
                         //value.setValueInfo();
                         variables.put(key, value);
                     }

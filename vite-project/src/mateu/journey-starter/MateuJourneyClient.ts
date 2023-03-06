@@ -1,6 +1,6 @@
 import jsontypes from '../../mocks/journey-types.json'
 import jsonjourney from '../../mocks/journey.json'
-import jsonstep from '../../mocks/step.json'
+import jsonstep from '../../mocks/step1.json'
 import JourneyType from "../dtos/JourneyType";
 import Step from "../dtos/Step";
 import Journey from "../dtos/Journey";
@@ -16,7 +16,7 @@ export default class MateuJourneyClient {
     }
 
     getStep(): Step {
-        return jsonstep as Step;
+        return jsonstep as unknown as Step;
     }
 
 }

@@ -34,7 +34,7 @@ export class MateuMain extends LitElement {
           </ul>
         </nav>
         
-        <mateu-view .metadata="${this.ui.home.metadata}" .data="${this.ui.home.data}"></mateu-view>
+        <mateu-view .metadata="${this.ui.home.components[0].metadata}" .data="${this.ui.home.components[0].data}"></mateu-view>
         
         <slot></slot>
       </div>

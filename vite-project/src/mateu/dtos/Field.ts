@@ -1,4 +1,5 @@
 import Validation from "./Validation";
+import Attribute from "./Attribute";
 
 export default interface Field {
 
@@ -11,5 +12,7 @@ export default interface Field {
     description: string;
 
     validations: Validation[];
+
+    attributes: Attribute[];
 
 }

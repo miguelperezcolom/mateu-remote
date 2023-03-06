@@ -1,5 +1,4 @@
 import Menu from "./Menu";
-import View from "./View";
 
 export default interface UI {
 
@@ -9,6 +8,6 @@ export default interface UI {
 
     menu: Menu[];
 
-    home: View;
+    homeJourneyTypeId: string;
 
 }

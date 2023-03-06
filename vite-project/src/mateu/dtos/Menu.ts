@@ -4,14 +4,12 @@ export default interface Menu {
 
     type: MenuType;
 
+    icon: string;
+
     caption: string;
 
-    data: string | null;
+    journeyTypeId: string | undefined;
 
     submenus: Menu[] | null;
-
-    roles: string[] | null;
-
-    users: string[] | null;
 
 }

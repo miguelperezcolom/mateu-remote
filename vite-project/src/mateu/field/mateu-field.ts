@@ -1,6 +1,13 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
+import {css, html, LitElement} from 'lit'
+import {customElement, property} from 'lit/decorators.js'
 import Field from "../dtos/Field";
+import Component from "./fields/interfaces/Component";
+import {mapInputTypeToFieldType} from "./fields/FieldTypeMapper";
+import './fields/field-text'
+import './fields/field-number'
+import './fields/field-enum'
+import './fields/field-boolean'
+import FieldWrapper from "../form/FieldWrapper";
 
 /**
  * An example element.
@@ -16,13 +23,43 @@ export class MateuField extends LitElement {
   @property()
   field!: Field
 
+  @property()
+  value!: object
+
+  @property()
+  visible!: boolean
+
+  @property()
+  enabled!: boolean
+
+  @property()
+  fieldWrapper!: FieldWrapper
+
+
+  firstUpdated() {
+    const element = document.createElement(mapInputTypeToFieldType(this.field.type));
+    const container = this.shadowRoot!.getElementById('container')!;
+    const component = element as unknown as Component;
+    component.onValueChanged = (e) => {
+      let change = new CustomEvent('change', {detail: {
+          key: this.field.id,
+          value: e.value
+        }});
+      this.dispatchEvent(change);
+    }
+    component.setLabel(this.field.caption);
+    component.setField(this.field);
+    component.setValue(this.value)
+    component.setRequired(this.field.validations.length > 0)
+    container.appendChild(element);
+    const wrapper = this.shadowRoot!.getElementById('wrapper')!;
+    this.fieldWrapper.container = wrapper;
+  }
+
   render() {
     return html`
-      <div>
-        
-        <h1>Field ${this.field.caption}</h1>
-        
-        <input type="${this.field.type}" id="${this.field.id}" placeholder="${this.field.description}">
+      <div id="wrapper">
+        <div id="container"></div>
         
         <slot></slot>
       </div>
@@ -30,13 +67,14 @@ export class MateuField extends LitElement {
   }
 
   static styles = css`
+  /*
     :host {
       max-width: 1280px;
       margin: 0 auto;
       padding: 2rem;
       text-align: center;
     }
-
+*/
   `
 }
 

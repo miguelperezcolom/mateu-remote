@@ -2,44 +2,40 @@ package com.example.mockserver.mateu.ui;
 
 import com.example.mockserver.mateu.ui.camunda.commands.RunStepActionCommand;
 import com.example.mockserver.mateu.ui.camunda.commands.StartJourneyCommand;
-import com.example.mockserver.mateu.ui.camunda.queries.GetJourneyQuery;
-import com.example.mockserver.mateu.ui.camunda.queries.GetJourneyTypesQuery;
-import com.example.mockserver.mateu.ui.camunda.queries.GetStepQuery;
+import com.example.mockserver.mateu.ui.camunda.queries.*;
 import io.mateu.remote.dtos.*;
-import org.openapitools.client.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("mateu/v1")
 public class RemoteMateuController {
 
-    @Autowired
-    RemoteMateuUIService uiService;
-
-    @Autowired
-    RemoteMateuJourneyService journeyService;
-
-    @GetMapping(value = "uis/{uiClassName}")
-    public UI getUI(@PathVariable String uiClassName) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        return uiService.createUI();
-    }
-
-    @GetMapping("uis/{uiClassName}/{viewClassName}")
-    public View getView(@PathVariable String uiClassName, @PathVariable String viewClassName) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        return uiService.createView();
-    }
-
-    @PostMapping("uis/{uiClassName}/{viewClassName}/{actionId}")
-    public View runAction(@PathVariable String uiClassName, @PathVariable String viewClassName,
-                          @PathVariable String actionId,
-                          @RequestBody ActionData actionData
-                          ) {
-        return uiService.createView();
+    @GetMapping(value = "uis/{uiId}")
+    public UI getUI(@PathVariable String uiId) throws Exception {
+        return UI.builder()
+                .favIcon("")
+                .logo("")
+                .title("Demo app")
+                .subtitle("Working on Mateu Remote")
+                .menu(List.of(
+                        Menu.builder()
+                                .caption("Menu 1")
+                                .type(MenuType.MenuOption)
+                                .journeyTypeId("32132132131")
+                                .build()
+                        , Menu.builder()
+                                .caption("Menu 2")
+                                .type(MenuType.MenuOption)
+                                .journeyTypeId("888ds7e8dwe")
+                                .build()
+                ))
+                .build();
     }
 
     @GetMapping("journey-types")
@@ -75,6 +71,43 @@ public class RemoteMateuController {
                 .stepId(stepId)
                 .actionId(actionId)
                 .data(rq.getData())
+                .build().run();
+    }
+
+    @GetMapping("journeys/{journeyId}/steps/{stepId}/lists/{listId}/rows")
+    public List<Map<String, Object>> getListRows(@PathVariable String journeyId,
+                                                 @PathVariable String stepId,
+                                                 @PathVariable String listId,
+                                                 @RequestParam int page,
+                                                 @RequestParam int page_size,
+// urlencoded form of filters json serialized
+                                                 @RequestParam String filters,
+// urlencoded form of orders json serialized
+                                                 @RequestParam String ordering
+                                             ) throws Exception {
+        return GetListRowsQuery.builder()
+                .journeyId(journeyId)
+                .stepId(stepId)
+                .listId(listId)
+                .page(page)
+                .pageSize(page_size)
+                .filters(new FiltersDeserializer(filters).deserialize())
+                .ordering(new OrderingDeserializer(ordering).deserialize())
+                .build().run();
+    }
+
+    @GetMapping("journeys/{journeyId}/steps/{stepId}/lists/{listId}/count")
+    public long getListCount(@PathVariable String journeyId,
+                             @PathVariable String stepId,
+                             @PathVariable String listId,
+// urlencoded form of filters json serialized
+                             @RequestParam String filters
+    ) throws Exception {
+        return GetListCountQuery.builder()
+                .journeyId(journeyId)
+                .stepId(stepId)
+                .listId(listId)
+                .filters(new FiltersDeserializer(filters).deserialize())
                 .build().run();
     }
 

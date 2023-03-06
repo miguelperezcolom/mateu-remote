@@ -4,7 +4,7 @@ import json from '../../mocks/ui.json'
 export default class MateuClient {
 
     getUi(): UI {
-        return json as UI;
+        return json as unknown as UI;
     }
 
 
