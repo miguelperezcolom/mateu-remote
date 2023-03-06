@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js'
 import MateuClient from "./MateuClient";
 import UI from "../dtos/UI";
 import '../view/mateu-view'
+import View from "../dtos/View";
 
 /**
  * An example element.
@@ -21,6 +22,10 @@ export class MateuMain extends LitElement {
   @property()
   ui: UI;
 
+  @property()
+  view: View;
+
+
   render() {
     return html`
       <div>
@@ -33,8 +38,9 @@ export class MateuMain extends LitElement {
           ${this.ui.menu.map((m) => html`<li>${m.caption}</li>`)}
           </ul>
         </nav>
+
         
-        <mateu-view .metadata="${this.ui.home.components[0].metadata}" .data="${this.ui.home.components[0].data}"></mateu-view>
+        <mateu-view .metadata="${this.view.components[0].metadata}" .data="${this.view.components[0].data}"></mateu-view>
         
         <slot></slot>
       </div>
@@ -45,6 +51,7 @@ export class MateuMain extends LitElement {
     super();
     console.log('ui', JSON.stringify(new MateuClient().getUi()));
     this.ui = new MateuClient().getUi();
+    this.view = {components: []}
   }
 
   static styles = css`
