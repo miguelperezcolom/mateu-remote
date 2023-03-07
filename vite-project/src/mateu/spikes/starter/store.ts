@@ -57,6 +57,13 @@ const { actions: authActions, reducer: authReducer } = createSlice({
         },
         setJourneyType: (state, { payload }) => {
             state.journeyType = payload;
+            state.loading = false;
+            state.error = false;
+            state.journeyId = undefined;
+            state.journey = undefined;
+            state.stepId = undefined;
+            state.step = undefined;
+            state.completed = false;
         },
         setJourneyId: (state, { payload }) => {
             state.journeyId = payload;

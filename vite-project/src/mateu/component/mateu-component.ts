@@ -3,6 +3,7 @@ import {css, html, LitElement} from "lit";
 import Component from "../dtos/Component";
 import {ViewType} from "../dtos/ViewType";
 import '../form/mateu-form'
+import '../crud/mateu-crud'
 
 
 @customElement('mateu-component')
@@ -37,7 +38,17 @@ export class MateuComponent extends LitElement {
                             .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
                     ><slot></slot></mateu-form>`
-                    :html`<h2>No es un form</h2>`}
+                    :html``}
+
+            ${this.component?.metadata.type == ViewType.Crud?
+                    html`<mateu-crud 
+                            .metadata=${this.component.metadata} 
+                            .data=${this.component.data}
+                            journeyId="${this.journeyId}" stepId="${this.stepId}"
+                            .setLoading=${this.setLoading}
+                            .rules=${this.component.rules}
+                    ><slot></slot></mateu-crud>`
+                    :html``}
         
         `
     }

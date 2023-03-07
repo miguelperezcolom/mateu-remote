@@ -4,6 +4,8 @@ export default interface Menu {
 
     type: MenuType;
 
+    id: string;
+
     icon: string;
 
     caption: string;

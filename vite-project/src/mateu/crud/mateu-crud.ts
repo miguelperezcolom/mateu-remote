@@ -1,6 +1,12 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import Crud from "../dtos/Crud";
+import "@vaadin/horizontal-layout";
+import "@vaadin/button";
+import "@vaadin/vaadin-grid";
+import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
+import "@vaadin/vaadin-grid/vaadin-grid-column";
+
 
 /**
  * An example element.
@@ -19,23 +25,60 @@ export class MateuCrud extends LitElement {
   @property()
   data: object | undefined;
 
+  @property()
+  items: object[] | undefined;
+
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.items = [
+      {
+        "name": "Mateu",
+        "lastName": "Pérez",
+        "email": "mateuperezgalmes@gmail.com"
+      },
+      {
+        "name": "Antònia",
+        "lastName": "Galmés",
+        "email": "antagalmes@gmail.com"
+      }
+    ];
+
+    console.log('metadata', this.metadata)
+  }
+
+
+
   render() {
     return html`
-      <div>
+      
+      <h1>${this.metadata?.title}</h1>
+
+      <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         
-        <h1>Crud ${this.metadata?.title}</h1>
+        ${this.metadata?.searchForm.fields.map(f => html`
+          <vaadin-text-field id="${f.id}" label="${f.caption}"></vaadin-text-field>
+        `)}
         
-        <slot></slot>
-      </div>
+        
+        <vaadin-button theme="primary">Search</vaadin-button>
+        
+      </vaadin-horizontal-layout>
+
+      <vaadin-grid .items="${this.items}">
+        <vaadin-grid-selection-column></vaadin-grid-selection-column>
+
+      ${this.metadata?.columns.map(c => html`
+        <vaadin-grid-column path="${c.id}" header="${c.caption}"></vaadin-grid-column>
+      `)}
+      
+        </vaadin-grid>
     `
   }
 
   static styles = css`
     :host {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
+
     }
 
   `

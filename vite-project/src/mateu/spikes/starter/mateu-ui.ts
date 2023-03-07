@@ -3,11 +3,21 @@ import {css, html, LitElement} from "lit";
 import {connect} from "pwa-helpers";
 import {getUi, setJourneyType, store} from "./store";
 import UI from "../../dtos/UI";
+import '@vaadin/vertical-layout'
 import '@vaadin/app-layout'
 import '@vaadin/app-layout/vaadin-drawer-toggle'
 import '@vaadin/vaadin-tabs'
 import '@vaadin/vaadin-tabs/vaadin-tab'
 import './journey-starter'
+import {MenuType} from "../../dtos/MenuType";
+import {MenuBarItem, MenuBarItemSelectedEvent} from "@vaadin/menu-bar";
+import "@vaadin/menu-bar";
+
+interface MyMenuBarItem extends MenuBarItem {
+
+    journeyTypeId: string | undefined
+
+}
 
 
 @customElement('mateu-ui')
@@ -25,12 +35,34 @@ export class MateuUi extends connect(store)(LitElement) {
     @property()
     loading: boolean = false;
 
+    @property()
+    items: MenuBarItem[] | undefined;
+
+    @property()
+    selectedItem?: MenuBarItem;
+
     stateChanged(state: any) {
         console.log('nuevo state', state)
         this.loading = false;
 
         //debugger;
         this.ui = state.tiposJourney.ui;
+        this.journeyTypeId = state.tiposJourney.journeyType;
+        this.items = this.ui?.menu.map(m => {
+            return {
+                journeyTypeId: m.journeyTypeId,
+                text: m.caption,
+                children: m.type == MenuType.Submenu?m.submenus?.map(s => {
+                    return {
+                        journeyTypeId: s.journeyTypeId,
+                        text: s.caption,
+                    }
+                }):undefined
+            }
+        });
+
+        console.log('items', this.items)
+        console.log('journeyTypeId', this.journeyTypeId)
 
     }
 
@@ -42,67 +74,92 @@ export class MateuUi extends connect(store)(LitElement) {
     }
 
     selectJourney(event: Event) {
-        // @ts-ignore
-        this.journeyTypeId = (event.currentTarget as HTMLElement).getAttribute('journeytypeid');
-        console.log('journeyTypeId', this.journeyTypeId)
-        store.dispatch(setJourneyType(this.journeyTypeId))
+        let journeyTypeId = (event.currentTarget as HTMLElement).getAttribute('journeytypeid');
+        console.log('journeyTypeId', journeyTypeId)
+        store.dispatch(setJourneyType(journeyTypeId))
+    }
+
+    itemSelected(event: MenuBarItemSelectedEvent) {
+        console.log(event.detail.value)
+        let item = event.detail.value as MyMenuBarItem
+        store.dispatch(setJourneyType(item.journeyTypeId))
     }
 
 
     render() {
 
         console.log('ui', this.ui);
-        console.log('this.ui.homeJourneyId', this.ui?.homeJourneyTypeId);
 
         return html`
-        
         ${this.ui?html`
 
+            <vaadin-vertical-layout style="align-items: center">
+
             <vaadin-app-layout>
+                <h3 slot="navbar" class="title ml-l mr-l">${this.ui.title}</h3>
+                <div class="container" slot="navbar">
                 ${this.ui.menu?html`
-                    <vaadin-drawer-toggle slot="navbar"></vaadin-drawer-toggle>
+                    <vaadin-menu-bar slot="navbar"
+                            .items="${this.items}"
+                            @item-selected="${this.itemSelected}"
+                                     theme="tertiary"
+                    ></vaadin-menu-bar>
                 `:''}
-                <h1 slot="navbar">${this.ui.title}</h1>
-                ${this.ui.menu?html`
-                    <vaadin-tabs slot="drawer" orientation="vertical">
-                        ${this.ui.menu.map(m => html`
-                            <vaadin-tab>
-                                <a tabindex="-1" @click=${this.selectJourney} journeyTypeId="${m.journeyTypeId}">
-                                    ${m.icon?html`<vaadin-icon icon="vaadin:${m.icon}"></vaadin-icon>`:''}
-                                    <span>${m.caption}</span>
-                                </a>
-                            </vaadin-tab>
-                        `)}
-                    </vaadin-tabs>
-                `:''}
+                </div>
+            </vaadin-app-layout>
+
+
+                <!--
+                <div class="container">
+                    <router-outlet></router-outlet>
+                </div>
+                -->
                 
                 ${this.ui.homeJourneyTypeId?html`
 
-                    <journey-starter journeytypeid="com.example.demoremote.MyForm"></journey-starter>
+                    <journey-starter journeytypeid="${this.ui.homeJourneyTypeId}"></journey-starter>
                     
                 `:''}
 
-                ${this.journeyTypeId?html`
+            ${this.journeyTypeId?html`
 
                     <journey-starter journeytypeid=${this.journeyTypeId}></journey-starter>
                     
                 `:''}
-                
-            </vaadin-app-layout>
+
+            </vaadin-vertical-layout>
         
-        `:``}
-        
-        
-        <slot></slot>`
+        `:``}`
     }
 
     static styles = css`
     :host {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;      
+        
     }
+    
+    .mr-l {
+        margin-right: var(--lumo-space-l);
+    }
+    .ml-l {
+        margin-left: var(--lumo-space-l);
+    }
+    
+    h3.title {
+        font-size: var(--lumo-font-size-xl);
+        margin-bottom: 0.5em;
+        font-weight: 600;
+        padding-bottom: 6px;
+    }
+    
+    div {
+        height: 44px;
+    }
+        
+    .container {
+      max-width: 1024px;
+      margin: auto;
+    }
+
   `
 }
 

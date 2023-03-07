@@ -94,6 +94,20 @@ export class JourneyStarter extends connect(store)(LitElement) {
 
     }
 
+    updated(changedProperties: Map<string, unknown>) {
+        console.log(`updated(). changedProps: `, changedProperties);
+        if (changedProperties.has("journeyTypeId")) {
+            // get the old value here
+            const oldValue = changedProperties.get("journeyTypeId") as number;
+            // new value is
+            const newValue = this.journeyTypeId;
+
+            console.log('journeyTypeId changed', oldValue, newValue)
+            store.dispatch(setJourneyType(this.journeyTypeId))
+        }
+
+        // No need to call any other method here.
+    }
 
     connectedCallback() {
         super.connectedCallback();
