@@ -85,8 +85,6 @@ export class MateuForm extends LitElement implements FormElement {
       js += 'const ' + key + ' = this.getValue("' + key + '");';
     }
     js += '' + filter;
-    console.log(js)
-    console.log(eval(js))
     return js
   }
 

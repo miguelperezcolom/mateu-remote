@@ -17,7 +17,9 @@ export interface State {
     journey: Journey | undefined,
     stepId: string | undefined,
     step: Step | undefined,
-    completed: boolean;
+    completed: boolean,
+    items: [] | undefined,
+    matches: number | undefined,
 }
 
 // initial state
@@ -32,6 +34,8 @@ export const initialState: State = {
     stepId: undefined,
     step: undefined,
     completed: false,
+    items: undefined,
+    matches: undefined,
 };
 
 
@@ -91,11 +95,17 @@ const { actions: authActions, reducer: authReducer } = createSlice({
         setUi: (state, { payload }) => {
             state.ui = payload;
         },
-
+        setCount: (state, { payload }) => {
+            state.matches = payload;
+        },
+        setRows: (state, { payload }) => {
+            console.log('setRows', payload)
+            state.items = payload;
+        },
     },
 })
 
-const { reset, setLoading, setJourneyTypes, setError, setJourneyType, setJourneyId, setJourney, setStep, completeStep, setUi } = authActions
+const { reset, setLoading, setJourneyTypes, setError, setJourneyType, setJourneyId, setJourney, setStep, completeStep, setUi, setCount, setRows } = authActions
 
 const store = configureStore({
     reducer: {
@@ -103,7 +113,7 @@ const store = configureStore({
     }
 })
 
-export { store, reset, setLoading, setJourneyTypes, setError, setJourneyType, setJourneyId, setJourney, setStep, completeStep, setUi }
+export { store, reset, setLoading, setJourneyTypes, setError, setJourneyType, setJourneyId, setJourney, setStep, completeStep, setUi, setCount, setRows }
 
 declare global {
     interface Window {
@@ -226,6 +236,41 @@ export function getUi(uiId: string) {
             .get("/uis/" + uiId)
             .then((response) => {
                 dispatch(setUi(response.data));
+            })
+            .catch((error) => {
+                console.log(error)
+                dispatch(setError());
+            });
+    };
+}
+
+
+export function getCount(journeyId: string, stepId: string, listId: string, filters: string) {
+
+    console.log('getCount', journeyId, stepId);
+
+    return async (dispatch: Dispatch) => {
+        api
+            .get("/journeys/" + journeyId + "/steps/" + stepId + "/lists/" + listId + "/count?filters=" + filters)
+            .then((response) => {
+                dispatch(setCount(response.data));
+            })
+            .catch((error) => {
+                console.log(error)
+                dispatch(setError());
+            });
+    };
+}
+
+export function getRows(journeyId: string, stepId: string, listId: string, filters: string) {
+
+    console.log('getRows', journeyId, stepId);
+
+    return async (dispatch: Dispatch) => {
+        api
+            .get("/journeys/" + journeyId + "/steps/" + stepId + "/lists/" + listId + "/rows?page=0&page_size=10&ordering=filters=" + filters)
+            .then((response) => {
+                dispatch(setRows(response.data));
             })
             .catch((error) => {
                 console.log(error)

@@ -6,6 +6,8 @@ import "@vaadin/button";
 import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
+import {connect} from "pwa-helpers";
+import {getCount, getRows, store} from "../spikes/starter/store";
 
 
 /**
@@ -15,10 +17,17 @@ import "@vaadin/vaadin-grid/vaadin-grid-column";
  * @csspart button - The button
  */
 @customElement('mateu-crud')
-export class MateuCrud extends LitElement {
+export class MateuCrud extends connect(store)(LitElement) {
   /**
    * Copy for the read the docs hint.
    */
+
+  @property()
+  journeyId!: string
+
+  @property()
+  stepId!: string
+
   @property()
   metadata: Crud | undefined
 
@@ -28,23 +37,26 @@ export class MateuCrud extends LitElement {
   @property()
   items: object[] | undefined;
 
+  search() {
+    console.log('search')
+    store.dispatch(getCount(this.journeyId, this.stepId, 'main', ''))
+    store.dispatch(getRows(this.journeyId, this.stepId, 'main', ''))
+  }
 
   connectedCallback() {
     super.connectedCallback();
-    this.items = [
-      {
-        "name": "Mateu",
-        "lastName": "Pérez",
-        "email": "mateuperezgalmes@gmail.com"
-      },
-      {
-        "name": "Antònia",
-        "lastName": "Galmés",
-        "email": "antagalmes@gmail.com"
-      }
-    ];
 
     console.log('metadata', this.metadata)
+  }
+
+  stateChanged(state: any) {
+    console.log('nuevo state', state)
+
+    console.log(state.tiposJourney.items)
+
+    //debugger;
+    this.items = state.tiposJourney.items;
+
   }
 
 
@@ -61,7 +73,7 @@ export class MateuCrud extends LitElement {
         `)}
         
         
-        <vaadin-button theme="primary">Search</vaadin-button>
+        <vaadin-button theme="primary" @click="${this.search}">Search</vaadin-button>
         
       </vaadin-horizontal-layout>
 
@@ -73,6 +85,7 @@ export class MateuCrud extends LitElement {
       `)}
       
         </vaadin-grid>
+      
     `
   }
 
@@ -82,6 +95,7 @@ export class MateuCrud extends LitElement {
     }
 
   `
+
 }
 
 declare global {
