@@ -268,7 +268,7 @@ export function getRows(journeyId: string, stepId: string, listId: string, filte
 
     return async (dispatch: Dispatch) => {
         api
-            .get("/journeys/" + journeyId + "/steps/" + stepId + "/lists/" + listId + "/rows?page=0&page_size=10&ordering=filters=" + filters)
+            .get("/journeys/" + journeyId + "/steps/" + stepId + "/lists/" + listId + "/rows?page=0&page_size=10&ordering=&filters=" + filters)
             .then((response) => {
                 dispatch(setRows(response.data));
             })
