@@ -7,6 +7,11 @@ import './fields/field-text'
 import './fields/field-number'
 import './fields/field-enum'
 import './fields/field-boolean'
+import './fields/field-date'
+import './fields/field-datetime'
+import './fields/field-time'
+import './fields/field-readonly'
+import './fields/field-textarea'
 import FieldWrapper from "../form/FieldWrapper";
 
 /**
@@ -37,7 +42,7 @@ export class MateuField extends LitElement {
 
 
   firstUpdated() {
-    const element = document.createElement(mapInputTypeToFieldType(this.field.type));
+    const element = document.createElement(mapInputTypeToFieldType(this.field.type, this.field.stereotype));
     const container = this.shadowRoot!.getElementById('container')!;
     const component = element as unknown as Component;
     component.onValueChanged = (e) => {

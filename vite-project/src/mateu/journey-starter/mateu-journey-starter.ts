@@ -40,7 +40,6 @@ export class MateuJourneyStarter extends LitElement {
 
   constructor() {
     super();
-    console.log('ui', JSON.stringify(new MateuJourneyClient().getJourneyTypes()));
     this.journeyTypes = new MateuJourneyClient().getJourneyTypes();
   }
 

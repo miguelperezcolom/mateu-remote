@@ -30,17 +30,15 @@ export class MateuView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    console.log(this.view)
   }
 
   render() {
     return html`
       <div>
-        
-        ${this.view?.components.map(c => html`<mateu-component .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" .setLoading=${this.setLoading}><slot></slot></mateu-component>`)}
-        
-      </div>
-    `
+        ${this.view?.components.map(c => html`<mateu-component 
+            .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" .setLoading=${this.setLoading}>
+          <slot></slot></mateu-component>
+        `)}</div>`
   }
 
   static styles = css`

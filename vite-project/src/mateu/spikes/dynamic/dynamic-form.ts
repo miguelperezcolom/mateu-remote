@@ -20,7 +20,6 @@ export class DynamicForm extends LitElement {
 
     onSelect = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('select', input.value)
         this.changeInput(input.value);
     }
 

@@ -7,6 +7,8 @@ export default interface Field {
 
     type: string;
 
+    stereotype: string;
+
     caption: string;
 
     description: string;

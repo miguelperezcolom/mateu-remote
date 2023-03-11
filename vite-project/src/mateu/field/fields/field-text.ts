@@ -1,5 +1,5 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {html, css, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-text-field'
@@ -45,7 +45,6 @@ export class FieldText extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('input-text', input.value)
         this.onValueChanged({value: input.value})
     }
 
@@ -72,6 +71,12 @@ export class FieldText extends LitElement implements Component {
             ></vaadin-text-field>
             `
     }
+
+    static styles = css`
+        vaadin-text-field {
+            width: 100%;
+        }
+    `
 
 }
 

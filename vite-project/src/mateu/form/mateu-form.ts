@@ -55,8 +55,6 @@ export class MateuForm extends LitElement implements FormElement {
         .filter(f => f)
         .forEach(f => f!.setVisible(true));
 
-    console.log('rules', this.rules);
-
     this.rules.forEach(r => this.applyRule(r))
   }
 
@@ -126,7 +124,6 @@ export class MateuForm extends LitElement implements FormElement {
     super.connectedCallback();
     this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
         .forEach(f => this.fieldsMap.map.set(f, new FieldWrapper(f)))
-    console.log('data', this.data)
     setTimeout(() => this.runRules());
   }
 
@@ -135,9 +132,7 @@ export class MateuForm extends LitElement implements FormElement {
         .filter(f => f.validations.length > 0);
     // @ts-ignore
     const missingFields = requiredFields.filter(f => !this.data[f.id]);
-    console.log(missingFields)
     if (missingFields.length > 0) {
-      console.log('hay que rellenarlo todo')
       const fnames = missingFields.map(f => f.caption);
       this.notificationMessage = 'All mandatory fields must be filled (' + fnames + ')';
       this.notificationOpened = true;

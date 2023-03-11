@@ -49,7 +49,6 @@ export class MateuMain extends LitElement {
 
   constructor() {
     super();
-    console.log('ui', JSON.stringify(new MateuClient().getUi()));
     this.ui = new MateuClient().getUi();
     this.view = {components: []}
   }

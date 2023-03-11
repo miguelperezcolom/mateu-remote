@@ -51,7 +51,6 @@ const { actions: authActions, reducer: authReducer } = createSlice({
             state.loading = true;
         },
         setJourneyTypes: (state, { payload }) => {
-            console.log('payload', payload)
             state.loading = false;
             state.error = false;
             state.journeyTypes = payload;
@@ -68,6 +67,8 @@ const { actions: authActions, reducer: authReducer } = createSlice({
             state.stepId = undefined;
             state.step = undefined;
             state.completed = false;
+            state.items = undefined;
+            state.matches = undefined;
         },
         setJourneyId: (state, { payload }) => {
             state.journeyId = payload;
@@ -85,7 +86,6 @@ const { actions: authActions, reducer: authReducer } = createSlice({
             state.step = step;
         },
         completeStep: (state) => {
-            console.log(state)
             state.step = undefined;
             state.stepId = undefined;
             state.journey = undefined;
@@ -99,7 +99,6 @@ const { actions: authActions, reducer: authReducer } = createSlice({
             state.matches = payload;
         },
         setRows: (state, { payload }) => {
-            console.log('setRows', payload)
             state.items = payload;
         },
     },
@@ -133,8 +132,6 @@ const api = axios.create({
 
 export function fetchItems() {
 
-    console.log('fetchItems');
-
     return async (dispatch: Dispatch) => {
         api
             .get("/journey-types")
@@ -149,9 +146,6 @@ export function fetchItems() {
 }
 
 export function createJourney(journeyTypeId: string, journeyId: string) {
-
-    console.log('createJourney', journeyTypeId, journeyId);
-
     const rq: JourneyCreationRq = {
         journeyTypeId,
         contextData: []
@@ -173,8 +167,6 @@ export function createJourney(journeyTypeId: string, journeyId: string) {
 
 export function getJourneyStatus(journeyId: string) {
 
-    console.log('getJourneyStatus', journeyId);
-
     return async (dispatch: Dispatch) => {
         api
             .get("/journeys/" + journeyId)
@@ -189,8 +181,6 @@ export function getJourneyStatus(journeyId: string) {
 }
 
 export function getStep(journeyId: string, stepId: string) {
-
-    console.log('getStep', journeyId, stepId);
 
     return async (dispatch: Dispatch) => {
         api
@@ -207,8 +197,6 @@ export function getStep(journeyId: string, stepId: string) {
 
 
 export function runStepAction(journeyId: string, stepId: string, actionId: string, data: object) {
-
-    console.log('runStepAction', journeyId, stepId, actionId, data);
 
     const rq: RunActionRq = {
         data: data
@@ -228,10 +216,7 @@ export function runStepAction(journeyId: string, stepId: string, actionId: strin
 }
 
 export function getUi(uiId: string) {
-
-    console.log('getUi', uiId);
-
-    return async (dispatch: Dispatch) => {
+   return async (dispatch: Dispatch) => {
         api
             .get("/uis/" + uiId)
             .then((response) => {
@@ -247,8 +232,6 @@ export function getUi(uiId: string) {
 
 export function getCount(journeyId: string, stepId: string, listId: string, filters: string) {
 
-    console.log('getCount', journeyId, stepId);
-
     return async (dispatch: Dispatch) => {
         api
             .get("/journeys/" + journeyId + "/steps/" + stepId + "/lists/" + listId + "/count?filters=" + filters)
@@ -263,8 +246,6 @@ export function getCount(journeyId: string, stepId: string, listId: string, filt
 }
 
 export function getRows(journeyId: string, stepId: string, listId: string, filters: string) {
-
-    console.log('getRows', journeyId, stepId);
 
     return async (dispatch: Dispatch) => {
         api

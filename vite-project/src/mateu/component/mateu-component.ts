@@ -23,7 +23,6 @@ export class MateuComponent extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log(this.component)
     }
 
 

@@ -42,7 +42,6 @@ export class MateuUi extends connect(store)(LitElement) {
     selectedItem?: MenuBarItem;
 
     stateChanged(state: any) {
-        console.log('nuevo state', state)
         this.loading = false;
 
         //debugger;
@@ -61,36 +60,27 @@ export class MateuUi extends connect(store)(LitElement) {
             }
         });
 
-        console.log('items', this.items)
-        console.log('journeyTypeId', this.journeyTypeId)
-
     }
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('connected')
         this.loading = true;
         store.dispatch(getUi(this.uiId))
     }
 
     selectJourney(event: Event) {
         let journeyTypeId = (event.currentTarget as HTMLElement).getAttribute('journeytypeid');
-        console.log('journeyTypeId', journeyTypeId)
         store.dispatch(setJourneyType(journeyTypeId))
     }
 
     itemSelected(event: MenuBarItemSelectedEvent) {
-        console.log(event.detail.value)
         let item = event.detail.value as MyMenuBarItem
         store.dispatch(setJourneyType(item.journeyTypeId))
     }
 
 
     render() {
-
-        console.log('ui', this.ui);
-
-        return html`
+       return html`
         ${this.ui?html`
 
             <vaadin-vertical-layout style="align-items: center">

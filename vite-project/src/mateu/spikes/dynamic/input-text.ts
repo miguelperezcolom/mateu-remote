@@ -25,7 +25,8 @@ export class InputText extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('input-text', input.value)}
+        console.log('input-text', input.value)
+    }
 
     @property()
     value: number | undefined;

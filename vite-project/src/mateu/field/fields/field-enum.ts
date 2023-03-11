@@ -46,7 +46,6 @@ export class FieldEnum extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('input-enum', input.value)
         this.onValueChanged({value: input.value})
     }
 

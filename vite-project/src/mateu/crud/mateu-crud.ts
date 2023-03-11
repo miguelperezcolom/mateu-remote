@@ -38,22 +38,16 @@ export class MateuCrud extends connect(store)(LitElement) {
   items: object[] | undefined;
 
   search() {
-    console.log('search')
-    store.dispatch(getCount(this.journeyId, this.stepId, 'main', ''))
-    store.dispatch(getRows(this.journeyId, this.stepId, 'main', ''))
+    const filters = '';
+    store.dispatch(getCount(this.journeyId, this.stepId, 'main', filters))
+    store.dispatch(getRows(this.journeyId, this.stepId, 'main', filters))
   }
 
   connectedCallback() {
     super.connectedCallback();
-
-    console.log('metadata', this.metadata)
   }
 
   stateChanged(state: any) {
-    console.log('nuevo state', state)
-
-    console.log(state.tiposJourney.items)
-
     //debugger;
     this.items = state.tiposJourney.items;
 

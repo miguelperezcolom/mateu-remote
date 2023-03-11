@@ -1,14 +1,13 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
-import '@vaadin/vaadin-checkbox'
-import '@vaadin/checkbox-group'
+import '@vaadin/text-area'
 import Field from "../../dtos/Field";
 
 
-@customElement('field-boolean')
-export class FieldBoolean extends LitElement implements Component {
+@customElement('field-readonly')
+export class FieldReadonly extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -16,6 +15,7 @@ export class FieldBoolean extends LitElement implements Component {
     setRequired(required: boolean): void {
         this.required = required;
     }
+
 
     setField(field: Field): void {
         this.field = field;
@@ -45,7 +45,7 @@ export class FieldBoolean extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.checked})
+        this.onValueChanged({value: input.value})
     }
 
     @property()
@@ -57,26 +57,43 @@ export class FieldBoolean extends LitElement implements Component {
     @property()
     field: Field | undefined;
 
+    firstUpdated() {
+        const textArea = this.shadowRoot!.querySelector('textarea');
+        textArea?.parentElement?.removeChild(textArea);
+    }
+
+
     render() {
         return html`
-            <vaadin-checkbox-group label="${this.label}" theme="vertical">
-                <vaadin-checkbox label="Yes"
-            @change=${this.onChange} 
+            <vaadin-text-area
+                label="${this.label}"
+                @change=${this.onChange} 
                            name="${this.name}" 
                            id="${this.name}"
                            value=${this.value}
                    ?disabled=${!this.enabled}
-                                 ?required=${this.required}
-                ></vaadin-checkbox>
-            </vaadin-checkbox-group>
+                ?required=${this.required}
+                readonly
+            ><div class="content" slot="textarea">${this.value}</div></vaadin-text-area>
             `
     }
+
+
+    static styles = css`
+        .content {
+            width: 100%;
+            min-height: unset;
+        }
+        vaadin-text-area {
+            width: 100%;
+        }
+    `
 
 }
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-boolean': FieldBoolean
+        'field-readonly': FieldReadonly
     }
 }
 

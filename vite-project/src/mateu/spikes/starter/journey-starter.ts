@@ -48,7 +48,6 @@ export class JourneyStarter extends connect(store)(LitElement) {
     completed: boolean = false;
 
     stateChanged(state: any) {
-        console.log('nuevo state', state)
         this.loading = false;
         if (!this.journeyTypeId) this.tipos = state.tiposJourney.journeyTypes;
         this.cargando = state.tiposJourney.loading;
@@ -95,14 +94,7 @@ export class JourneyStarter extends connect(store)(LitElement) {
     }
 
     updated(changedProperties: Map<string, unknown>) {
-        console.log(`updated(). changedProps: `, changedProperties);
         if (changedProperties.has("journeyTypeId")) {
-            // get the old value here
-            const oldValue = changedProperties.get("journeyTypeId") as number;
-            // new value is
-            const newValue = this.journeyTypeId;
-
-            console.log('journeyTypeId changed', oldValue, newValue)
             store.dispatch(setJourneyType(this.journeyTypeId))
         }
 
@@ -111,7 +103,6 @@ export class JourneyStarter extends connect(store)(LitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        console.log('connected')
         if (this.journeyTypeId) {
             store.dispatch(setJourneyType(this.journeyTypeId))
         } else {
@@ -121,7 +112,6 @@ export class JourneyStarter extends connect(store)(LitElement) {
 
     startJourney(event: Event) {
         const typeId = (event.target as HTMLElement).getAttribute('typeId');
-        console.log('start', typeId)
         store.dispatch(setJourneyType(typeId))
     }
 

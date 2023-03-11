@@ -18,7 +18,6 @@ export class RemoteJourneys extends connect(store)(LitElement) {
     tipos:JourneyType[] = [];
 
     stateChanged(state: any) {
-        console.log('nuevo state', state.tiposJourney)
         this.tipos = state.tiposJourney.journeyTypes;
         this.cargando = state.tiposJourney.loading;
         this.error = state.tiposJourney.error;

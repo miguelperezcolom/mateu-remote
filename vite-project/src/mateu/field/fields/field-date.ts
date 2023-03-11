@@ -2,13 +2,12 @@ import {customElement, property} from "lit/decorators.js";
 import {html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
-import '@vaadin/vaadin-checkbox'
-import '@vaadin/checkbox-group'
+import '@vaadin/date-picker'
 import Field from "../../dtos/Field";
 
 
-@customElement('field-boolean')
-export class FieldBoolean extends LitElement implements Component {
+@customElement('field-date')
+export class FieldDate extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -33,7 +32,7 @@ export class FieldBoolean extends LitElement implements Component {
         console.log(event)
     }
     setValue(value: unknown): void {
-        this.value = value as number;
+        this.value = value as Date;
     }
 
     @property()
@@ -45,11 +44,11 @@ export class FieldBoolean extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.checked})
+        this.onValueChanged({value: input.value})
     }
 
     @property()
-    value: number | undefined;
+    value: Date | undefined;
 
     @property()
     enabled = true;
@@ -59,16 +58,15 @@ export class FieldBoolean extends LitElement implements Component {
 
     render() {
         return html`
-            <vaadin-checkbox-group label="${this.label}" theme="vertical">
-                <vaadin-checkbox label="Yes"
-            @change=${this.onChange} 
+            <vaadin-date-picker
+                    label="${this.label}"
+                    @change=${this.onChange} 
                            name="${this.name}" 
                            id="${this.name}"
                            value=${this.value}
-                   ?disabled=${!this.enabled}
-                                 ?required=${this.required}
-                ></vaadin-checkbox>
-            </vaadin-checkbox-group>
+                    ?disabled=${!this.enabled}
+                    ?required=${this.required}
+            ></vaadin-date-picker>
             `
     }
 
@@ -76,7 +74,7 @@ export class FieldBoolean extends LitElement implements Component {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-boolean': FieldBoolean
+        'field-date': FieldDate
     }
 }
 

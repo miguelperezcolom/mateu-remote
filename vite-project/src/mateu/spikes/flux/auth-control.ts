@@ -15,12 +15,10 @@ export class AuthControl extends connect(store)(LitElement) {
     }
 
     handleSignIn() {
-        console.log('sign in');
         store.dispatch(signIn())
     }
 
     handleSignOut() {
-        console.log('sign out');
         store.dispatch(signOut())
     }
 
