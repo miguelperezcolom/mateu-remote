@@ -5,6 +5,7 @@ import Component from "./fields/interfaces/Component";
 import {mapInputTypeToFieldType} from "./fields/FieldTypeMapper";
 import './fields/field-text'
 import './fields/field-number'
+import './fields/field-double'
 import './fields/field-enum'
 import './fields/field-boolean'
 import './fields/field-date'
