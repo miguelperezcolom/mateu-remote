@@ -11,6 +11,7 @@ import Rule from "../dtos/Rule";
 import FieldsMap from "./FieldsMap";
 import FieldWrapper from "./FieldWrapper";
 import Field from "../dtos/Field";
+import {badge} from "@vaadin/vaadin-lumo-styles";
 
 export interface FormElement {
 
@@ -149,6 +150,12 @@ export class MateuForm extends LitElement implements FormElement {
         
         <h1>${this.metadata.title}</h1>
         <h3>${this.metadata.subtitle}</h3>
+          
+        ${this.metadata.badges?html`
+            <div class="badges">
+              ${this.metadata.badges.map(b => html`<span theme="badge ${b.type.toString().toLowerCase()}">${b.message}</span>`)}
+            </div>        
+        `:''}
         
         ${this.metadata.sections.map(s => html`<mateu-section .section="${s}" .formElement=${this}></mateu-section>`)}
 
@@ -175,8 +182,12 @@ export class MateuForm extends LitElement implements FormElement {
   }
 
   static styles = css`
+    ${badge}
     vaadin-button {
         margin-left: 10px;
+    }    
+    .badges {
+      margin-bottom: 10px;
     }
   `
 }

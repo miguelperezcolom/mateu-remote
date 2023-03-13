@@ -121,7 +121,7 @@ declare global {
 }
 
 // set up axios - simple json-server prototype config here
-const api = axios.create({
+export const api = axios.create({
     baseURL: window.__MATEU_REMOTE_BASE_URL__?window.__MATEU_REMOTE_BASE_URL__:"https://remote.mateu.io/mateu/v1",
     withCredentials: false,
     headers: {

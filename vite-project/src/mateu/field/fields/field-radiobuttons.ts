@@ -7,8 +7,8 @@ import '@vaadin/radio-group'
 import Field from "../../dtos/Field";
 
 
-@customElement('field-enum')
-export class FieldEnum extends LitElement implements Component {
+@customElement('field-radiobuttons')
+export class FieldRadiobuttons extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -80,7 +80,7 @@ export class FieldEnum extends LitElement implements Component {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-enum': FieldEnum
+        'field-radiobuttons': FieldRadiobuttons
     }
 }
 

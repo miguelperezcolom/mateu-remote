@@ -7,51 +7,24 @@
     <title>Vite + Lit + TS</title>
     <link rel="stylesheet" href="./src/index.css" />
     <script type="module" src="/src/lumo.js"></script>
-    <script type="module" src="/src/mateu/spikes/starter/journey-starter.ts"></script>
-    <!--
-    <script type="module" src="/src/mateu/spikes/hello/hello-world.ts"></script>
-    -->
-    <!--
-    <script type="module" src="/src/mateu/spikes/flux/reactive-view.ts"></script>
-    <script type="module" src="/src/mateu/spikes/flux/auth-control.ts"></script>
-    -->
-    <!--
-    <script type="module" src="/src/mateu/main/mateu-main.ts"></script>
-    -->
-    <!--
-    <script type="module" src="/src/mateu/spikes/dynamic/dynamic-form.ts"></script>
-    -->
-    <!--
-    <script type="module" src="/src/mateu/spikes/reduxandaxios/remote-journeys.ts"></script>
-    -->
+    <script type="module" src="/src/mateu/spikes/starter/mateu-ui.ts"></script>
+    <script>window.__MATEU_REMOTE_BASE_URL__ = 'http://localhost:8081/mateu/v1';</script>
   </head>
   <body>
-  <nav>
-    <h2>Journey runner component</h2>
-  </nav>
-  <main>
-  <!--
-    <mateu-journey-starter remoteUrl="https://remote.mateu.io"></mateu-journey-starter>
-    -->
-  <!--
-  <hello-world name="Mateu">Hola</hello-world>
-  <mateu-main></mateu-main>
-  -->
-  <!--
-  <div>
-    <reactive-view></reactive-view>
-  </div>
-  <div>
-    <auth-control></auth-control>
-  </div>
-  -->
-  <!--
-  <dynamic-form></dynamic-form>
-  -->
-  <!--
-  <remote-journeys></remote-journeys>
-  -->
-  <journey-starter></journey-starter>
-  </main>
+  <mateu-ui uiId="com.example.demoremote.DemoApp">
+  </mateu-ui>
+  <script>
+    if (window.matchMedia) {
+      if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+        document.documentElement.setAttribute('theme', 'dark')
+      } else {
+        document.documentElement.setAttribute('theme', 'light')
+      }
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        document.documentElement.setAttribute('theme', e.matches?'dark':'light')
+      });
+    }
+  </script>
   </body>
 </html>

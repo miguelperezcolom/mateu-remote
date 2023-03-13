@@ -6,13 +6,15 @@ import {mapInputTypeToFieldType} from "./fields/FieldTypeMapper";
 import './fields/field-text'
 import './fields/field-number'
 import './fields/field-double'
-import './fields/field-enum'
+import './fields/field-radiobuttons'
 import './fields/field-boolean'
 import './fields/field-date'
 import './fields/field-datetime'
 import './fields/field-time'
 import './fields/field-readonly'
 import './fields/field-textarea'
+import './fields/field-combobox'
+import './fields/field-externalref'
 import FieldWrapper from "../form/FieldWrapper";
 
 /**

@@ -1,13 +1,14 @@
 import {customElement, property} from "lit/decorators.js";
-import {css, html, LitElement} from "lit";
+import {html, css, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
-import '@vaadin/text-area'
+import '@vaadin/combo-box'
 import Field from "../../dtos/Field";
+import Value from "../../dtos/Value";
 
 
-@customElement('field-readonly')
-export class FieldReadonly extends LitElement implements Component {
+@customElement('field-combobox')
+export class FieldCombobox extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -57,43 +58,43 @@ export class FieldReadonly extends LitElement implements Component {
     @property()
     field: Field | undefined;
 
-    firstUpdated() {
-        const textArea = this.shadowRoot!.querySelector('textarea');
-        textArea?.parentElement?.removeChild(textArea);
+    items: Value[] | undefined;
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.items = this.field!.attributes.filter(a => a.key == 'choice').map(a => a.value);
     }
 
 
     render() {
         return html`
-            <vaadin-text-area
-                label="${this.label}"
-                @change=${this.onChange} 
+            <vaadin-combo-box label="${this.label}" theme="vertical"
+                                @change=${this.onChange} 
                            name="${this.name}" 
                            id="${this.name}"
                            value=${this.value}
                    ?disabled=${!this.enabled}
-                ?required=${this.required}
-                readonly
-            ><div class="content" slot="textarea">${this.value}</div></vaadin-text-area>
+                                ?required=${this.required}
+                              .items="${this.items}"
+                              item-label-path="key"
+                              item-value-path="value"
+            >
+            </vaadin-combo-box>
             `
     }
 
-
     static styles = css`
-        .content {
-            width: 95%;
-            min-height: unset;
-        }
-        vaadin-text-area {
+        vaadin-combo-box {
             width: 100%;
         }
     `
+
 
 }
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-readonly': FieldReadonly
+        'field-combobox': FieldCombobox
     }
 }
 
