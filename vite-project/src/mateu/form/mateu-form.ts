@@ -5,13 +5,14 @@ import '../section/mateu-section'
 import '@vaadin/horizontal-layout'
 import '@vaadin/vaadin-notification'
 import '@vaadin/button'
-import { notificationRenderer } from 'lit-vaadin-helpers';
+import {notificationRenderer} from 'lit-vaadin-helpers';
 import {runStepAction, store} from "../spikes/starter/store";
 import Rule from "../dtos/Rule";
 import FieldsMap from "./FieldsMap";
 import FieldWrapper from "./FieldWrapper";
 import Field from "../dtos/Field";
 import {badge} from "@vaadin/vaadin-lumo-styles";
+import {BadgeType} from "../dtos/BadgeType";
 
 export interface FormElement {
 
@@ -153,7 +154,7 @@ export class MateuForm extends LitElement implements FormElement {
           
         ${this.metadata.badges?html`
             <div class="badges">
-              ${this.metadata.badges.map(b => html`<span theme="badge ${b.type.toString().toLowerCase()}">${b.message}</span>`)}
+              ${this.metadata.badges.map(b => html`<span theme="badge ${this.getThemeForBadgetType(b.type)}">${b.message}</span>`)}
             </div>        
         `:''}
         
@@ -181,8 +182,29 @@ export class MateuForm extends LitElement implements FormElement {
     `
   }
 
+  private getThemeForBadgetType(type: BadgeType): string {
+    switch (type) {
+      case BadgeType.SUCCESS: return 'success';
+      case BadgeType.WARNING: return 'warning';
+      case BadgeType.DANGER: return 'error';
+      case BadgeType.NONE: return 'contrast';
+    }
+    return '';
+  }
+
   static styles = css`
     ${badge}
+    
+  [theme~='badge'][theme~='warning'] {
+    color: #C7BC1D;
+    background-color: #FFFCC0;
+  }
+  [theme~='badge'][theme~='warning'][theme~='primary'] {
+    color: #ffffff;
+    background-color: #C7BC1D;
+  }
+
+
     vaadin-button {
         margin-left: 10px;
     }    

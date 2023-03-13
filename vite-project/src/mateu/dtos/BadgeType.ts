@@ -1,3 +1,3 @@
 export enum BadgeType {
-    NONE, INFO, SUCCESS, WARNING, DANGER
+    NONE = "NONE", INFO = "INFO", SUCCESS = "SUCCESS", WARNING = "WARNING", DANGER = "DANGER"
 }
