@@ -12,6 +12,8 @@ export default interface Menu {
 
     journeyTypeId: string | undefined;
 
+    useJourneyTypeForId: boolean | undefined;
+
     submenus: Menu[] | null;
 
 }

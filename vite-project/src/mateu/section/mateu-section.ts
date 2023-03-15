@@ -25,7 +25,7 @@ export class MateuSection extends LitElement {
     return html`
       <div class="mateu-section">
 
-        ${this.section.caption?html`<h1>${this.section.caption}</h1>`:''}
+        ${this.section.caption?html`<h2>${this.section.caption}</h2>`:''}
         
         ${this.section.fieldGroups.map(s => html`<mateu-fieldgroup .fieldGroup="${s}" .formElement=${this.formElement}></mateu-fieldgroup>`)}
         
@@ -40,7 +40,12 @@ export class MateuSection extends LitElement {
       border: 1px solid lightgrey;
       border-radius: 8px;
       padding: 2rem;  
-      margin-bottom: 16px;    
+      margin-bottom: 16px;       
+      padding-top: 14px;   
+    }
+    
+    .mateu-section:has(h1) {
+      padding-top: 0px;
     }
 
   `

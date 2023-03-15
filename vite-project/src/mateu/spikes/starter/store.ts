@@ -154,8 +154,7 @@ export function createJourney(journeyTypeId: string, journeyId: string) {
     return async (dispatch: Dispatch) => {
         api
             .post("/journeys/" + journeyId, rq)
-            .then((response) => {
-                console.log(response)
+            .then(() => {
                 dispatch(setJourneyId(journeyId));
             })
             .catch((error) => {

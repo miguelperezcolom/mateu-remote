@@ -68,7 +68,7 @@ export class JourneyStarter extends connect(store)(LitElement) {
             if (!this.journeyId) {
                 // generate journey id
                 // and store journey id
-                const journeyId = nanoid();
+                const journeyId = this.journeyTypeId?.startsWith('fixed_')?this.journeyType:nanoid();
                 // call api to start journey
                 this.loading = true;
                 store.dispatch(createJourney(this.journeyType, journeyId));

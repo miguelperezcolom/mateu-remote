@@ -24,6 +24,10 @@ export class FieldTime extends LitElement implements Component {
         this.label = label
     }
 
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
+    }
+
     setEnabled(enabled: boolean): void {
         this.enabled = enabled;
     }
@@ -37,6 +41,9 @@ export class FieldTime extends LitElement implements Component {
 
     @property()
     label = '';
+
+    @property()
+    placeholder = '';
 
     @property()
     name = '';
@@ -66,6 +73,7 @@ export class FieldTime extends LitElement implements Component {
                            value=${this.value}
                     ?disabled=${!this.enabled}
                     ?required=${this.required}
+                    placeholder="${this.placeholder}"
             ></vaadin-time-picker>
             `
     }

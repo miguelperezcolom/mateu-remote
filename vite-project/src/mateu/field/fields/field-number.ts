@@ -15,14 +15,16 @@ export class FieldNumber extends LitElement implements Component {
         this.required = required;
     }
 
-
-
     setField(field: Field): void {
         this.field = field;
     }
 
     setLabel(label: string): void {
         this.label = label
+    }
+
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
     }
 
     setEnabled(enabled: boolean): void {
@@ -38,6 +40,9 @@ export class FieldNumber extends LitElement implements Component {
 
     @property()
     label = '';
+
+    @property()
+    placeholder = '';
 
     @property()
     name = '';
@@ -71,6 +76,7 @@ export class FieldNumber extends LitElement implements Component {
                     step-buttons-visible
                     min="0"
                     max="100"
+                    placeholder="${this.placeholder}"
             ></vaadin-integer-field>
         `
     }

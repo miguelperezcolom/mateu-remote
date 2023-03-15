@@ -15,6 +15,8 @@ import './fields/field-readonly'
 import './fields/field-textarea'
 import './fields/field-combobox'
 import './fields/field-externalref'
+import './fields/field-toggle'
+import './fields/field-file'
 import FieldWrapper from "../form/FieldWrapper";
 
 /**
@@ -56,6 +58,7 @@ export class MateuField extends LitElement {
       this.dispatchEvent(change);
     }
     component.setLabel(this.field.caption);
+    component.setPlaceholder(this.field.placeholder)
     component.setField(this.field);
     component.setValue(this.value)
     component.setRequired(this.field.validations.length > 0)

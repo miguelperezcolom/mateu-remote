@@ -14,8 +14,6 @@ import {utility} from '@vaadin/vaadin-lumo-styles/utility.js';
 import '@vaadin/vaadin-icons/vaadin-iconset.js';
 
 const sheet = document.createElement('style')
-console.log('lumo!!!!!!')
-sheet.setAttribute("data-test", "lumo")
 sheet.innerHTML = `
 ${fieldButton.cssText}
 ${menuOverlay.cssText}

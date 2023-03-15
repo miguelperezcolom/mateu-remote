@@ -1,5 +1,5 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
+import {css, html, LitElement} from 'lit'
+import {customElement, property, state} from 'lit/decorators.js'
 import Crud from "../dtos/Crud";
 import "@vaadin/horizontal-layout";
 import "@vaadin/button";
@@ -7,7 +7,8 @@ import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
 import {connect} from "pwa-helpers";
-import {getCount, getRows, store} from "../spikes/starter/store";
+import {api, store} from "../spikes/starter/store";
+import {Grid, GridDataProvider, GridSorterDefinition} from "@vaadin/vaadin-grid";
 
 
 /**
@@ -34,13 +35,55 @@ export class MateuCrud extends connect(store)(LitElement) {
   @property()
   data: object | undefined;
 
-  @property()
-  items: object[] | undefined;
+  @state()
+  dataProvider: GridDataProvider<any> = async (params, callback) => {
+    const { page, pageSize, sortOrders } = params;
+
+    const { rows, count } = await this.fetchData({
+      page,
+      pageSize,
+      sortOrders,
+      filters: btoa(JSON.stringify(this.data)),
+    });
+
+    callback(rows, count);
+  };
 
   search() {
-    const filters = '';
-    store.dispatch(getCount(this.journeyId, this.stepId, 'main', filters))
-    store.dispatch(getRows(this.journeyId, this.stepId, 'main', filters))
+    const grid = this.shadowRoot!.getElementById('grid') as Grid;
+    grid.clearCache();
+  }
+
+  async fetchData(params: {
+    page: number;
+    pageSize: number;
+    filters: string;
+    sortOrders: GridSorterDefinition[];
+  }) {
+    const rows = await this.fetchRows(params);
+
+    // Pagination
+    const count = await this.fetchCount(params.filters);
+
+    return { rows, count };
+  }
+
+  async fetchRows(params: {
+    page: number;
+    pageSize: number;
+    filters: string;
+    sortOrders: GridSorterDefinition[];
+  }): Promise<any[]> {
+    const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
+        "/lists/main/rows?page=" + params.page + "&page_size=" + params.pageSize +
+        "&ordering=&filters=" + params.filters);
+    return response.data;
+  }
+
+  async fetchCount(filters: string): Promise<number> {
+    const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
+        "/lists/main/count?filters=" + filters);
+    return response.data;
   }
 
   connectedCallback() {
@@ -49,8 +92,16 @@ export class MateuCrud extends connect(store)(LitElement) {
 
   stateChanged(state: any) {
     //debugger;
-    this.items = state.tiposJourney.items;
+    console.log('state changed in crud', state)
 
+  }
+
+  filterChanged(e:Event) {
+    const input = e.target as HTMLInputElement;
+    const obj = {};
+    // @ts-ignore
+    obj[input.id] = input.value;
+    this.data = { ...this.data, ...obj}
   }
 
 
@@ -63,7 +114,7 @@ export class MateuCrud extends connect(store)(LitElement) {
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         
         ${this.metadata?.searchForm.fields.map(f => html`
-          <vaadin-text-field id="${f.id}" label="${f.caption}"></vaadin-text-field>
+          <vaadin-text-field id="${f.id}" label="${f.caption}" @change=${this.filterChanged}></vaadin-text-field>
         `)}
         
         
@@ -71,7 +122,7 @@ export class MateuCrud extends connect(store)(LitElement) {
         
       </vaadin-horizontal-layout>
 
-      <vaadin-grid .items="${this.items}">
+      <vaadin-grid id="grid" .dataProvider="${this.dataProvider}">
         <vaadin-grid-selection-column></vaadin-grid-selection-column>
 
       ${this.metadata?.columns.map(c => html`

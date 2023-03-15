@@ -17,6 +17,9 @@ export class FieldCombobox extends LitElement implements Component {
         this.required = required;
     }
 
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
+    }
 
     setField(field: Field): void {
         this.field = field;
@@ -41,6 +44,9 @@ export class FieldCombobox extends LitElement implements Component {
     label = '';
 
     @property()
+    placeholder = '';
+
+    @property()
     name = '';
 
     @property()
@@ -62,7 +68,7 @@ export class FieldCombobox extends LitElement implements Component {
 
     connectedCallback() {
         super.connectedCallback();
-        this.items = this.field!.attributes.filter(a => a.key == 'choice').map(a => a.value);
+        this.items = this.field!.attributes.filter(a => a.key == 'choice').map(a => a.value as Value);
     }
 
 
@@ -78,6 +84,7 @@ export class FieldCombobox extends LitElement implements Component {
                               .items="${this.items}"
                               item-label-path="key"
                               item-value-path="value"
+                              placeholder="${this.placeholder}"
             >
             </vaadin-combo-box>
             `

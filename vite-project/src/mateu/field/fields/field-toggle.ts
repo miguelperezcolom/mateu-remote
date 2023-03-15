@@ -2,13 +2,13 @@ import {customElement, property} from "lit/decorators.js";
 import {html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
-import '@vaadin/vaadin-checkbox'
-import '@vaadin/checkbox-group'
+import '@polymer/paper-toggle-button'
+import '@vaadin/input-container'
 import Field from "../../dtos/Field";
 
 
-@customElement('field-boolean')
-export class FieldBoolean extends LitElement implements Component {
+@customElement('field-toggle')
+export class FieldToggle extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -66,17 +66,32 @@ export class FieldBoolean extends LitElement implements Component {
 
     render() {
         return html`
-            <vaadin-checkbox-group label="${this.label}" theme="vertical">
-                <vaadin-checkbox label="Yes"
-            @change=${this.onChange} 
-                           name="${this.name}" 
-                           id="${this.name}"
-                           value=${this.value}
-                   ?disabled=${!this.enabled}
-                                 ?required=${this.required}
-                                 placeholder="${this.placeholder}"
-                ></vaadin-checkbox>
-            </vaadin-checkbox-group>
+            <div class="vaadin-field-container">
+                <div part="label">
+                    <slot name="label">${this.label}</slot>
+                    <span part="required-indicator" aria-hidden="true" on-click="focus"></span>
+                </div>
+
+                <vaadin-input-container
+                        part="input-field"
+                        disabled="${!this.enabled}"
+                        invalid="false"
+                        theme$="[[_theme]]"
+                >
+                    <slot name="prefix" slot="prefix"></slot>
+                    <slot name="input"><paper-toggle-button id="mitoggle" checked @change=${this.onChange}></paper-toggle-button></slot>
+                    <slot name="suffix" slot="suffix"></slot>
+                </vaadin-input-container>
+                
+                <div part="helper-text">
+                    <slot name="helper">Texto de ayuda</slot>
+                </div>
+
+                <div part="error-message">
+                    <slot name="error-message">Mensaje de error</slot>
+                </div>
+            </div>
+            <slot name="tooltip"></slot>
             `
     }
 
@@ -84,7 +99,7 @@ export class FieldBoolean extends LitElement implements Component {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-boolean': FieldBoolean
+        'field-toggle': FieldToggle
     }
 }
 

@@ -10,4 +10,6 @@ export default interface UI {
 
     homeJourneyTypeId: string;
 
+    useJourneyTypeForId: boolean | undefined;
+
 }

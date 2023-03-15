@@ -7,6 +7,8 @@ export default interface Component {
 
     setLabel(value: string): void;
 
+    setPlaceholder(value: string): void;
+
     setValue(value: unknown): void;
 
     setEnabled(enabled: boolean): void;

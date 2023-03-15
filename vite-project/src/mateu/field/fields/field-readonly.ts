@@ -16,13 +16,15 @@ export class FieldReadonly extends LitElement implements Component {
         this.required = required;
     }
 
-
     setField(field: Field): void {
         this.field = field;
     }
 
     setLabel(label: string): void {
         this.label = label
+    }
+
+    setPlaceholder(): void {
     }
 
     setEnabled(enabled: boolean): void {

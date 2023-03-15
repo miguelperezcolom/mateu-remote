@@ -2,12 +2,15 @@ import {customElement, property} from "lit/decorators.js";
 import {html, css, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
-import '@vaadin/vaadin-text-field'
+import '@vaadin/vaadin-upload'
 import Field from "../../dtos/Field";
+import File from "../../dtos/File";
+import {nanoid} from "nanoid";
+import {UploadElement} from "@vaadin/vaadin-upload/src/vaadin-upload";
 
 
-@customElement('field-text')
-export class FieldText extends LitElement implements Component {
+@customElement('field-file')
+export class FieldFile extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -16,8 +19,12 @@ export class FieldText extends LitElement implements Component {
         this.required = required;
     }
 
+
     setField(field: Field): void {
         this.field = field;
+        this.fileidprefix = field.attributes.find(a => a.key == 'fileidprefix')?.value as string;
+        this.fileid = nanoid();
+        this.maxfiles = field.attributes.find(a => a.key == 'maxfiles')?.value as number;
     }
 
     setLabel(label: string): void {
@@ -49,9 +56,17 @@ export class FieldText extends LitElement implements Component {
     name = '';
 
     @property()
-    onChange = (e:Event) => {
-        const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.value})
+    onChange = (e:CustomEvent) => {
+        const input = e.target as UploadElement;
+        if (e.detail.value == 100) {
+            console.log('upload complete', e, input.files)
+            this.onValueChanged({value: input.files.map(uf => { return {
+                    targetUrl: uf.uploadTarget,
+                    id: this.fileid,
+                    name: uf.name,
+                    type: uf.type
+                } as File })})
+        }
     }
 
     @property()
@@ -63,19 +78,28 @@ export class FieldText extends LitElement implements Component {
     @property()
     field: Field | undefined;
 
+    @property()
+    maxfiles: number | undefined;
+
+    @property()
+    fileidprefix: string | undefined;
+
+    @property()
+    fileid: string | undefined;
 
     render() {
         return html`
-            <vaadin-text-field
+            <vaadin-upload
                 label="${this.label}"
-                @change=${this.onChange} 
+                .maxFiles="${this.maxfiles}"
+                @files-changed=${this.onChange}
                            name="${this.name}" 
                            id="${this.name}"
                            value=${this.value}
                    ?disabled=${!this.enabled}
                 ?required=${this.required}
                 placeholder="${this.placeholder}"
-            ></vaadin-text-field>
+                    target="${window.__MATEU_REMOTE_BASE_URL__ + '/files/' + this.fileidprefix + this.fileid}"></vaadin-upload>
             `
     }
 
@@ -89,7 +113,7 @@ export class FieldText extends LitElement implements Component {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-text': FieldText
+        'field-file': FieldFile
     }
 }
 

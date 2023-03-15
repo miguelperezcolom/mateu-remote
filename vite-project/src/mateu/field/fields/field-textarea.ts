@@ -16,13 +16,16 @@ export class FieldTextarea extends LitElement implements Component {
         this.required = required;
     }
 
-
     setField(field: Field): void {
         this.field = field;
     }
 
     setLabel(label: string): void {
         this.label = label
+    }
+
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
     }
 
     setEnabled(enabled: boolean): void {
@@ -38,6 +41,9 @@ export class FieldTextarea extends LitElement implements Component {
 
     @property()
     label = '';
+
+    @property()
+    placeholder = '';
 
     @property()
     name = '';
@@ -67,6 +73,7 @@ export class FieldTextarea extends LitElement implements Component {
                            value=${this.value}
                    ?disabled=${!this.enabled}
                 ?required=${this.required}
+                placeholder="${this.placeholder}"
             ></vaadin-text-area>
             `
     }

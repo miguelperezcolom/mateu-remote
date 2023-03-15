@@ -5,6 +5,7 @@ import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-radio-button'
 import '@vaadin/radio-group'
 import Field from "../../dtos/Field";
+import Value from "../../dtos/Value";
 
 
 @customElement('field-radiobuttons')
@@ -17,13 +18,16 @@ export class FieldRadiobuttons extends LitElement implements Component {
         this.required = required;
     }
 
-
     setField(field: Field): void {
         this.field = field;
     }
 
     setLabel(label: string): void {
         this.label = label
+    }
+
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
     }
 
     setEnabled(enabled: boolean): void {
@@ -39,6 +43,9 @@ export class FieldRadiobuttons extends LitElement implements Component {
 
     @property()
     label = '';
+
+    @property()
+    placeholder = '';
 
     @property()
     name = '';
@@ -68,9 +75,10 @@ export class FieldRadiobuttons extends LitElement implements Component {
                            value=${this.value}
                    ?disabled=${!this.enabled}
                                 ?required=${this.required}
+                                placeholder="${this.placeholder}"
             >
-                ${this.field!.attributes.filter(a => a.key == 'choice').map(a => html`
-                    <vaadin-radio-button value=${a.value.value} label=${a.value.key}></vaadin-radio-button>
+                ${this.field!.attributes.filter(a => a.key == 'choice').map(a => a.value as Value).map(v => html`
+                    <vaadin-radio-button value=${v.value} label=${v.key}></vaadin-radio-button>
                     `)}
             </vaadin-radio-group>
             `

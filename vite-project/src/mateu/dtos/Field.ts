@@ -11,6 +11,8 @@ export default interface Field {
 
     caption: string;
 
+    placeholder: string;
+
     description: string;
 
     validations: Validation[];

@@ -3,7 +3,9 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'readonly': return 'field-readonly';
         case 'textarea': return 'field-textarea';
         case 'radiobuttons': return 'field-radiobuttons';
+        case 'toggle': return 'field-toggle';
         case 'combobox': return 'field-combobox';
+        case 'file': return 'field-file';
     }
     switch (type) {
         case 'string': return 'field-text';
@@ -15,6 +17,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'date': return 'field-date';
         case 'datetime': return 'field-datetime';
         case 'time': return 'field-time';
+        case 'file': return 'field-file';
         case 'ExternalReference': return 'field-externalref';
     }
     return 'field-text'

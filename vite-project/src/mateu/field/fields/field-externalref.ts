@@ -18,6 +18,9 @@ export class FieldExternalRef extends LitElement implements Component {
         this.required = required;
     }
 
+    setPlaceholder(placeholder: string): void {
+        this.placeholder = placeholder
+    }
 
     setField(field: Field): void {
         this.field = field;
@@ -40,6 +43,9 @@ export class FieldExternalRef extends LitElement implements Component {
 
     @property()
     label = '';
+
+    @property()
+    placeholder = '';
 
     @property()
     name = '';
@@ -92,7 +98,6 @@ export class FieldExternalRef extends LitElement implements Component {
     protected firstUpdated(_changedProperties: PropertyValues) {
         const comboBox = this.shadowRoot?.querySelector('vaadin-combo-box') as ComboBox;
         comboBox.dataProvider = this.dataProvider;
-        console.log(this.value)
         comboBox.selectedItem = this.value;
     }
 
@@ -108,6 +113,7 @@ export class FieldExternalRef extends LitElement implements Component {
                    ?disabled=${!this.enabled}
                                 ?required=${this.required}
                               item-label-path="key"
+                              placeholder="${this.placeholder}"
             >
             </vaadin-combo-box>
             `
