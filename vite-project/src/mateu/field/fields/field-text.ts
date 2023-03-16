@@ -36,7 +36,7 @@ export class FieldText extends LitElement implements Component {
         console.log(event)
     }
     setValue(value: unknown): void {
-        this.value = value as number;
+        this.value = value as string;
     }
 
     @property()
@@ -55,7 +55,7 @@ export class FieldText extends LitElement implements Component {
     }
 
     @property()
-    value: number | undefined;
+    value: string | undefined;
 
     @property()
     enabled = true;

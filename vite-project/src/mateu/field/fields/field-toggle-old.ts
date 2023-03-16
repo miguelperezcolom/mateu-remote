@@ -7,8 +7,8 @@ import '@vaadin/input-container'
 import Field from "../../dtos/Field";
 
 
-@customElement('field-toggle')
-export class FieldToggle extends LitElement implements Component {
+@customElement('field-toggle-old')
+export class FieldToggleOld extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -37,8 +37,7 @@ export class FieldToggle extends LitElement implements Component {
         console.log(event)
     }
     setValue(value: unknown): void {
-        console.log('toggle value set', value)
-        this.value = value as boolean;
+        this.value = value as number;
     }
 
     @property()
@@ -53,12 +52,11 @@ export class FieldToggle extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('toggle changed', input.checked)
         this.onValueChanged({value: input.checked})
     }
 
     @property()
-    value: boolean | undefined;
+    value: number | undefined;
 
     @property()
     enabled = true;
@@ -69,23 +67,39 @@ export class FieldToggle extends LitElement implements Component {
     render() {
         return html`
             <div class="vaadin-field-container">
-                <vaadin-horizontal-layout>
-                    <h5 style="flex-grow: 1;">${this.label}</h5>
-                    <paper-toggle-button id="mitoggle"
-                                         ?disabled=${!this.enabled}
-                                         ?checked=${this.value}
-                                         @change=${this.onChange}></paper-toggle-button>
-                </vaadin-horizontal-layout>
+                <div part="label">
+                    <slot name="label">${this.label}</slot>
+                    <span part="required-indicator" aria-hidden="true" on-click="focus"></span>
+                </div>
+
+                <vaadin-input-container
+                        part="input-field"
+                        disabled="${!this.enabled}"
+                        invalid="false"
+                        theme$="[[_theme]]"
+                >
+                    <slot name="prefix" slot="prefix"></slot>
+                    <slot name="input"><paper-toggle-button id="mitoggle" checked @change=${this.onChange}></paper-toggle-button></slot>
+                    <slot name="suffix" slot="suffix"></slot>
+                </vaadin-input-container>
+                
+                <div part="helper-text">
+                    <slot name="helper">Texto de ayuda</slot>
+                </div>
+
+                <div part="error-message">
+                    <slot name="error-message">Mensaje de error</slot>
+                </div>
             </div>
+            <slot name="tooltip"></slot>
             `
     }
-
 
 }
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-toggle': FieldToggle
+        'field-toggle-old': FieldToggleOld
     }
 }
 
