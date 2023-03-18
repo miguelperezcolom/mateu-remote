@@ -56,7 +56,6 @@ export class FieldExternalrefArray extends LitElement implements Component {
 
     @property()
     onChange = (e:MultiSelectComboBoxSelectedItemsChangedEvent<Value>) => {
-        console.log(e.detail.value)
         this.onValueChanged({value: e.detail.value})
     }
 
@@ -105,7 +104,7 @@ export class FieldExternalrefArray extends LitElement implements Component {
     protected firstUpdated(_changedProperties: PropertyValues) {
         const comboBox = this.shadowRoot?.querySelector('vaadin-multi-select-combo-box') as MultiSelectComboBox<Value>;
         comboBox.dataProvider = this.dataProvider;
-        comboBox.selectedItems = this.value!;
+        comboBox.selectedItems = this.value?this.value:[];
     }
 
 
