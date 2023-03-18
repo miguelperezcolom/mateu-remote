@@ -149,8 +149,17 @@ export class MateuForm extends LitElement implements FormElement {
     return html`
       <div>
         
-        <h1>${this.metadata.title}</h1>
-        <h3>${this.metadata.subtitle}</h3>
+        <vaadin-horizontal-layout class="header">
+          <div>
+            <h1>${this.metadata.title}</h1>
+            <h3>${this.metadata.subtitle}</h3>
+          </div>
+          <vaadin-horizontal-layout style="justify-content: end; flex-grow: 1; align-items: center;" theme="spacing">
+            ${this.metadata.actions.map(a => html`
+            <vaadin-button theme="secondary" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
+          `)}
+          </vaadin-horizontal-layout>
+        </vaadin-horizontal-layout>
           
         ${this.metadata.badges?html`
             <div class="badges">
@@ -160,12 +169,8 @@ export class MateuForm extends LitElement implements FormElement {
         
         ${this.metadata.sections.map(s => html`<mateu-section .section="${s}" .formElement=${this}></mateu-section>`)}
 
-        <vaadin-horizontal-layout style="justify-content: end;" margin spacing>
+        <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
           <slot></slot>
-          ${this.metadata.actions.map(a => html`
-            <vaadin-button theme="primary" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
-          `)}
-
           ${this.metadata.mainActions.map(a => html`
             <vaadin-button theme="primary" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
           `)}
@@ -202,6 +207,10 @@ export class MateuForm extends LitElement implements FormElement {
   [theme~='badge'][theme~='warning'][theme~='primary'] {
     color: #ffffff;
     background-color: #C7BC1D;
+  }
+  
+  .header {
+  width: 100%;
   }
 
 

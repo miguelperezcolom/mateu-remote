@@ -1,5 +1,5 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/time-picker'
@@ -77,6 +77,12 @@ export class FieldTime extends LitElement implements Component {
             ></vaadin-time-picker>
             `
     }
+    static styles = css`
+        vaadin-time-picker {
+            width: 100%;
+        }
+    `
+
 
 }
 

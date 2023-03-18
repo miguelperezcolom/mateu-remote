@@ -1,5 +1,5 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/integer-field'
@@ -80,6 +80,12 @@ export class FieldNumber extends LitElement implements Component {
             ></vaadin-integer-field>
         `
     }
+
+    static styles = css`
+        vaadin-integer-field {
+            width: 100%;
+        }
+    `
 
 }
 

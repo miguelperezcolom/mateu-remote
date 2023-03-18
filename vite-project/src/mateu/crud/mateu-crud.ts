@@ -6,10 +6,11 @@ import "@vaadin/button";
 import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
+import { columnBodyRenderer } from '@vaadin/grid/lit.js';
 import {connect} from "pwa-helpers";
-import {api, store} from "../spikes/starter/store";
+import {api, runStepAction, store} from "../spikes/starter/store";
 import {Grid, GridDataProvider, GridSorterDefinition} from "@vaadin/vaadin-grid";
-
+import {Button} from "@vaadin/button";
 
 /**
  * An example element.
@@ -30,7 +31,7 @@ export class MateuCrud extends connect(store)(LitElement) {
   stepId!: string
 
   @property()
-  metadata: Crud | undefined
+  metadata!: Crud
 
   @property()
   data: object | undefined;
@@ -104,13 +105,47 @@ export class MateuCrud extends connect(store)(LitElement) {
     this.data = { ...this.data, ...obj}
   }
 
+  edit(e:Event) {
+    const button = e.currentTarget as Button;
+    // @ts-ignore
+    console.log(button.row);
+    const obj = {
+      // @ts-ignore
+      _selectedRow: button.row
+    };
+    // @ts-ignore
+    this.data = { ...this.data, ...obj}
+    store.dispatch(runStepAction(this.journeyId, this.stepId, 'edit', this.data))
+  }
+
+  runAction(e:Event) {
+    const button = e.currentTarget as Button;
+    const grid = this.shadowRoot?.getElementById('grid') as Grid
+    const obj = {
+      // @ts-ignore
+      _selectedRows: grid.selectedItems
+    };
+    // @ts-ignore
+    const extendedData = { ...this.data, ...obj}
+    store.dispatch(runStepAction(this.journeyId, this.stepId, button.getAttribute('actionid')!, extendedData))
+  }
+
 
 
   render() {
     return html`
-      
-      <h1>${this.metadata?.title}</h1>
 
+      <vaadin-horizontal-layout class="header">
+        <div>
+          <h1>${this.metadata.title}</h1>
+          <h3>${this.metadata.subtitle}</h3>
+        </div>
+        <vaadin-horizontal-layout style="justify-content: end; flex-grow: 1; align-items: center;" theme="spacing">
+          ${this.metadata.actions.map(a => html`
+            <vaadin-button theme="secondary" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
+          `)}
+        </vaadin-horizontal-layout>
+      </vaadin-horizontal-layout>
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         
         ${this.metadata?.searchForm.fields.map(f => html`
@@ -128,7 +163,16 @@ export class MateuCrud extends connect(store)(LitElement) {
       ${this.metadata?.columns.map(c => html`
         <vaadin-grid-column path="${c.id}" header="${c.caption}"></vaadin-grid-column>
       `)}
-      
+
+        <vaadin-grid-column
+            frozen-to-end
+            auto-width
+            flex-grow="0"
+            ${columnBodyRenderer(
+                (row) => html`<vaadin-button theme="tertiary-inline" .row="${row}" @click="${this.edit}">Edit</vaadin-button>`,
+                []
+            )}
+        
         </vaadin-grid>
       
     `

@@ -1,5 +1,5 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/number-field'
@@ -77,6 +77,12 @@ export class FieldDouble extends LitElement implements Component {
             ></vaadin-number-field>
         `
     }
+
+    static styles = css`
+        vaadin-number-field {
+            width: 100%;
+        }
+    `
 
 }
 
