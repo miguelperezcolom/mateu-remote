@@ -135,7 +135,10 @@ public class GetStepQuery {
                             .build())
                     .build();
 
-        } else {
+        } else if (task.getChild("extensionElements", bpmnNs) != null
+                && task.getChild("extensionElements", bpmnNs).getChild("formData", camundaNs) != null
+                && task.getChild("extensionElements", bpmnNs).getChild("formData", camundaNs)
+                .getChildren("formField", camundaNs) != null) {
             List<Element> formFields = task.getChild("extensionElements", bpmnNs)
                     .getChild("formData", camundaNs).getChildren("formField", camundaNs);
 
@@ -164,6 +167,29 @@ public class GetStepQuery {
                     .view(View.builder()
                             .components(List.of(Component.builder()
                                     .data(data)
+                                    .metadata(form)
+                                    .rules(List.of())
+                                    .build()))
+                            .build())
+                    .build();
+        } else {
+            Form form = Form.builder()
+                    .title(task.getAttributeValue("name"))
+                    .subtitle(task.getAttributeValue("id"))
+                    .sections(List.of())
+                    .actions(List.of())
+                    .mainActions(List.of(Action.builder()
+                            .type(ActionType.Primary)
+                            .id("complete")
+                            .caption("Complete")
+                            .build()))
+                    .build();
+
+            step = Step.builder()
+                    .name(task.getAttributeValue("name"))
+                    .view(View.builder()
+                            .components(List.of(Component.builder()
+                                    .data(Map.of())
                                     .metadata(form)
                                     .rules(List.of())
                                     .build()))
