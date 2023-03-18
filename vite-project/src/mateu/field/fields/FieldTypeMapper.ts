@@ -6,6 +6,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'toggle': return 'field-toggle';
         case 'combobox': return 'field-combobox';
         case 'file': return 'field-file';
+        case 'closedlist': return 'field-closedlist';
     }
     switch (type) {
         case 'string': return 'field-text';
