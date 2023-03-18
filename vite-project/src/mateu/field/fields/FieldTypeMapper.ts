@@ -19,6 +19,12 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'time': return 'field-time';
         case 'file': return 'field-file';
         case 'ExternalReference': return 'field-externalref';
+        case 'boolean[]': return 'field-boolean-array';
+        case 'int[]': return 'field-int-array';
+        case 'double[]': return 'field-double-array';
+        case 'string[]': return 'field-string-array';
+        case 'enum[]': return 'field-enum-array';
+        case 'ExternalReference[]': return 'field-externalref-array';
     }
     return 'field-text'
 }

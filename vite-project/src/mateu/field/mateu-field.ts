@@ -17,6 +17,12 @@ import './fields/field-combobox'
 import './fields/field-externalref'
 import './fields/field-toggle'
 import './fields/field-file'
+import './fields/field-boolean-array'
+import './fields/field-int-array'
+import './fields/field-double-array'
+import './fields/field-string-array'
+import './fields/field-enum-array'
+import './fields/field-externalref-array'
 import FieldWrapper from "../form/FieldWrapper";
 
 /**
