@@ -37,7 +37,6 @@ export class FieldToggle extends LitElement implements Component {
         console.log(event)
     }
     setValue(value: unknown): void {
-        console.log('toggle value set', value)
         this.value = value as boolean;
     }
 
@@ -53,7 +52,6 @@ export class FieldToggle extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        console.log('toggle changed', input.checked)
         this.onValueChanged({value: input.checked})
     }
 
