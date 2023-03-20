@@ -7,11 +7,10 @@ import '../spikes/starter/mateu-ui'
 export class LandingComponent extends LitElement {
 
     @property()
-    name = '';
-
+    uiId = window.__MATEU_UI_ID__;
 
     render() {
-        return html`<mateu-ui uiId="com.example.demoremote.DemoApp">
+        return html`<mateu-ui uiId="${this.uiId}">
         </mateu-ui>`
     }
 

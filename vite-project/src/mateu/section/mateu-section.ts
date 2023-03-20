@@ -27,7 +27,16 @@ export class MateuSection extends LitElement {
 
         ${this.section.caption?html`<h2>${this.section.caption}</h2>`:''}
         
-        ${this.section.fieldGroups.map(s => html`<mateu-fieldgroup .fieldGroup="${s}" .formElement=${this.formElement}></mateu-fieldgroup>`)}
+        ${this.section.readOnly?html`
+          ${this.section.fieldGroups.map(g => html`<div>
+              ${g.caption}
+              <div class="table">
+              ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div><div class="cell value">${this.formElement.getValue(f.id)}</div></div>`)}
+              </div>
+          </div>`)}
+        `:html`
+          ${this.section.fieldGroups.map(s => html`<mateu-fieldgroup .fieldGroup="${s}" .formElement=${this.formElement}></mateu-fieldgroup>`)}
+        `}
         
         <slot></slot>
       </div>
@@ -47,6 +56,38 @@ export class MateuSection extends LitElement {
     .mateu-section:has(h1) {
       padding-top: 0px;
     }
+    
+    .table {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, calc(50% - 20px));
+        grid-column-gap: 20px;
+    }
+    
+    .field {
+        border-bottom: 1px solid lightgrey;
+        display: flex;
+    }
+
+    .field:nth-child(-n+2)  {
+        border-top: 1px solid lightgrey;
+    }
+    
+    .cell {
+        min-height: 2rem;
+        padding-top: 5px;
+    }
+    
+    .caption {
+        font-weight: 500;
+        font-size: var(--lumo-font-size-s);
+        color: var(--lumo-secondary-text-color);
+    }
+    
+    .value {
+        text-align: right;
+        flex: auto;
+    }
+
 
   `
 }

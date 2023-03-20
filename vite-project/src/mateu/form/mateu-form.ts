@@ -13,6 +13,7 @@ import FieldWrapper from "./FieldWrapper";
 import Field from "../dtos/Field";
 import {badge} from "@vaadin/vaadin-lumo-styles";
 import {BadgeType} from "../dtos/BadgeType";
+import {ActionType} from "../dtos/ActionType";
 
 export interface FormElement {
 
@@ -172,7 +173,7 @@ export class MateuForm extends LitElement implements FormElement {
         <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
           <slot></slot>
           ${this.metadata.mainActions.map(a => html`
-            <vaadin-button theme="primary" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
+            <vaadin-button theme="${ActionType.Primary == a.type?'primary':'secondary'}" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
           `)}
         </vaadin-horizontal-layout>
 

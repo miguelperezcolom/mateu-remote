@@ -162,7 +162,7 @@ export class JourneyStarter extends connect(store)(LitElement) {
             ${this.step?html`
 
                         <journey-step  journeyId="${this.journeyId}" stepId="${this.stepId}" .step=${this.step} .setLoading=${this.setLoading}>
-            <vaadin-button theme="secondary" @click=${this.resetJourney}>Back to the beginning</vaadin-button>
+            ${this.tipos.length > 0?html`<vaadin-button theme="secondary" @click=${this.resetJourney}>Back to the beginning</vaadin-button>`:''}
                         </journey-step>
 
                     `:''}

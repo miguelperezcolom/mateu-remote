@@ -1,4 +1,4 @@
-import {css, html, LitElement} from 'lit'
+import {css, html, LitElement, PropertyValues} from 'lit'
 import {customElement, property, state} from 'lit/decorators.js'
 import Crud from "../dtos/Crud";
 import "@vaadin/horizontal-layout";
@@ -91,10 +91,19 @@ export class MateuCrud extends connect(store)(LitElement) {
     super.connectedCallback();
   }
 
+  protected firstUpdated(_changedProperties: PropertyValues) {
+      this.addEventListener('keydown', this.handleKey);
+  }
+
+  private handleKey(e: KeyboardEvent) {
+    if (e.code == 'Enter') {
+      setTimeout(() => this.search());
+    }
+  }
+
   stateChanged(state: any) {
     //debugger;
     console.log('state changed in crud', state)
-
   }
 
   filterChanged(e:Event) {
@@ -147,14 +156,34 @@ export class MateuCrud extends connect(store)(LitElement) {
         </vaadin-horizontal-layout>
       </vaadin-horizontal-layout>
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
-        
-        ${this.metadata?.searchForm.fields.map(f => html`
-          <vaadin-text-field id="${f.id}" label="${f.caption}" @change=${this.filterChanged}></vaadin-text-field>
+        ${this.metadata?.searchForm.fields.slice(0,1).map(f => html`
+          <vaadin-text-field autofocus id="${f.id}" label="${f.caption}" @change=${this.filterChanged} style="flex-grow: 1;"></vaadin-text-field>
         `)}
-        
-        
         <vaadin-button theme="primary" @click="${this.search}">Search</vaadin-button>
-        
+      </vaadin-horizontal-layout>
+
+      <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
+        ${this.metadata?.searchForm.fields.slice(1).map(f => html`
+          ${f.type != 'enum'?html`
+            <vaadin-text-field id="${f.id}" label="${f.caption}"
+                               placeholder="${f.placeholder}"
+                               @change=${this.filterChanged}></vaadin-text-field>
+          `:''}
+          ${f.type == 'enum'?html`
+            
+            <vaadin-combo-box label="${f.caption}" theme="vertical"
+                                @change=${this.filterChanged}
+                           id="${f.id}"
+                              .items="${f.attributes.filter(a => a.key == 'choice').map(a => a.value)}"
+                              item-label-path="key"
+                              item-value-path="value"
+                              placeholder="${f.placeholder}"
+            >
+            </vaadin-combo-box>
+            
+            
+          `:''}
+        `)}
       </vaadin-horizontal-layout>
 
       <vaadin-grid id="grid" .dataProvider="${this.dataProvider}">

@@ -5,6 +5,8 @@ export default interface Section {
 
     caption: string;
 
+    readOnly: boolean;
+
     actions: Action[];
 
     fieldGroups: FieldGroup[];

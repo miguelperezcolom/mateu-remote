@@ -117,6 +117,7 @@ export { store, reset, setLoading, setJourneyTypes, setError, setJourneyType, se
 declare global {
     interface Window {
         __MATEU_REMOTE_BASE_URL__:any;
+        __MATEU_UI_ID__:any;
     }
 }
 

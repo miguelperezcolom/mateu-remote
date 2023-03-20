@@ -7,6 +7,8 @@ export default interface Form extends ViewMetadata {
 
     title: string;
 
+    readOnly: boolean;
+
     subtitle: string;
 
     badges: Badge[];
