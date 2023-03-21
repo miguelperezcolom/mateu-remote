@@ -64,12 +64,14 @@ export class MateuSection extends LitElement {
     }
     
     .field {
-        border-bottom: 1px solid lightgrey;
+        border-bottom: 1px dashed lightgrey;
         display: flex;
     }
 
-    .field:nth-child(-n+2)  {
+    .field:nth-child(n+3)  {
+    /*
         border-top: 1px solid lightgrey;
+        */
     }
     
     .cell {
@@ -78,7 +80,7 @@ export class MateuSection extends LitElement {
     }
     
     .caption {
-        font-weight: 500;
+        font-weight: 800;
         font-size: var(--lumo-font-size-s);
         color: var(--lumo-secondary-text-color);
     }

@@ -23,6 +23,7 @@
     "@vaadin/button": "^23.2.1",
     "@vaadin/checkbox-group": "^23.3.8",
     "@vaadin/combo-box": "^23.3.8",
+    "@vaadin/context-menu": "^23.3.8",
     "@vaadin/date-picker": "^23.3.8",
     "@vaadin/date-time-picker": "^23.3.8",
     "@vaadin/form-layout": "^23.2.1",

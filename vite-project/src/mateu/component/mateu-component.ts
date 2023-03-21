@@ -4,6 +4,7 @@ import Component from "../dtos/Component";
 import {ViewType} from "../dtos/ViewType";
 import '../form/mateu-form'
 import '../crud/mateu-crud'
+import '../result/mateu-result'
 
 
 @customElement('mateu-component')
@@ -48,7 +49,17 @@ export class MateuComponent extends LitElement {
                             .rules=${this.component.rules}
                     ><slot></slot></mateu-crud>`
                     :html``}
-        
+
+            ${this.component?.metadata.type == ViewType.Result?
+                    html`<mateu-result 
+                            .metadata=${this.component.metadata} 
+                            .data=${this.component.data}
+                            journeyId="${this.journeyId}" stepId="${this.stepId}"
+                            .setLoading=${this.setLoading}
+                            .rules=${this.component.rules}
+                    ><slot></slot></mateu-result>`
+                    :html``}
+
         `
     }
 

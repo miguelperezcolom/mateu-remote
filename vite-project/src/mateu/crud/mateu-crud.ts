@@ -1,4 +1,4 @@
-import {css, html, LitElement, PropertyValues} from 'lit'
+import {css, html, LitElement, PropertyValues, TemplateResult} from 'lit'
 import {customElement, property, state} from 'lit/decorators.js'
 import Crud from "../dtos/Crud";
 import "@vaadin/horizontal-layout";
@@ -6,11 +6,17 @@ import "@vaadin/button";
 import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
-import { columnBodyRenderer } from '@vaadin/grid/lit.js';
+import {columnBodyRenderer} from '@vaadin/grid/lit.js';
 import {connect} from "pwa-helpers";
 import {api, runStepAction, store} from "../spikes/starter/store";
 import {Grid, GridDataProvider, GridSorterDefinition} from "@vaadin/vaadin-grid";
 import {Button} from "@vaadin/button";
+import {badge} from "@vaadin/vaadin-lumo-styles";
+import {StatusType} from "../dtos/StatusType";
+import Column from "../dtos/Column";
+import '@vaadin/context-menu';
+import type { ContextMenuOpenedChangedEvent } from '@vaadin/context-menu';
+
 
 /**
  * An example element.
@@ -35,6 +41,12 @@ export class MateuCrud extends connect(store)(LitElement) {
 
   @property()
   data: object | undefined;
+
+  @state()
+  private contextMenuItems = [];
+
+  // @ts-ignore
+  private contextMenuOpened?: boolean;
 
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
@@ -127,6 +139,16 @@ export class MateuCrud extends connect(store)(LitElement) {
     store.dispatch(runStepAction(this.journeyId, this.stepId, 'edit', this.data))
   }
 
+  showMenu(e:Event) {
+    const button = e.currentTarget as Button;
+    // @ts-ignore
+    console.log(button.row);
+    // @ts-ignore
+    console.log(button.actions);
+    // @ts-ignore
+    this.contextMenuItems = button.actions
+  }
+
   runAction(e:Event) {
     const button = e.currentTarget as Button;
     const grid = this.shadowRoot?.getElementById('grid') as Grid
@@ -139,9 +161,55 @@ export class MateuCrud extends connect(store)(LitElement) {
     store.dispatch(runStepAction(this.journeyId, this.stepId, button.getAttribute('actionid')!, extendedData))
   }
 
+  private getThemeForBadgetType(type: StatusType): string {
+    switch (type) {
+      case StatusType.SUCCESS: return 'success';
+      case StatusType.WARNING: return 'warning';
+      case StatusType.DANGER: return 'error';
+      case StatusType.NONE: return 'contrast';
+    }
+    return '';
+  }
+
+  private getColumn(c: Column): TemplateResult {
+    if (c.type == 'Status') {
+      return html`
+            <vaadin-grid-column  path="${c.id}" header="${c.caption}"
+                ${columnBodyRenderer(
+          (row) => {
+            // @ts-ignore
+            const status = row[c.id]
+            return html`<span theme="badge ${this.getThemeForBadgetType(status.type)}">${status.message}</span>`;
+          },
+          []
+      )}
+            </vaadin-grid-column>
+          `;
+    }
+    if (c.type == 'ColumnActionGroup') {
+      return html`
+        <vaadin-grid-column  path="${c.id}" header="${c.caption}"
+                             ${columnBodyRenderer(
+                                 (row) => {
+                                   // @ts-ignore
+                                   const actions = row[c.id]
+                                   return html`<vaadin-icon icon="vaadin:ellipsis-dots-v" class="menu" size="s"
+                                                            .row="${row}" .actions="${actions}" @click="${this.showMenu}"
+                                   ></vaadin-icon>`;
+                                 },
+                                 []
+                             )}
+        </vaadin-grid-column>
+      `;
+    }
+    return html`
+            <vaadin-grid-column path="${c.id}" header="${c.caption}"></vaadin-grid-column>
+        `;
+  }
 
 
   render() {
+    // @ts-ignore
     return html`
 
       <vaadin-horizontal-layout class="header">
@@ -186,12 +254,22 @@ export class MateuCrud extends connect(store)(LitElement) {
         `)}
       </vaadin-horizontal-layout>
 
+
+
+      <vaadin-context-menu
+          open-on="click"
+          .items=${this.contextMenuItems}
+          @opened-changed="${(event: ContextMenuOpenedChangedEvent) => {
+            this.contextMenuOpened = event.detail.value;
+          }}"
+      >
+
       <vaadin-grid id="grid" .dataProvider="${this.dataProvider}">
         <vaadin-grid-selection-column></vaadin-grid-selection-column>
 
-      ${this.metadata?.columns.map(c => html`
-        <vaadin-grid-column path="${c.id}" header="${c.caption}"></vaadin-grid-column>
-      `)}
+      ${this.metadata?.columns.map(c => {
+        return this.getColumn(c)
+      })}
 
         <vaadin-grid-column
             frozen-to-end
@@ -208,6 +286,22 @@ export class MateuCrud extends connect(store)(LitElement) {
   }
 
   static styles = css`
+  ${badge}
+    
+  [theme~='badge'][theme~='warning'] {
+    color: #C7BC1D;
+    background-color: #FFFCC0;
+  }
+  [theme~='badge'][theme~='warning'][theme~='primary'] {
+    color: #ffffff;
+    background-color: #C7BC1D;
+  }
+  
+  .menu {
+    /* color: var(--lumo-secondary-text-color); */
+    color: grey;
+  }
+  
     :host {
 
     }
