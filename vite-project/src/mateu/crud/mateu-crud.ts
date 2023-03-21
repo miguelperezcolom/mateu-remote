@@ -14,8 +14,7 @@ import {Button} from "@vaadin/button";
 import {badge} from "@vaadin/vaadin-lumo-styles";
 import {StatusType} from "../dtos/StatusType";
 import Column from "../dtos/Column";
-import '@vaadin/context-menu';
-import type { ContextMenuOpenedChangedEvent } from '@vaadin/context-menu';
+import '@vaadin/menu-bar';
 
 
 /**
@@ -43,7 +42,7 @@ export class MateuCrud extends connect(store)(LitElement) {
   data: object | undefined;
 
   @state()
-  private contextMenuItems = [];
+  private clickedRow:unknown;
 
   // @ts-ignore
   private contextMenuOpened?: boolean;
@@ -139,26 +138,27 @@ export class MateuCrud extends connect(store)(LitElement) {
     store.dispatch(runStepAction(this.journeyId, this.stepId, 'edit', this.data))
   }
 
-  showMenu(e:Event) {
-    const button = e.currentTarget as Button;
-    // @ts-ignore
-    console.log(button.row);
-    // @ts-ignore
-    console.log(button.actions);
-    // @ts-ignore
-    this.contextMenuItems = button.actions
-  }
-
   runAction(e:Event) {
     const button = e.currentTarget as Button;
     const grid = this.shadowRoot?.getElementById('grid') as Grid
     const obj = {
       // @ts-ignore
-      _selectedRows: grid.selectedItems
+      _selectedRows: grid.selectedItems,
+      _clickedRow: this.clickedRow
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
     store.dispatch(runStepAction(this.journeyId, this.stepId, button.getAttribute('actionid')!, extendedData))
+  }
+
+  itemSelected(e: CustomEvent) {
+    const obj = {
+      // @ts-ignore
+      _clickedRow: e.target.row
+    };
+    // @ts-ignore
+    const extendedData = { ...this.data, ...obj}
+    store.dispatch(runStepAction(this.journeyId, this.stepId, '__row__' + e.detail.value.id, extendedData))
   }
 
   private getThemeForBadgetType(type: StatusType): string {
@@ -192,10 +192,19 @@ export class MateuCrud extends connect(store)(LitElement) {
                              ${columnBodyRenderer(
                                  (row) => {
                                    // @ts-ignore
-                                   const actions = row[c.id]
-                                   return html`<vaadin-icon icon="vaadin:ellipsis-dots-v" class="menu" size="s"
-                                                            .row="${row}" .actions="${actions}" @click="${this.showMenu}"
-                                   ></vaadin-icon>`;
+                                   const actions = row[c.id].actions.map(a => {
+                                     return {
+                                       ...a,text: a.caption
+                                     }
+                                   })
+                                   return html`
+                                     <vaadin-menu-bar
+                                         .items=${[{ text: '···', children: actions }]}
+                                         theme="tertiary"
+                                         .row="${row}"
+                                         @item-selected="${this.itemSelected}"
+                                     ></vaadin-menu-bar>
+                                   </vaadin-icon>`;
                                  },
                                  []
                              )}
@@ -253,17 +262,6 @@ export class MateuCrud extends connect(store)(LitElement) {
           `:''}
         `)}
       </vaadin-horizontal-layout>
-
-
-
-      <vaadin-context-menu
-          open-on="click"
-          .items=${this.contextMenuItems}
-          @opened-changed="${(event: ContextMenuOpenedChangedEvent) => {
-            this.contextMenuOpened = event.detail.value;
-          }}"
-      >
-
       <vaadin-grid id="grid" .dataProvider="${this.dataProvider}">
         <vaadin-grid-selection-column></vaadin-grid-selection-column>
 
@@ -281,7 +279,6 @@ export class MateuCrud extends connect(store)(LitElement) {
             )}
         
         </vaadin-grid>
-      
     `
   }
 
@@ -300,6 +297,7 @@ export class MateuCrud extends connect(store)(LitElement) {
   .menu {
     /* color: var(--lumo-secondary-text-color); */
     color: grey;
+    height: 1.2rem;
   }
   
     :host {
