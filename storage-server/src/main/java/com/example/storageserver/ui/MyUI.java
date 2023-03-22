@@ -1,17 +1,14 @@
 package com.example.storageserver.ui;
 
 import com.example.storageserver.storage.JourneyOutcome;
-import com.example.storageserver.ui.journeyRunner.UserJourneyStarter;
 import io.mateu.mdd.core.annotations.MateuUI;
 import io.mateu.mdd.shared.annotations.Caption;
 import io.mateu.mdd.shared.annotations.MenuOption;
 import io.mateu.mdd.shared.interfaces.JpaCrud;
 import io.mateu.mdd.shared.interfaces.UserJourney;
+import io.mateu.mdd.shared.interfaces.UserJourneyStarter;
 
-@MateuUI(path = "",
-        favIcon = "https://www.wefox.com/favicons/favicon-32x32.png",
-        logo = "logo.svg",
-        stylesheets = "estilo.css")
+@MateuUI(path = "")
 @Caption("")
 public class MyUI {
 

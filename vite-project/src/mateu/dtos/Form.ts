@@ -11,6 +11,8 @@ export default interface Form extends ViewMetadata {
 
     subtitle: string;
 
+    status: Badge;
+
     badges: Badge[];
 
     sections: Section[];

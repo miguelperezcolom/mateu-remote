@@ -5,6 +5,7 @@ import "@vaadin/horizontal-layout";
 import "@vaadin/button";
 import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
+import "@vaadin/vaadin-grid/vaadin-grid-sort-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
 import {columnBodyRenderer} from '@vaadin/grid/lit.js';
 import {connect} from "pwa-helpers";
@@ -46,6 +47,13 @@ export class MateuCrud extends connect(store)(LitElement) {
 
   // @ts-ignore
   private contextMenuOpened?: boolean;
+
+  @state()
+  message = '';
+
+  @state()
+  canDownload = true;
+
 
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
@@ -95,6 +103,7 @@ export class MateuCrud extends connect(store)(LitElement) {
   async fetchCount(filters: string): Promise<number> {
     const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
         "/lists/main/count?filters=" + filters);
+    this.message = `${response.data} elements found.`;
     return response.data;
   }
 
@@ -174,7 +183,7 @@ export class MateuCrud extends connect(store)(LitElement) {
   private getColumn(c: Column): TemplateResult {
     if (c.type == 'Status') {
       return html`
-            <vaadin-grid-column  path="${c.id}" header="${c.caption}"
+            <vaadin-grid-sort-column  path="${c.id}" header="${c.caption}" resizable 
                 ${columnBodyRenderer(
           (row) => {
             // @ts-ignore
@@ -183,12 +192,12 @@ export class MateuCrud extends connect(store)(LitElement) {
           },
           []
       )}
-            </vaadin-grid-column>
+            </vaadin-grid-sort-column>
           `;
     }
     if (c.type == 'ColumnActionGroup') {
       return html`
-        <vaadin-grid-column  path="${c.id}" header="${c.caption}"
+        <vaadin-grid-column  path="${c.id}" header="${c.caption}" width="60px"
                              ${columnBodyRenderer(
                                  (row) => {
                                    // @ts-ignore
@@ -212,7 +221,7 @@ export class MateuCrud extends connect(store)(LitElement) {
       `;
     }
     return html`
-            <vaadin-grid-column path="${c.id}" header="${c.caption}"></vaadin-grid-column>
+            <vaadin-grid-sort-column path="${c.id}" header="${c.caption}" resizable></vaadin-grid-sort-column>
         `;
   }
 
@@ -276,9 +285,22 @@ export class MateuCrud extends connect(store)(LitElement) {
             ${columnBodyRenderer(
                 (row) => html`<vaadin-button theme="tertiary-inline" .row="${row}" @click="${this.edit}">Edit</vaadin-button>`,
                 []
-            )}
+            )}></vaadin-grid-column>
         
         </vaadin-grid>
+      
+      <vaadin-horizontal-layout style="align-items: baseline; width: 100%;" theme="spacing">
+        <div style=" flex-grow: 1;">${this.message}</div>
+        <div style="justify-content: end;">
+          <vaadin-menu-bar
+              .items=${[{ text: 'Export as ...', children: [
+                  {text: 'Excel'},
+                  {text: 'Csv'}
+                ] }]}
+              theme="tertiary"
+          ></vaadin-menu-bar>
+        </div>
+      </vaadin-horizontal-layout>
     `
   }
 

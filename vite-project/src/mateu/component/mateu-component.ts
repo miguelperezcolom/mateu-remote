@@ -5,6 +5,10 @@ import {ViewType} from "../dtos/ViewType";
 import '../form/mateu-form'
 import '../crud/mateu-crud'
 import '../result/mateu-result'
+import '../spikes/starter/journey-starter'
+import '../spikes/starter/journey-step'
+import JourneyStarter from "../dtos/JourneyStarter";
+import JourneyRunner from "../dtos/JourneyRunner";
 
 
 @customElement('mateu-component')
@@ -60,6 +64,14 @@ export class MateuComponent extends LitElement {
                     ><slot></slot></mateu-result>`
                     :html``}
 
+            ${this.component?.metadata.type == ViewType.JourneyStarter?
+                    html`<journey-starter remoteUrl="${(this.component.metadata as JourneyStarter).baseUrl}"></journey-starter>`
+                    :html``}
+
+            ${this.component?.metadata.type == ViewType.JourneyRunner?
+                    html`<journey-starter journeyType="${(this.component.metadata as JourneyRunner).journeyType}"></journey-starter>`
+                    :html``}
+        
         `
     }
 

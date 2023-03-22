@@ -22,7 +22,7 @@ import java.util.UUID;
 @Service
 public class ExternalTaskPoller {
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 120000)
     public void scheduleFixedDelayTask() {
         poll();
     }
