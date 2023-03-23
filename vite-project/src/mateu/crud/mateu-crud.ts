@@ -191,7 +191,8 @@ export class MateuCrud extends connect(store)(LitElement) {
   private getColumn(c: Column): TemplateResult {
     if (c.type == 'Status') {
       return html`
-            <vaadin-grid-sort-column  path="${c.id}" header="${c.caption}" resizable 
+            <vaadin-grid-sort-column  path="${c.id}" header="${c.caption}" resizable
+                                      width="${c.width}"
                 ${columnBodyRenderer(
           (row) => {
             // @ts-ignore
@@ -199,7 +200,7 @@ export class MateuCrud extends connect(store)(LitElement) {
             return html`<span theme="badge ${this.getThemeForBadgetType(status.type)}">${status.message}</span>`;
           },
           []
-      )}
+      )}>
             </vaadin-grid-sort-column>
           `;
     }
@@ -221,7 +222,7 @@ export class MateuCrud extends connect(store)(LitElement) {
                                          .row="${row}"
                                          @item-selected="${this.itemSelected}"
                                      ></vaadin-menu-bar>
-                                   </vaadin-icon>`;
+                                   `;
                                  },
                                  []
                              )}
@@ -229,7 +230,9 @@ export class MateuCrud extends connect(store)(LitElement) {
       `;
     }
     return html`
-            <vaadin-grid-sort-column path="${c.id}" header="${c.caption}" resizable></vaadin-grid-sort-column>
+            <vaadin-grid-sort-column path="${c.id}" header="${c.caption}" resizable
+                                     width="${c.width}"
+            ></vaadin-grid-sort-column>
         `;
   }
 
