@@ -147,7 +147,7 @@ export class MateuUi extends connect(store)(LitElement) {
     }
         
     .container {
-      max-width: 1024px;
+      max-width: 1124px;
       margin: auto;
     }
 

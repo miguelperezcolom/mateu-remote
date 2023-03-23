@@ -10,7 +10,7 @@ import "@vaadin/vaadin-grid/vaadin-grid-column";
 import {columnBodyRenderer} from '@vaadin/grid/lit.js';
 import {connect} from "pwa-helpers";
 import {api, runStepAction, store} from "../spikes/starter/store";
-import {Grid, GridDataProvider, GridSorterDefinition} from "@vaadin/vaadin-grid";
+import {Grid, GridDataProvider} from "@vaadin/vaadin-grid";
 import {Button} from "@vaadin/button";
 import {badge} from "@vaadin/vaadin-lumo-styles";
 import {StatusType} from "../dtos/StatusType";
@@ -57,12 +57,20 @@ export class MateuCrud extends connect(store)(LitElement) {
 
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
-    const { page, pageSize, sortOrders } = params;
+    const { page, pageSize } = params;
 
     const { rows, count } = await this.fetchData({
       page,
       pageSize,
-      sortOrders,
+      sortOrders: btoa(JSON.stringify(params.sortOrders.map(o => {
+        let direction = 'None';
+        if ('asc' == o.direction) direction = 'Ascending';
+        if ('desc' == o.direction) direction = 'Descending';
+        return {
+          column: o.path,
+          order: direction
+        }
+      }))),
       filters: btoa(JSON.stringify(this.data)),
     });
 
@@ -78,7 +86,7 @@ export class MateuCrud extends connect(store)(LitElement) {
     page: number;
     pageSize: number;
     filters: string;
-    sortOrders: GridSorterDefinition[];
+    sortOrders: string;
   }) {
     const rows = await this.fetchRows(params);
 
@@ -92,11 +100,11 @@ export class MateuCrud extends connect(store)(LitElement) {
     page: number;
     pageSize: number;
     filters: string;
-    sortOrders: GridSorterDefinition[];
+    sortOrders: string;
   }): Promise<any[]> {
     const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
         "/lists/main/rows?page=" + params.page + "&page_size=" + params.pageSize +
-        "&ordering=&filters=" + params.filters);
+        "&ordering=" + params.sortOrders + "&filters=" + params.filters);
     return response.data;
   }
 
@@ -130,7 +138,7 @@ export class MateuCrud extends connect(store)(LitElement) {
     const input = e.target as HTMLInputElement;
     const obj = {};
     // @ts-ignore
-    obj[input.id] = input.value;
+    obj[input.id] = input.value || null;
     this.data = { ...this.data, ...obj}
   }
 
@@ -243,7 +251,9 @@ export class MateuCrud extends connect(store)(LitElement) {
       </vaadin-horizontal-layout>
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         ${this.metadata?.searchForm.fields.slice(0,1).map(f => html`
-          <vaadin-text-field autofocus id="${f.id}" label="${f.caption}" @change=${this.filterChanged} style="flex-grow: 1;"></vaadin-text-field>
+          <vaadin-text-field autofocus id="${f.id}" label="${f.caption}" @change=${this.filterChanged}
+                             placeholder="${f.placeholder}"
+                             style="flex-grow: 1;"></vaadin-text-field>
         `)}
         <vaadin-button theme="primary" @click="${this.search}">Search</vaadin-button>
       </vaadin-horizontal-layout>

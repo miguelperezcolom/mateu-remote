@@ -8,12 +8,18 @@
 
 <script>
 
-    fetch('https://remote.mateu.io/mateu/v1/journey-types')
+//    fetch('https://remote.mateu.io/mateu/v1/journey-types')
+
+    fetch('https://wipo-ms-term-life-poc.30d437346.eu-central-1.wipo.wefox.cloud/mateu/v1/journey-types')
         .then(response => response.json())
-        .then(data => console.log('journey-types', data));
+        .then(data => {
+            console.log('journey-types', data);
+            document.getElementById('output').innerHTML = data;
+        });
 
 </script>
 
+<div id="output"></div>
 
 </body>
 </html>
