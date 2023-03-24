@@ -1,10 +1,13 @@
 import {customElement, property} from "lit/decorators.js";
 import {css, html, LitElement} from "lit";
-import Step from "../../dtos/Step";
+import Step from "../../api/dtos/Step";
 import '../../view/mateu-view';
 
 @customElement('journey-step')
 export class JourneyStep extends LitElement {
+
+    @property()
+    baseUrl = '';
 
     @property()
     journeyId = '';
@@ -23,13 +26,14 @@ export class JourneyStep extends LitElement {
         super.connectedCallback();
     }
 
-
     render() {
         return html`<mateu-view 
                 .view=${this.step?.view} 
                 journeyId="${this.journeyId}" 
                 stepId="${this.stepId}" 
-                .setLoading=${this.setLoading}><slot></slot></mateu-view>`
+                .setLoading=${this.setLoading}
+                baseUrl="${this.baseUrl}"
+        ><slot></slot></mateu-view>`
     }
 
     static styles = css`

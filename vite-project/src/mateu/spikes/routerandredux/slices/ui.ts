@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
-import UI from '../../../dtos/UI'
+import UI from '../../../api/dtos/UI'
 import {router} from "../router";
 import {Context} from "@vaadin/router";
-import Menu from "../../../dtos/Menu";
+import Menu from "../../../api/dtos/Menu";
 
 const initialState = {
     loading: false,

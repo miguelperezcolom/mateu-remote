@@ -5,8 +5,8 @@ import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/checkbox-group'
 import '@vaadin/vaadin-checkbox'
     import type { CheckboxGroupValueChangedEvent } from '@vaadin/checkbox-group';
-import Field from "../../dtos/Field";
-import Value from "../../dtos/Value";
+import Field from "../../api/dtos/Field";
+import Value from "../../api/dtos/Value";
 
 
 @customElement('field-closedlist')

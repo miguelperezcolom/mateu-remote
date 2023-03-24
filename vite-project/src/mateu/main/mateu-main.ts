@@ -1,9 +1,9 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import MateuClient from "./MateuClient";
-import UI from "../dtos/UI";
+import UI from "../api/dtos/UI";
 import '../view/mateu-view'
-import View from "../dtos/View";
+import View from "../api/dtos/View";
 
 /**
  * An example element.

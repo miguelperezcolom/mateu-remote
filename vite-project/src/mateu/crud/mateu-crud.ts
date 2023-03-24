@@ -1,6 +1,6 @@
 import {css, html, LitElement, PropertyValues, TemplateResult} from 'lit'
 import {customElement, property, state} from 'lit/decorators.js'
-import Crud from "../dtos/Crud";
+import Crud from "../api/dtos/Crud";
 import "@vaadin/horizontal-layout";
 import "@vaadin/button";
 import "@vaadin/vaadin-grid";
@@ -8,14 +8,14 @@ import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-sort-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
 import {columnBodyRenderer} from '@vaadin/grid/lit.js';
-import {connect} from "pwa-helpers";
-import {api, runStepAction, store} from "../spikes/starter/store";
 import {Grid, GridDataProvider} from "@vaadin/vaadin-grid";
 import {Button} from "@vaadin/button";
 import {badge} from "@vaadin/vaadin-lumo-styles";
-import {StatusType} from "../dtos/StatusType";
-import Column from "../dtos/Column";
+import {StatusType} from "../api/dtos/StatusType";
+import Column from "../api/dtos/Column";
 import '@vaadin/menu-bar';
+import axios from "axios";
+import MateuApiClient from "../api/MateuApiClient";
 
 
 /**
@@ -25,10 +25,13 @@ import '@vaadin/menu-bar';
  * @csspart button - The button
  */
 @customElement('mateu-crud')
-export class MateuCrud extends connect(store)(LitElement) {
+export class MateuCrud extends LitElement {
   /**
    * Copy for the read the docs hint.
    */
+
+  @property()
+  baseUrl = ''
 
   @property()
   journeyId!: string
@@ -102,14 +105,14 @@ export class MateuCrud extends connect(store)(LitElement) {
     filters: string;
     sortOrders: string;
   }): Promise<any[]> {
-    const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
+    const response = await axios.get(this.baseUrl + "/journeys/" + this.journeyId + "/steps/" + this.stepId +
         "/lists/main/rows?page=" + params.page + "&page_size=" + params.pageSize +
         "&ordering=" + params.sortOrders + "&filters=" + params.filters);
     return response.data;
   }
 
   async fetchCount(filters: string): Promise<number> {
-    const response = await api.get("/journeys/" + this.journeyId + "/steps/" + this.stepId +
+    const response = await axios.get(this.baseUrl + "/journeys/" + this.journeyId + "/steps/" + this.stepId +
         "/lists/main/count?filters=" + filters);
     this.message = `${response.data} elements found.`;
     return response.data;
@@ -152,7 +155,8 @@ export class MateuCrud extends connect(store)(LitElement) {
     };
     // @ts-ignore
     this.data = { ...this.data, ...obj}
-    store.dispatch(runStepAction(this.journeyId, this.stepId, 'edit', this.data))
+    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+        'edit', this.data)
   }
 
   runAction(e:Event) {
@@ -165,7 +169,8 @@ export class MateuCrud extends connect(store)(LitElement) {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    store.dispatch(runStepAction(this.journeyId, this.stepId, button.getAttribute('actionid')!, extendedData))
+    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+        button.getAttribute('actionid')!, extendedData)
   }
 
   itemSelected(e: CustomEvent) {
@@ -175,7 +180,8 @@ export class MateuCrud extends connect(store)(LitElement) {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    store.dispatch(runStepAction(this.journeyId, this.stepId, '__row__' + e.detail.value.id, extendedData))
+    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+        '__row__' + e.detail.value.id, extendedData)
   }
 
   private getThemeForBadgetType(type: StatusType): string {

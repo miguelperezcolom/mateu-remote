@@ -4,7 +4,7 @@ import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@polymer/paper-toggle-button'
 import '@vaadin/input-container'
-import Field from "../../dtos/Field";
+import Field from "../../api/dtos/Field";
 
 
 @customElement('field-toggle')

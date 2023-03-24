@@ -1,17 +1,16 @@
 import {customElement, property} from "lit/decorators.js";
 import {css, html, LitElement} from "lit";
-import {connect} from "pwa-helpers";
-import {getUi, setJourneyType, store} from "./store";
-import UI from "../../dtos/UI";
+import UI from "../../api/dtos/UI";
 import '@vaadin/vertical-layout'
 import '@vaadin/app-layout'
 import '@vaadin/app-layout/vaadin-drawer-toggle'
 import '@vaadin/vaadin-tabs'
 import '@vaadin/vaadin-tabs/vaadin-tab'
 import './journey-starter'
-import {MenuType} from "../../dtos/MenuType";
+import {MenuType} from "../../api/dtos/MenuType";
 import {MenuBarItem, MenuBarItemSelectedEvent} from "@vaadin/menu-bar";
 import "@vaadin/menu-bar";
+import MateuApiClient from "../../api/MateuApiClient";
 
 interface MyMenuBarItem extends MenuBarItem {
 
@@ -21,7 +20,10 @@ interface MyMenuBarItem extends MenuBarItem {
 
 
 @customElement('mateu-ui')
-export class MateuUi extends connect(store)(LitElement) {
+export class MateuUi extends LitElement {
+
+    @property()
+    baseUrl = ''
 
     @property()
     uiId = '';
@@ -41,13 +43,12 @@ export class MateuUi extends connect(store)(LitElement) {
     @property()
     selectedItem?: MenuBarItem;
 
-    stateChanged(state: any) {
-        this.loading = false;
-
-        //debugger;
-        this.ui = state.tiposJourney.ui;
-        this.journeyTypeId = state.tiposJourney.journeyType;
-        this.items = this.ui?.menu.map(m => {
+    async connectedCallback() {
+        super.connectedCallback();
+        this.loading = true;
+        this.ui = await new MateuApiClient(this.baseUrl).fetchUi(this.uiId);
+        console.log('ui', this.ui)
+        this.items = this.ui?.menu?.map(m => {
             return {
                 journeyTypeId: m.journeyTypeId,
                 text: m.caption,
@@ -59,30 +60,24 @@ export class MateuUi extends connect(store)(LitElement) {
                 }):undefined
             }
         });
-
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.loading = true;
-        store.dispatch(getUi(this.uiId))
+        console.log('items', this.items)
     }
 
     selectJourney(event: Event) {
         let journeyTypeId = (event.currentTarget as HTMLElement).getAttribute('journeytypeid');
-        store.dispatch(setJourneyType(journeyTypeId))
+        // @ts-ignore
+        this.journeyTypeId = journeyTypeId
     }
 
     itemSelected(event: MenuBarItemSelectedEvent) {
         let item = event.detail.value as MyMenuBarItem
-        store.dispatch(setJourneyType(item.journeyTypeId))
+        this.journeyTypeId = item.journeyTypeId
     }
 
 
     render() {
        return html`
         ${this.ui?html`
-
             <vaadin-vertical-layout style="align-items: center">
 
             <vaadin-app-layout>
@@ -108,19 +103,19 @@ export class MateuUi extends connect(store)(LitElement) {
                 
                 ${this.ui.homeJourneyTypeId?html`
 
-                    <journey-starter journeytypeid="${this.ui.homeJourneyTypeId}"></journey-starter>
+                    <journey-starter journeytypeid="${this.ui.homeJourneyTypeId}" baseUrl="${this.baseUrl}"></journey-starter>
                     
                 `:''}
 
             ${this.journeyTypeId?html`
 
-                    <journey-starter journeytypeid=${this.journeyTypeId}></journey-starter>
+                    <journey-starter journeytypeid=${this.journeyTypeId} baseUrl="${this.baseUrl}"></journey-starter>
                     
                 `:''}
 
             </vaadin-vertical-layout>
         
-        `:``}`
+        `:html`<h1>No UI</h1>`}`
     }
 
     static styles = css`

@@ -1,6 +1,6 @@
 import {css, html, LitElement} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
-import Field from "../dtos/Field";
+import Field from "../api/dtos/Field";
 import Component from "./fields/interfaces/Component";
 import {mapInputTypeToFieldType} from "./fields/FieldTypeMapper";
 import './fields/field-text'
@@ -50,28 +50,46 @@ export class MateuField extends LitElement {
   enabled!: boolean
 
   @property()
-  fieldWrapper!: FieldWrapper
+  component: Component | undefined;
 
+  @property()
+  fieldWrapper?: FieldWrapper
+
+  async updated() {
+    this.setupComponent();
+    // No need to call any other method here.
+  }
+
+  setupComponent() {
+    if (this.component) {
+      this.component.setLabel(this.field.caption);
+      this.component.setPlaceholder(this.field.placeholder)
+      this.component.setField(this.field);
+      this.component.setValue(this.value)
+      this.component.setRequired(this.field.validations.length > 0)
+    }
+  }
 
   firstUpdated() {
     const element = document.createElement(mapInputTypeToFieldType(this.field.type, this.field.stereotype));
+    element.setAttribute('id', 'field')
     const container = this.shadowRoot!.getElementById('container')!;
-    const component = element as unknown as Component;
-    component.onValueChanged = (e) => {
+    this.component = element as unknown as Component;
+    this.component.onValueChanged = (e) => {
       let change = new CustomEvent('change', {detail: {
           key: this.field.id,
           value: e.value
         }});
       this.dispatchEvent(change);
     }
-    component.setLabel(this.field.caption);
-    component.setPlaceholder(this.field.placeholder)
-    component.setField(this.field);
-    component.setValue(this.value)
-    component.setRequired(this.field.validations.length > 0)
+    this.setupComponent();
     container.appendChild(element);
-    const wrapper = this.shadowRoot!.getElementById('wrapper')!;
-    this.fieldWrapper.container = wrapper;
+    const wrapper = this.shadowRoot!.getElementById('wrapper') as unknown;
+    if (this.fieldWrapper) {
+      this.fieldWrapper.container = wrapper as HTMLElement;
+    } else {
+      console.log('missing wrapper for ', this.field.id)
+    }
   }
 
   render() {

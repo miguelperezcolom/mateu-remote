@@ -4,11 +4,10 @@ import "@vaadin/horizontal-layout";
 import "@vaadin/button";
 import "@vaadin/icons";
 import "@vaadin/icon";
-import {connect} from "pwa-helpers";
-import {runStepAction, store} from "../spikes/starter/store";
 import {Button} from "@vaadin/button";
-import Result from "../dtos/Result";
-import {ResultType} from "../dtos/ResultType";
+import Result from "../api/dtos/Result";
+import {ResultType} from "../api/dtos/ResultType";
+import MateuApiClient from "../api/MateuApiClient";
 
 /**
  * An example element.
@@ -17,10 +16,13 @@ import {ResultType} from "../dtos/ResultType";
  * @csspart button - The button
  */
 @customElement('mateu-result')
-export class MateuResult extends connect(store)(LitElement) {
+export class MateuResult extends LitElement {
   /**
    * Copy for the read the docs hint.
    */
+
+  @property()
+  baseUrl = ''
 
   @property()
   journeyId!: string
@@ -40,7 +42,8 @@ export class MateuResult extends connect(store)(LitElement) {
 
   runAction(e:Event) {
     const button = e.currentTarget as Button;
-    store.dispatch(runStepAction(this.journeyId, this.stepId, button.getAttribute('actionid')!, {}))
+    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+        button.getAttribute('actionid')!, {})
   }
 
   getIcon(resultType: ResultType): string {

@@ -1,19 +1,19 @@
 import {css, html, LitElement} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
-import Form from "../dtos/Form";
+import Form from "../api/dtos/Form";
 import '../section/mateu-section'
 import '@vaadin/horizontal-layout'
 import '@vaadin/vaadin-notification'
 import '@vaadin/button'
 import {notificationRenderer} from 'lit-vaadin-helpers';
-import {runStepAction, store} from "../spikes/starter/store";
-import Rule from "../dtos/Rule";
+import Rule from "../api/dtos/Rule";
 import FieldsMap from "./FieldsMap";
 import FieldWrapper from "./FieldWrapper";
-import Field from "../dtos/Field";
+import Field from "../api/dtos/Field";
 import {badge} from "@vaadin/vaadin-lumo-styles";
-import {BadgeType} from "../dtos/BadgeType";
-import {ActionType} from "../dtos/ActionType";
+import {BadgeType} from "../api/dtos/BadgeType";
+import {ActionType} from "../api/dtos/ActionType";
+import MateuApiClient from "../api/MateuApiClient";
 
 export interface FormElement {
 
@@ -93,6 +93,9 @@ export class MateuForm extends LitElement implements FormElement {
    * Copy for the read the docs hint.
    */
   @property()
+  baseUrl = ''
+
+  @property()
   metadata!: Form
 
   @property()
@@ -123,14 +126,23 @@ export class MateuForm extends LitElement implements FormElement {
   @property()
   setLoading!: (loading: boolean) => void;
 
-  connectedCallback() {
-    super.connectedCallback();
+  async updated() {
+    this.setUp()
+    // No need to call any other method here.
+  }
+
+  setUp() {
     this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
         .forEach(f => this.fieldsMap.map.set(f, new FieldWrapper(f)))
     setTimeout(() => this.runRules());
   }
 
-  runAction(event: Event) {
+  connectedCallback() {
+    super.connectedCallback();
+    this.setUp()
+  }
+
+  async runAction(event: Event) {
     const requiredFields = this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
         .filter(f => f.validations.length > 0);
     // @ts-ignore
@@ -142,7 +154,17 @@ export class MateuForm extends LitElement implements FormElement {
     } else {
       const actionId = (event.target as HTMLElement).getAttribute('actionId');
       this.setLoading(true)
-      store.dispatch(runStepAction(this.journeyId, this.stepId, actionId!, this.data))
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
+      let actionCalledEvent = new CustomEvent('action-called', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          message: 'Something important happened'
+        }
+      });
+      this.dispatchEvent(actionCalledEvent);
+      this.setLoading(false)
+      console.log('event dispatched')
     }
   }
 

@@ -1,4 +1,4 @@
-import UI from "../dtos/UI";
+import UI from "../api/dtos/UI";
 import json from '../../mocks/ui.json'
 
 export default class MateuClient {

@@ -9,8 +9,11 @@ export class LandingComponent extends LitElement {
     @property()
     uiId = window.__MATEU_UI_ID__;
 
+    @property()
+    baseUrl = window.__MATEU_REMOTE_BASE_URL__;
+
     render() {
-        return html`<mateu-ui uiId="${this.uiId}">
+        return html`<mateu-ui uiId="${this.uiId}" baseUrl="${this.baseUrl}">
         </mateu-ui>`
     }
 

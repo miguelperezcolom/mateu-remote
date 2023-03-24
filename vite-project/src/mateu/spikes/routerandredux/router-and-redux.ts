@@ -4,8 +4,8 @@ import {router} from "./router";
 import {Route} from "@vaadin/router";
 import {connect} from "pwa-helpers";
 import {store} from "./store";
-import UI from "../../dtos/UI";
-import Menu from "../../dtos/Menu";
+import UI from "../../api/dtos/UI";
+import Menu from "../../api/dtos/Menu";
 
 
 @customElement('router-and-redux')

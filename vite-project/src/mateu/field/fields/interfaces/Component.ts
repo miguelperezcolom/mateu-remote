@@ -1,5 +1,5 @@
 import ValueChangedEvent from "./ValueChangedEvent";
-import Field from "../../../dtos/Field";
+import Field from "../../../api/dtos/Field";
 
 export default interface Component {
 

@@ -1,4 +1,4 @@
-import Field from "../dtos/Field";
+import Field from "../api/dtos/Field";
 import FieldWrapper from "./FieldWrapper";
 
 export default class FieldsMap {

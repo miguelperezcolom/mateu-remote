@@ -1,6 +1,6 @@
 import {css, html, LitElement} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
-import Field from "../dtos/Field";
+import Field from "../api/dtos/Field";
 import Component from "../field/fields/interfaces/Component";
 import {mapInputTypeToFieldType} from "../field/fields/FieldTypeMapper";
 import './fields/field-text'

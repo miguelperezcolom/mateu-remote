@@ -3,8 +3,8 @@ import {html, LitElement, css, PropertyValues} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/multi-select-combo-box';
-import Field from "../../dtos/Field";
-import Value from "../../dtos/Value";
+import Field from "../../api/dtos/Field";
+import Value from "../../api/dtos/Value";
 import {
     ComboBoxDataProvider,
     ComboBoxDataProviderParams,

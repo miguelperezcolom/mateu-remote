@@ -3,7 +3,7 @@ import {html, css, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-text-field'
-import Field from "../../dtos/Field";
+import Field from "../../api/dtos/Field";
 
 
 @customElement('field-text')

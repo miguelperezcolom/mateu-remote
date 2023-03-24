@@ -2,7 +2,7 @@ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import '../component/mateu-component';
 import '../crud/mateu-crud';
-import View from "../dtos/View";
+import View from "../api/dtos/View";
 
 /**
  * An example element.
@@ -15,6 +15,9 @@ export class MateuView extends LitElement {
   /**
    * Copy for the read the docs hint.
    */
+
+  @property()
+  baseUrl = ''
 
   @property()
   view!: View
@@ -36,7 +39,10 @@ export class MateuView extends LitElement {
     return html`
       <div>
         ${this.view?.components.map(c => html`<mateu-component 
-            .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" .setLoading=${this.setLoading}>
+            .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" 
+            .setLoading=${this.setLoading}
+            baseUrl="${this.baseUrl}"
+        >
           <slot></slot></mateu-component>
         `)}</div>`
   }

@@ -4,7 +4,7 @@ import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-checkbox'
 import '@vaadin/checkbox-group'
-import Field from "../../dtos/Field";
+import Field from "../../api/dtos/Field";
 
 
 @customElement('field-boolean')

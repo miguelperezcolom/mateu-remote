@@ -3,7 +3,7 @@ import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/date-picker'
-import Field from "../../dtos/Field";
+import Field from "../../api/dtos/Field";
 
 
 @customElement('field-date')

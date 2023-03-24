@@ -1,18 +1,20 @@
-import {customElement, property} from "lit/decorators.js";
+import {customElement, property, state} from "lit/decorators.js";
 import {css, html, LitElement} from "lit";
-import {connect} from "pwa-helpers";
-import {createJourney, fetchItems, getJourneyStatus, getStep, reset, setJourneyType, store} from "./store";
-import JourneyType from "../../dtos/JourneyType";
+import JourneyType from "../../api/dtos/JourneyType";
 import '../dynamic/dynamic-form'
 import '@vaadin/button'
 import '@vaadin/horizontal-layout'
 import './journey-step'
-import Journey from "../../dtos/Journey";
-import Step from "../../dtos/Step";
+import Journey from "../../api/dtos/Journey";
+import Step from "../../api/dtos/Step";
 import {nanoid} from "@reduxjs/toolkit";
+import MateuApiClient from "../../api/MateuApiClient";
 
 @customElement('journey-starter')
-export class JourneyStarter extends connect(store)(LitElement) {
+export class JourneyStarter extends LitElement {
+
+    @property()
+    baseUrl = ''
 
     @property()
     journeyTypeId: string | undefined = undefined;
@@ -30,9 +32,6 @@ export class JourneyStarter extends connect(store)(LitElement) {
     tipos:JourneyType[] = [];
 
     @property()
-    journeyType: string | undefined = undefined;
-
-    @property()
     journeyId: string | undefined = undefined;
 
     @property()
@@ -47,81 +46,63 @@ export class JourneyStarter extends connect(store)(LitElement) {
     @property()
     completed: boolean = false;
 
-    stateChanged(state: any) {
-        this.loading = false;
-        if (!this.journeyTypeId) this.tipos = state.tiposJourney.journeyTypes;
-        this.cargando = state.tiposJourney.loading;
-        this.error = state.tiposJourney.error;
-        this.journeyType = state.tiposJourney.journeyType;
-        this.journeyId = state.tiposJourney.journeyId;
-        this.journey = state.tiposJourney.journey;
-        this.stepId = state.tiposJourney.stepId;
-        this.step = state.tiposJourney.step;
-        this.completed = state.tiposJourney.completed;
+    @state()
+    version = ''
 
-        //debugger;
-
-        if (!this.tipos) {
-            this.loading = true;
-            store.dispatch(fetchItems())
-        } else if (this.journeyType) {
-            if (!this.journeyId) {
-                // generate journey id
-                // and store journey id
-                //const journeyId = this.journeyTypeId?.startsWith('fixed_')?this.journeyType:nanoid();
-                const journeyId = nanoid();
-                // call api to start journey
-                this.loading = true;
-                store.dispatch(createJourney(this.journeyType, journeyId));
-            } else {
-                if (!this.journey) {
-                    this.loading = true;
-                    store.dispatch(getJourneyStatus(this.journeyId));
-                } else {
-                    if (this.stepId) {
-                        if (!this.step) {
-                            this.loading = true;
-                            store.dispatch(getStep(this.journeyId, this.stepId));
-                        } else {
-
-                        }
-                    } else {
-
-                    }
-                }
-            }
+    async connectedCallback() {
+        super.connectedCallback();
+        if (this.journeyTypeId) {
+            this.journeyId = nanoid()
+            await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
+            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+            this.stepId = this.journey.currentStepId
+            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+        } else {
+            this.tipos = await new MateuApiClient(this.baseUrl).fetchJourneyTypes()
         }
-
     }
 
-    updated(changedProperties: Map<string, unknown>) {
+    async updated(changedProperties: Map<string, unknown>) {
         if (changedProperties.has("journeyTypeId")) {
-            store.dispatch(setJourneyType(this.journeyTypeId))
+            this.loading = true
+            this.journeyId = nanoid()
+            await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
+            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+            this.stepId = this.journey.currentStepId
+            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+            this.loading = false
         }
 
         // No need to call any other method here.
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        if (this.journeyTypeId) {
-            store.dispatch(setJourneyType(this.journeyTypeId))
-        } else {
-            store.dispatch(fetchItems())
-        }
-    }
-
-    startJourney(event: Event) {
-        const typeId = (event.target as HTMLElement).getAttribute('typeId');
-        store.dispatch(setJourneyType(typeId))
+    async startJourney(event: Event) {
+        this.loading = true
+        // @ts-ignore
+        this.journeyTypeId = (event.target as HTMLElement).getAttribute('typeId');
+        this.journeyId = nanoid()
+        await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
+        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId)
+        this.stepId = this.journey.currentStepId
+        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+        this.loading = false
     }
 
     resetJourney() {
-        store.dispatch(reset())
+        this.journeyId = undefined
+        this.journeyTypeId = undefined
     }
 
     setLoading(loading: boolean) {
+        console.log('setLoading', loading)
         this.loading = loading;
+    }
+
+    async onActionCalled(event: CustomEvent) {
+        console.log('action called', event)
+        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+        this.stepId = this.journey.currentStepId
+        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId!, this.stepId)
     }
 
     render() {
@@ -129,19 +110,7 @@ export class JourneyStarter extends connect(store)(LitElement) {
 
             <div class="lds-roller" style="display: ${this.loading?'':'none'};"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 
-            <!--
-            <div>cargando = ${this.cargando}</div>
-            <div>error = ${this.error}</div>
-            <div>journey types = ${this.tipos}</div>
-            <div>journey type = ${this.journeyType}</div>
-            <div>journey id = ${this.journeyId}</div>
-            <div>journey = ${this.journey}</div>
-            <div>step id = ${this.stepId}</div>
-            <div>step = ${this.step}</div>
-            <div>completed = ${this.completed}</div>
-            -->
-        
-            ${!this.journeyType?html`
+            ${!this.journeyTypeId?html`
 
                 ${this.tipos?html`
                             <h1>Available journey types</h1>
@@ -150,7 +119,8 @@ export class JourneyStarter extends connect(store)(LitElement) {
                 <vaadin-horizontal-layout theme="spacing padding" style="width: 100%;">
                     <div style="flex-grow: 1"><h2>${s.name}</h2></div>
                     <vaadin-horizontal-layout style="align-items: center;">
-                        <vaadin-button theme="primary" @click=${this.startJourney} typeId="${s.id}">Start journey</vaadin-button>
+                        <vaadin-button theme="primary" @click=${this.startJourney} 
+                                       typeId="${s.id}">Start journey</vaadin-button>
                     </vaadin-horizontal-layout>
                 </vaadin-horizontal-layout>
             </div>`)}
@@ -161,12 +131,22 @@ export class JourneyStarter extends connect(store)(LitElement) {
                     `:html``}
 
             ${this.step?html`
-
-                        <journey-step  journeyId="${this.journeyId}" stepId="${this.stepId}" .step=${this.step} .setLoading=${this.setLoading}>
-            ${this.tipos.length > 0?html`<vaadin-button theme="secondary" @click=${this.resetJourney}>Back to the beginning</vaadin-button>`:''}
+                        <journey-step
+                                id="step"
+                                journeyId="${this.journeyId}" 
+                                       stepId="${this.stepId}" 
+                                       .step=${this.step} 
+                                       .setLoading=${this.setLoading}
+                                       baseUrl="${this.baseUrl}"
+                                       @action-called=${this.onActionCalled}
+                                version="${this.version}"
+                        >
+            ${this.tipos.length > 0?html`<vaadin-button theme="secondary" 
+                                                        @click=${this.resetJourney}
+                                                >Back to the beginning</vaadin-button>`:''}
                         </journey-step>
 
-                    `:''}
+                    `:html`<h1>No step</h1>`}
             
             ${this.completed?html`<h1>Done!</h1>
 

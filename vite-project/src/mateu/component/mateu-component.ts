@@ -1,18 +1,21 @@
 import {customElement, property} from "lit/decorators.js";
 import {css, html, LitElement} from "lit";
-import Component from "../dtos/Component";
-import {ViewType} from "../dtos/ViewType";
+import Component from "../api/dtos/Component";
+import {ViewType} from "../api/dtos/ViewType";
 import '../form/mateu-form'
 import '../crud/mateu-crud'
 import '../result/mateu-result'
 import '../spikes/starter/journey-starter'
 import '../spikes/starter/journey-step'
-import JourneyStarter from "../dtos/JourneyStarter";
-import JourneyRunner from "../dtos/JourneyRunner";
+import JourneyStarter from "../api/dtos/JourneyStarter";
+import JourneyRunner from "../api/dtos/JourneyRunner";
 
 
 @customElement('mateu-component')
 export class MateuComponent extends LitElement {
+
+    @property()
+    baseUrl = ''
 
     @property()
     component: Component | undefined;
@@ -26,11 +29,6 @@ export class MateuComponent extends LitElement {
     @property()
     setLoading!: (loading: boolean) => void;
 
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
-
     render() {
         return html`
         
@@ -38,9 +36,11 @@ export class MateuComponent extends LitElement {
                     html`<mateu-form 
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
-                            journeyId="${this.journeyId}" stepId="${this.stepId}"
+                            journeyId="${this.journeyId}" 
+                            stepId="${this.stepId}"
                             .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
+                            baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-form>`
                     :html``}
 
@@ -48,9 +48,11 @@ export class MateuComponent extends LitElement {
                     html`<mateu-crud 
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
-                            journeyId="${this.journeyId}" stepId="${this.stepId}"
+                            journeyId="${this.journeyId}" 
+                            stepId="${this.stepId}"
                             .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
+                            baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-crud>`
                     :html``}
 
@@ -61,15 +63,22 @@ export class MateuComponent extends LitElement {
                             journeyId="${this.journeyId}" stepId="${this.stepId}"
                             .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
+                            baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-result>`
                     :html``}
 
             ${this.component?.metadata.type == ViewType.JourneyStarter?
-                    html`<journey-starter remoteUrl="${(this.component.metadata as JourneyStarter).baseUrl}"></journey-starter>`
+                    html`<journey-starter 
+                            remoteUrl="${(this.component.metadata as JourneyStarter).baseUrl}"
+                            baseUrl="${this.baseUrl}"
+                    ></journey-starter>`
                     :html``}
 
             ${this.component?.metadata.type == ViewType.JourneyRunner?
-                    html`<journey-starter journeyType="${(this.component.metadata as JourneyRunner).journeyType}"></journey-starter>`
+                    html`<journey-starter 
+                            journeyType="${(this.component.metadata as JourneyRunner).journeyType}"
+                            baseUrl="${this.baseUrl}"
+                    ></journey-starter>`
                     :html``}
         
         `

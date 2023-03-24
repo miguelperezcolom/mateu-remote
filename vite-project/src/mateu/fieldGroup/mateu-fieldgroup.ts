@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import FieldGroup from "../dtos/FieldGroup";
+import FieldGroup from "../api/dtos/FieldGroup";
 import '../field/mateu-field'
 import {FormElement} from "../form/mateu-form";
 

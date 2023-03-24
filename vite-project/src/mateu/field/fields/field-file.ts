@@ -3,8 +3,8 @@ import {html, css, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-upload'
-import Field from "../../dtos/Field";
-import File from "../../dtos/File";
+import Field from "../../api/dtos/Field";
+import File from "../../api/dtos/File";
 import {nanoid} from "nanoid";
 import {UploadElement} from "@vaadin/vaadin-upload/src/vaadin-upload";
 

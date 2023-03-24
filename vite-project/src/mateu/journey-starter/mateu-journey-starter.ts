@@ -2,7 +2,7 @@ import {css, html, LitElement} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
 import MateuJourneyClient from "./MateuJourneyClient";
 import '../view/mateu-view'
-import JourneyType from "../dtos/JourneyType";
+import JourneyType from "../api/dtos/JourneyType";
 
 /**
  * An example element.

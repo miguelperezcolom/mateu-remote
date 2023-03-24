@@ -2,7 +2,7 @@ import {customElement, property} from "lit/decorators.js";
 import {css, html, LitElement} from "lit";
 import {connect} from "pwa-helpers";
 import {fetchItems, store} from "./store";
-import JourneyType from "../../dtos/JourneyType";
+import JourneyType from "../../api/dtos/JourneyType";
 
 
 @customElement('remote-journeys')
