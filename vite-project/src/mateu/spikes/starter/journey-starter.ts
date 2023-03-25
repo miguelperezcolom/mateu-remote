@@ -64,12 +64,16 @@ export class JourneyStarter extends LitElement {
 
     async updated(changedProperties: Map<string, unknown>) {
         if (changedProperties.has("journeyTypeId")) {
+            console.log('journeyTypeId changed to', this.journeyTypeId)
             this.loading = true
             this.journeyId = nanoid()
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
+            console.log('journey created', this.journeyId)
             this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+            console.log('journey loaded', this.journey)
             this.stepId = this.journey.currentStepId
             this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+            console.log('step loaded', this.step)
             this.loading = false
         }
 

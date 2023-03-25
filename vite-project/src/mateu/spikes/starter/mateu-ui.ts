@@ -60,7 +60,14 @@ export class MateuUi extends LitElement {
                 }):undefined
             }
         });
-        console.log('items', this.items)
+        if (window.location.hash) {
+            this.journeyTypeId = window.location.hash.substring(1)
+        }
+        window.onpopstate = (e) => {
+            console.log('popped', e);
+            const w = e.target as Window
+            this.journeyTypeId = w.location.hash.substring(1)
+        };
     }
 
     selectJourney(event: Event) {
@@ -72,6 +79,8 @@ export class MateuUi extends LitElement {
     itemSelected(event: MenuBarItemSelectedEvent) {
         let item = event.detail.value as MyMenuBarItem
         this.journeyTypeId = item.journeyTypeId
+        document.title = this.journeyTypeId!;
+        window.history.pushState({},"", '#' + this.journeyTypeId!);
     }
 
 
