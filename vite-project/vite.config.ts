@@ -4,11 +4,16 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     // lib: {
-    //   entry: 'src/mateu/spikes/starter/journey-starter.ts',
+    //   entry: 'src/mateu/spikes/starter/mateu-ui.ts',
     //   formats: ['es'],
     // },
     rollupOptions: {
       //external: /^lit/,
+      output: {
+        entryFileNames: `assets/mateu.js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`
+      }
     },
   },
 })

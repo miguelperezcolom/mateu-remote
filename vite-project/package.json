@@ -1,13 +1,13 @@
 {
-  "name": "vite-project",
-  "private": true,
-  "version": "0.0.0",
+  "name": "mateu-ui",
+  "private": false,
+  "version": "1.0.3",
   "type": "module",
-  "main": "dist/my-element.es.js",
+  "main": "dist/assets/index.js",
   "exports": {
-    ".": "./dist/my-element.es.js"
+    ".": "./dist/assets/index.js"
   },
-  "types": "types/my-element.d.ts",
+  "types": "types/mateu-ui.d.ts",
   "files": [
     "dist",
     "types"
