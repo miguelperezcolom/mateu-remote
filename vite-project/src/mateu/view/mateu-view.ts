@@ -28,8 +28,6 @@ export class MateuView extends LitElement {
   @property()
   stepId!: string
 
-  @property()
-  setLoading!: (loading: boolean) => void;
 
   connectedCallback() {
     super.connectedCallback();
@@ -40,7 +38,6 @@ export class MateuView extends LitElement {
       <div>
         ${this.view?.components.map(c => html`<mateu-component 
             .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" 
-            .setLoading=${this.setLoading}
             baseUrl="${this.baseUrl}"
         >
           <slot></slot></mateu-component>

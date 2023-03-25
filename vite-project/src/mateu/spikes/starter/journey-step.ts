@@ -18,10 +18,6 @@ export class JourneyStep extends LitElement {
     @property()
     step: Step | undefined = undefined;
 
-    @property()
-    setLoading!: (loading: boolean) => void;
-
-
     connectedCallback() {
         super.connectedCallback();
     }
@@ -30,8 +26,7 @@ export class JourneyStep extends LitElement {
         return html`<mateu-view 
                 .view=${this.step?.view} 
                 journeyId="${this.journeyId}" 
-                stepId="${this.stepId}" 
-                .setLoading=${this.setLoading}
+                stepId="${this.stepId}"
                 baseUrl="${this.baseUrl}"
         ><slot></slot></mateu-view>`
     }

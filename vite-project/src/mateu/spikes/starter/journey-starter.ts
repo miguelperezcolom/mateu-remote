@@ -5,6 +5,7 @@ import '../dynamic/dynamic-form'
 import '@vaadin/button'
 import '@vaadin/horizontal-layout'
 import './journey-step'
+import {notificationRenderer} from 'lit-vaadin-helpers';
 import Journey from "../../api/dtos/Journey";
 import Step from "../../api/dtos/Step";
 import {nanoid} from "@reduxjs/toolkit";
@@ -49,8 +50,38 @@ export class JourneyStarter extends LitElement {
     @state()
     version = ''
 
+    @property()
+    notificationOpened: boolean = false;
+
+    @property()
+    notificationMessage: string = '';
+
+    renderNotification = () => html`${this.notificationMessage}`;
+
+
     async connectedCallback() {
         super.connectedCallback();
+
+        window.addEventListener('backend-called-event', () => {
+            this.loading = true
+        })
+
+        window.addEventListener('backend-succeeded-event', () => {
+            this.loading = false
+        })
+
+        window.addEventListener('backend-failed-event', (event) => {
+            this.loading = false
+            const ce = event as CustomEvent
+            this.notificationMessage = `${ce.detail.reason.code} ${ce.detail.reason.message}`;
+            this.notificationOpened = true;
+            setTimeout(() => this.notificationOpened = false, 3000)
+        })
+
+        window.addEventListener('action-called', () => {
+            this.onActionCalled()
+        })
+
         if (this.journeyTypeId) {
             this.journeyId = nanoid()
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
@@ -64,24 +95,16 @@ export class JourneyStarter extends LitElement {
 
     async updated(changedProperties: Map<string, unknown>) {
         if (changedProperties.has("journeyTypeId")) {
-            console.log('journeyTypeId changed to', this.journeyTypeId)
-            this.loading = true
-            this.journeyId = nanoid()
-            await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
-            console.log('journey created', this.journeyId)
-            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
-            console.log('journey loaded', this.journey)
+            const journeyId = nanoid()
+            await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, journeyId)
+            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(journeyId)
             this.stepId = this.journey.currentStepId
-            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
-            console.log('step loaded', this.step)
-            this.loading = false
+            this.step = await new MateuApiClient(this.baseUrl).fetchStep(journeyId, this.stepId)
+            this.journeyId = journeyId
         }
-
-        // No need to call any other method here.
     }
 
     async startJourney(event: Event) {
-        this.loading = true
         // @ts-ignore
         this.journeyTypeId = (event.target as HTMLElement).getAttribute('typeId');
         this.journeyId = nanoid()
@@ -89,7 +112,6 @@ export class JourneyStarter extends LitElement {
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId)
         this.stepId = this.journey.currentStepId
         this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
-        this.loading = false
     }
 
     resetJourney() {
@@ -97,25 +119,7 @@ export class JourneyStarter extends LitElement {
         this.journeyTypeId = undefined
     }
 
-    setLoading(loading: boolean) {
-        let actionCalledEvent = new CustomEvent('loading-changed', {
-            bubbles: true,
-            composed: true,
-            detail: {
-                loading: loading
-            }
-        });
-        this.dispatchEvent(actionCalledEvent);
-    }
-
-    onLoadingChanged(event: CustomEvent) {
-        console.log('loading changed', event)
-        this.loading = event.detail.loading
-        this.requestUpdate()
-    }
-
-    async onActionCalled(event: CustomEvent) {
-        console.log('action called', event)
+    async onActionCalled() {
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
         this.stepId = this.journey.currentStepId
         this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId!, this.stepId)
@@ -152,10 +156,7 @@ export class JourneyStarter extends LitElement {
                                 journeyId="${this.journeyId}" 
                                        stepId="${this.stepId}" 
                                        .step=${this.step} 
-                                       .setLoading=${this.setLoading}
                                        baseUrl="${this.baseUrl}"
-                                       @action-called=${this.onActionCalled}
-                                        @loading-changed=${this.onLoadingChanged}
                                 version="${this.version}"
                         >
             ${this.tipos.length > 0?html`<vaadin-button theme="secondary" 
@@ -172,6 +173,15 @@ export class JourneyStarter extends LitElement {
                     `
                     :''}
 
+
+            <vaadin-notification
+                    .opened=${this.notificationOpened}
+                    position="bottom-end"
+                    duration="5000"
+                    theme="error"
+                    ${notificationRenderer(this.renderNotification)}
+            >${this.notificationMessage}</vaadin-notification>
+            
         <slot></slot>`
     }
 

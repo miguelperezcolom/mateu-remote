@@ -14,7 +14,6 @@ import {badge} from "@vaadin/vaadin-lumo-styles";
 import {StatusType} from "../api/dtos/StatusType";
 import Column from "../api/dtos/Column";
 import '@vaadin/menu-bar';
-import axios from "axios";
 import MateuApiClient from "../api/MateuApiClient";
 
 
@@ -57,14 +56,6 @@ export class MateuCrud extends LitElement {
   @state()
   canDownload = true;
 
-  @property()
-  setLoading!: (loading: boolean) => void;
-
-  async updated() {
-    this.search()
-    // No need to call any other method here.
-  }
-
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
     const { page, pageSize } = params;
@@ -87,8 +78,15 @@ export class MateuCrud extends LitElement {
     callback(rows, count);
   };
 
+  async updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has("journeyId")) {
+      if (changedProperties.get("journeyId") && this.journeyId) {
+        this.search();
+      }
+    }
+  }
+
   search() {
-    this.setLoading(true)
     const grid = this.shadowRoot!.getElementById('grid') as Grid;
     grid.clearCache();
   }
@@ -104,6 +102,8 @@ export class MateuCrud extends LitElement {
     // Pagination
     const count = await this.fetchCount(params.filters);
 
+    this.message = `${count} elements found.`;
+
     return { rows, count };
   }
 
@@ -113,17 +113,14 @@ export class MateuCrud extends LitElement {
     filters: string;
     sortOrders: string;
   }): Promise<any[]> {
-    const response = await axios.get(this.baseUrl + "/journeys/" + this.journeyId + "/steps/" + this.stepId +
-        "/lists/main/rows?page=" + params.page + "&page_size=" + params.pageSize +
-        "&ordering=" + params.sortOrders + "&filters=" + params.filters);
-    return response.data;
+    return new MateuApiClient(this.baseUrl).fetchRows(this.journeyId,
+        this.stepId, params.page, params.pageSize,
+        params.sortOrders, params.filters)
   }
 
   async fetchCount(filters: string): Promise<number> {
-    const response = await axios.get(this.baseUrl + "/journeys/" + this.journeyId + "/steps/" + this.stepId +
-        "/lists/main/count?filters=" + filters);
-    this.message = `${response.data} elements found.`;
-    return response.data;
+    return new MateuApiClient(this.baseUrl).fetchCount(this.journeyId,
+        this.stepId, filters)
   }
 
   connectedCallback() {
@@ -163,18 +160,7 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     this.data = { ...this.data, ...obj}
-    this.setLoading(true)
     await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, 'edit', this.data)
-    let actionCalledEvent = new CustomEvent('action-called', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        message: 'Something important happened'
-      }
-    });
-    this.dispatchEvent(actionCalledEvent);
-    this.setLoading(false)
-
   }
 
   async runAction(e:Event) {
@@ -187,18 +173,8 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    this.setLoading(true)
     await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
         button.getAttribute('actionid')!, extendedData)
-    let actionCalledEvent = new CustomEvent('action-called', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        message: 'Something important happened'
-      }
-    });
-    this.dispatchEvent(actionCalledEvent);
-    this.setLoading(false)
   }
 
   async itemSelected(e: CustomEvent) {
@@ -208,18 +184,8 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    this.setLoading(true)
     await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
         '__row__' + e.detail.value.id, extendedData)
-    let actionCalledEvent = new CustomEvent('action-called', {
-      bubbles: true,
-      composed: true,
-      detail: {
-        message: 'Something important happened'
-      }
-    });
-    this.dispatchEvent(actionCalledEvent);
-    this.setLoading(false)
   }
 
   private getThemeForBadgetType(type: StatusType): string {

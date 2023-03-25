@@ -7,6 +7,7 @@ import '@vaadin/app-layout/vaadin-drawer-toggle'
 import '@vaadin/vaadin-tabs'
 import '@vaadin/vaadin-tabs/vaadin-tab'
 import './journey-starter'
+import {notificationRenderer} from 'lit-vaadin-helpers';
 import {MenuType} from "../../api/dtos/MenuType";
 import {MenuBarItem, MenuBarItemSelectedEvent} from "@vaadin/menu-bar";
 import "@vaadin/menu-bar";
@@ -43,9 +44,17 @@ export class MateuUi extends LitElement {
     @property()
     selectedItem?: MenuBarItem;
 
+    @property()
+    notificationOpened: boolean = false;
+
+    @property()
+    notificationMessage: string = '';
+
+    renderNotification = () => html`${this.notificationMessage}`;
+
+
     async connectedCallback() {
         super.connectedCallback();
-        this.loading = true;
         this.ui = await new MateuApiClient(this.baseUrl).fetchUi(this.uiId);
         console.log('ui', this.ui)
         this.items = this.ui?.menu?.map(m => {
@@ -79,7 +88,7 @@ export class MateuUi extends LitElement {
     itemSelected(event: MenuBarItemSelectedEvent) {
         let item = event.detail.value as MyMenuBarItem
         this.journeyTypeId = item.journeyTypeId
-        document.title = this.journeyTypeId!;
+        document.title = item.text!;
         window.history.pushState({},"", '#' + this.journeyTypeId!);
     }
 
@@ -124,7 +133,19 @@ export class MateuUi extends LitElement {
 
             </vaadin-vertical-layout>
         
-        `:html`<h1>No UI</h1>`}`
+        `:html`<h1>No UI</h1>`}
+
+
+        <vaadin-notification
+                .opened=${this.notificationOpened}
+                position="bottom-end"
+                duration="5000"
+                theme="error"
+                ${notificationRenderer(this.renderNotification)}
+        >${this.notificationMessage}</vaadin-notification>
+
+
+       `
     }
 
     static styles = css`

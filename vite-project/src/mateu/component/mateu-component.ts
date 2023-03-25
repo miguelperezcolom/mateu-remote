@@ -26,8 +26,6 @@ export class MateuComponent extends LitElement {
     @property()
     stepId!: string
 
-    @property()
-    setLoading!: (loading: boolean) => void;
 
     render() {
         return html`
@@ -38,7 +36,6 @@ export class MateuComponent extends LitElement {
                             .data=${this.component.data}
                             journeyId="${this.journeyId}" 
                             stepId="${this.stepId}"
-                            .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-form>`
@@ -50,7 +47,6 @@ export class MateuComponent extends LitElement {
                             .data=${this.component.data}
                             journeyId="${this.journeyId}" 
                             stepId="${this.stepId}"
-                            .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-crud>`
@@ -61,7 +57,6 @@ export class MateuComponent extends LitElement {
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
                             journeyId="${this.journeyId}" stepId="${this.stepId}"
-                            .setLoading=${this.setLoading}
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-result>`

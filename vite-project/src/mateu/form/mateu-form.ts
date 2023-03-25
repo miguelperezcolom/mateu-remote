@@ -122,10 +122,6 @@ export class MateuForm extends LitElement implements FormElement {
 
   renderNotification = () => html`${this.notificationMessage}`;
 
-
-  @property()
-  setLoading!: (loading: boolean) => void;
-
   async updated() {
     this.setUp()
     // No need to call any other method here.
@@ -153,17 +149,7 @@ export class MateuForm extends LitElement implements FormElement {
       this.notificationOpened = true;
     } else {
       const actionId = (event.target as HTMLElement).getAttribute('actionId');
-      this.setLoading(true)
       await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
-      let actionCalledEvent = new CustomEvent('action-called', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          message: 'Something important happened'
-        }
-      });
-      this.dispatchEvent(actionCalledEvent);
-      this.setLoading(false)
     }
   }
 
