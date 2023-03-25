@@ -36,14 +36,27 @@ export class MateuResult extends LitElement {
   @property()
   data: object | undefined;
 
+  @property()
+  setLoading!: (loading: boolean) => void;
+
   connectedCallback() {
     super.connectedCallback();
   }
 
-  runAction(e:Event) {
+  async runAction(e:Event) {
     const button = e.currentTarget as Button;
-    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+    this.setLoading(true)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
         button.getAttribute('actionid')!, {})
+    let actionCalledEvent = new CustomEvent('action-called', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        message: 'Something important happened'
+      }
+    });
+    this.dispatchEvent(actionCalledEvent);
+    this.setLoading(false)
   }
 
   getIcon(resultType: ResultType): string {

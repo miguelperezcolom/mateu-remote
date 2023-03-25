@@ -94,8 +94,20 @@ export class JourneyStarter extends LitElement {
     }
 
     setLoading(loading: boolean) {
-        console.log('setLoading', loading)
-        this.loading = loading;
+        let actionCalledEvent = new CustomEvent('loading-changed', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                loading: loading
+            }
+        });
+        this.dispatchEvent(actionCalledEvent);
+    }
+
+    onLoadingChanged(event: CustomEvent) {
+        console.log('loading changed', event)
+        this.loading = event.detail.loading
+        this.requestUpdate()
     }
 
     async onActionCalled(event: CustomEvent) {
@@ -139,6 +151,7 @@ export class JourneyStarter extends LitElement {
                                        .setLoading=${this.setLoading}
                                        baseUrl="${this.baseUrl}"
                                        @action-called=${this.onActionCalled}
+                                        @loading-changed=${this.onLoadingChanged}
                                 version="${this.version}"
                         >
             ${this.tipos.length > 0?html`<vaadin-button theme="secondary" 

@@ -164,7 +164,6 @@ export class MateuForm extends LitElement implements FormElement {
       });
       this.dispatchEvent(actionCalledEvent);
       this.setLoading(false)
-      console.log('event dispatched')
     }
   }
 

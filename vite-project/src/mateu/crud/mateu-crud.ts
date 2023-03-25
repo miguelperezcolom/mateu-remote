@@ -57,6 +57,13 @@ export class MateuCrud extends LitElement {
   @state()
   canDownload = true;
 
+  @property()
+  setLoading!: (loading: boolean) => void;
+
+  async updated() {
+    this.search()
+    // No need to call any other method here.
+  }
 
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
@@ -81,6 +88,7 @@ export class MateuCrud extends LitElement {
   };
 
   search() {
+    this.setLoading(true)
     const grid = this.shadowRoot!.getElementById('grid') as Grid;
     grid.clearCache();
   }
@@ -145,7 +153,7 @@ export class MateuCrud extends LitElement {
     this.data = { ...this.data, ...obj}
   }
 
-  edit(e:Event) {
+  async edit(e:Event) {
     const button = e.currentTarget as Button;
     // @ts-ignore
     console.log(button.row);
@@ -155,11 +163,21 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     this.data = { ...this.data, ...obj}
-    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
-        'edit', this.data)
+    this.setLoading(true)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, 'edit', this.data)
+    let actionCalledEvent = new CustomEvent('action-called', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        message: 'Something important happened'
+      }
+    });
+    this.dispatchEvent(actionCalledEvent);
+    this.setLoading(false)
+
   }
 
-  runAction(e:Event) {
+  async runAction(e:Event) {
     const button = e.currentTarget as Button;
     const grid = this.shadowRoot?.getElementById('grid') as Grid
     const obj = {
@@ -169,19 +187,39 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+    this.setLoading(true)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
         button.getAttribute('actionid')!, extendedData)
+    let actionCalledEvent = new CustomEvent('action-called', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        message: 'Something important happened'
+      }
+    });
+    this.dispatchEvent(actionCalledEvent);
+    this.setLoading(false)
   }
 
-  itemSelected(e: CustomEvent) {
+  async itemSelected(e: CustomEvent) {
     const obj = {
       // @ts-ignore
       _clickedRow: e.target.row
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+    this.setLoading(true)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
         '__row__' + e.detail.value.id, extendedData)
+    let actionCalledEvent = new CustomEvent('action-called', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        message: 'Something important happened'
+      }
+    });
+    this.dispatchEvent(actionCalledEvent);
+    this.setLoading(false)
   }
 
   private getThemeForBadgetType(type: StatusType): string {
@@ -203,7 +241,7 @@ export class MateuCrud extends LitElement {
           (row) => {
             // @ts-ignore
             const status = row[c.id]
-            return html`<span theme="badge ${this.getThemeForBadgetType(status.type)}">${status.message}</span>`;
+            return status?html`<span theme="badge ${this.getThemeForBadgetType(status.type)}">${status.message}</span>`:html``;
           },
           []
       )}>
@@ -216,7 +254,7 @@ export class MateuCrud extends LitElement {
                              ${columnBodyRenderer(
                                  (row) => {
                                    // @ts-ignore
-                                   const actions = row[c.id].actions.map(a => {
+                                   const actions = row[c.id]?.actions.map(a => {
                                      return {
                                        ...a,text: a.caption
                                      }
