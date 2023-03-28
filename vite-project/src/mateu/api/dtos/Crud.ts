@@ -6,6 +6,8 @@ import Action from "./Action";
 
 export default interface Crud extends ViewMetadata {
 
+    listId: string;
+
     title: string;
 
     subtitle: string;

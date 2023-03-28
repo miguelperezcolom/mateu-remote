@@ -176,7 +176,9 @@ export class MateuForm extends LitElement implements FormElement {
             </div>        
         `:''}
         
-        ${this.metadata.sections.map(s => html`<mateu-section .section="${s}" .formElement=${this}></mateu-section>`)}
+        ${this.metadata.sections.map(s => html`<mateu-section .section="${s}"
+                                                              baseUrl="${this.baseUrl}"
+                                                              .formElement=${this}></mateu-section>`)}
 
         <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
           <slot></slot>

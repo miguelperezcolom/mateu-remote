@@ -16,6 +16,9 @@ export class MateuSection extends LitElement {
    * Copy for the read the docs hint.
    */
   @property()
+  baseUrl!: string
+
+  @property()
   section!: Section
 
   @property()
@@ -31,11 +34,16 @@ export class MateuSection extends LitElement {
           ${this.section.fieldGroups.map(g => html`<div>
               ${g.caption}
               <div class="table">
-              ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div><div class="cell value">${this.formElement.getValue(f.id)}</div></div>`)}
+              ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div>
+                  <div class="cell value">${this.formElement.getValue(f.id)}</div></div>`)}
               </div>
           </div>`)}
         `:html`
-          ${this.section.fieldGroups.map(s => html`<mateu-fieldgroup .fieldGroup="${s}" .formElement=${this.formElement}></mateu-fieldgroup>`)}
+          ${this.section.fieldGroups.map(s => html`<mateu-fieldgroup 
+                  .fieldGroup="${s}" 
+                  .formElement=${this.formElement}
+                  baseUrl="${this.baseUrl}"
+          ></mateu-fieldgroup>`)}
         `}
         
         <slot></slot>

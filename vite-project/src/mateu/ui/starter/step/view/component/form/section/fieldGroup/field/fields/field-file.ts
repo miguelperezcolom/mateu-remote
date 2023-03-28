@@ -46,6 +46,14 @@ export class FieldFile extends LitElement implements Component {
         this.value = value as number;
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 
@@ -99,7 +107,7 @@ export class FieldFile extends LitElement implements Component {
                    ?disabled=${!this.enabled}
                 ?required=${this.required}
                 placeholder="${this.placeholder}"
-                    target="${window.__MATEU_REMOTE_BASE_URL__ + '/files/' + this.fileidprefix + this.fileid}"></vaadin-upload>
+                    target="${this.baseUrl + '/files/' + this.fileidprefix + this.fileid}"></vaadin-upload>
             `
     }
 

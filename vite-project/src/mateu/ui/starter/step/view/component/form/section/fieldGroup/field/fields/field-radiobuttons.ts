@@ -41,6 +41,14 @@ export class FieldRadiobuttons extends LitElement implements Component {
         this.value = value as number;
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 

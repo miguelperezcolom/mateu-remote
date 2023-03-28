@@ -39,6 +39,14 @@ export class FieldDate extends LitElement implements Component {
         this.value = value as Date;
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 

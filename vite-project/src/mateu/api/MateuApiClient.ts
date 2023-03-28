@@ -87,23 +87,23 @@ export default class MateuApiClient {
         })
     }
 
-    async fetchRows(journeyId: string, stepId: string,
+    async fetchRows(journeyId: string, stepId: string, listId: string,
                     page: number, pageSize: number,
                     sortOrders: string, filters: string
                     ): Promise<any[]> {
         return await this.wrap<any[]>(axios.get(this.baseUrl + "/journeys/" + journeyId +
             "/steps/" + stepId +
-            "/lists/main/rows?page=" + page + "&page_size=" + pageSize +
+            "/lists/" + listId + "/rows?page=" + page + "&page_size=" + pageSize +
             "&ordering=" + sortOrders + "&filters=" + filters)
             .then((response) => response.data))
     }
 
-    async fetchCount(journeyId: string, stepId: string,
+    async fetchCount(journeyId: string, stepId: string, listId: string,
                      filters: string
     ): Promise<number> {
         return await this.wrap<number>(axios.get(this.baseUrl + "/journeys/" + journeyId
             + "/steps/" + stepId +
-            "/lists/main/count?filters=" + filters)
+            "/lists/" + listId + "/count?filters=" + filters)
             .then((response) => response.data))
     }
 

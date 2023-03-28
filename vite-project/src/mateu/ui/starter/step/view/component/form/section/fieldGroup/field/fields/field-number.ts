@@ -38,6 +38,14 @@ export class FieldNumber extends LitElement implements Component {
         this.value = value as string;
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 

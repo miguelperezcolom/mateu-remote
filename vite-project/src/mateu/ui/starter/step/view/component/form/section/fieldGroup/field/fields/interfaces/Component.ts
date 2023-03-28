@@ -5,6 +5,8 @@ export default interface Component {
 
     onValueChanged(event: ValueChangedEvent):void;
 
+    setBaseUrl(value: string): void;
+
     setLabel(value: string): void;
 
     setPlaceholder(value: string): void;

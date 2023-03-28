@@ -37,6 +37,10 @@ export class MateuField extends LitElement {
   /**
    * Copy for the read the docs hint.
    */
+
+  @property()
+  baseUrl!: string
+
   @property()
   field!: Field
 
@@ -66,6 +70,7 @@ export class MateuField extends LitElement {
       this.component.setPlaceholder(this.field.placeholder)
       this.component.setField(this.field);
       this.component.setValue(this.value)
+      this.component.setBaseUrl(this.baseUrl)
       this.component.setRequired(this.field.validations.length > 0)
     }
   }

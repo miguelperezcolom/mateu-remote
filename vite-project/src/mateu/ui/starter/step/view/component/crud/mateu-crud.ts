@@ -15,6 +15,7 @@ import {StatusType} from "../../../../../../api/dtos/StatusType";
 import Column from "../../../../../../api/dtos/Column";
 import '@vaadin/menu-bar';
 import MateuApiClient from "../../../../../../api/MateuApiClient";
+import {Base64} from "js-base64";
 
 
 /**
@@ -39,6 +40,9 @@ export class MateuCrud extends LitElement {
   stepId!: string
 
   @property()
+  listId!: string
+
+  @property()
   metadata!: Crud
 
   @property()
@@ -48,6 +52,7 @@ export class MateuCrud extends LitElement {
   private clickedRow:unknown;
 
   // @ts-ignore
+
   private contextMenuOpened?: boolean;
 
   @state()
@@ -63,7 +68,7 @@ export class MateuCrud extends LitElement {
     const { rows, count } = await this.fetchData({
       page,
       pageSize,
-      sortOrders: btoa(JSON.stringify(params.sortOrders.map(o => {
+      sortOrders: Base64.encode(JSON.stringify(params.sortOrders.map(o => {
         let direction = 'None';
         if ('asc' == o.direction) direction = 'Ascending';
         if ('desc' == o.direction) direction = 'Descending';
@@ -72,7 +77,7 @@ export class MateuCrud extends LitElement {
           order: direction
         }
       }))),
-      filters: btoa(JSON.stringify(this.data)),
+      filters: Base64.encode(JSON.stringify(this.data)),
     });
 
     callback(rows, count);
@@ -114,13 +119,13 @@ export class MateuCrud extends LitElement {
     sortOrders: string;
   }): Promise<any[]> {
     return new MateuApiClient(this.baseUrl).fetchRows(this.journeyId,
-        this.stepId, params.page, params.pageSize,
+        this.stepId, this.listId, params.page, params.pageSize,
         params.sortOrders, params.filters)
   }
 
   async fetchCount(filters: string): Promise<number> {
     return new MateuApiClient(this.baseUrl).fetchCount(this.journeyId,
-        this.stepId, filters)
+        this.stepId, this.listId, filters)
   }
 
   connectedCallback() {
@@ -143,7 +148,7 @@ export class MateuCrud extends LitElement {
   }
 
   filterChanged(e:Event) {
-    const input = e.target as HTMLInputElement;
+    const input = e.currentTarget as HTMLInputElement;
     const obj = {};
     // @ts-ignore
     obj[input.id] = input.value || null;
@@ -160,7 +165,7 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     this.data = { ...this.data, ...obj}
-    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, 'edit', this.data)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, '__list__' + this.listId + '__edit', this.data)
   }
 
   async runAction(e:Event) {
@@ -185,7 +190,7 @@ export class MateuCrud extends LitElement {
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
     await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
-        '__row__' + e.detail.value.id, extendedData)
+        '__list__' + this.listId + '__row__' + e.detail.value.id, extendedData)
   }
 
   private getThemeForBadgetType(type: StatusType): string {
@@ -273,10 +278,27 @@ export class MateuCrud extends LitElement {
 
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         ${this.metadata?.searchForm.fields.slice(1).map(f => html`
-          ${f.type != 'enum'?html`
+          ${f.type != 'enum'
+              && f.type != 'boolean'
+              && f.type != 'DatesRange'?html`
             <vaadin-text-field id="${f.id}" label="${f.caption}"
                                placeholder="${f.placeholder}"
                                @change=${this.filterChanged}></vaadin-text-field>
+          `:''}
+          ${f.type == 'boolean'?html`
+            <vaadin-checkbox-group id="${f.id}" label="${f.caption}"
+                               placeholder="${f.placeholder}"
+                               @change=${this.filterChanged}>
+              <vaadin-checkbox></vaadin-checkbox>
+            </vaadin-checkbox-group>
+          `:''}
+          ${f.type == 'DatesRange'?html`
+            <vaadin-date-picker id="${f.id}_from" label="${f.caption} from"
+                               placeholder="${f.placeholder}"
+                               @change=${this.filterChanged}></vaadin-date-picker>
+            <vaadin-date-picker id="${f.id}_to" label="${f.caption} to"
+                                placeholder="${f.placeholder}"
+                                @change=${this.filterChanged}></vaadin-date-picker>
           `:''}
           ${f.type == 'enum'?html`
             

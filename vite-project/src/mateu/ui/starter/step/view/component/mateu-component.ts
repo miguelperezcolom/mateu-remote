@@ -9,6 +9,7 @@ import '../../../journey-starter'
 import '../../journey-step'
 import JourneyStarter from "../../../../../api/dtos/JourneyStarter";
 import JourneyRunner from "../../../../../api/dtos/JourneyRunner";
+import Crud from "../../../../../api/dtos/Crud";
 
 
 @customElement('mateu-component')
@@ -47,6 +48,7 @@ export class MateuComponent extends LitElement {
                             .data=${this.component.data}
                             journeyId="${this.journeyId}" 
                             stepId="${this.stepId}"
+                            listId="${(this.component.metadata as Crud).listId}"
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
                     ><slot></slot></mateu-crud>`

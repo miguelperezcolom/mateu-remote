@@ -51,6 +51,7 @@
     "@vaadin/vaadin-upload": "^23.3.8",
     "@vaadin/vertical-layout": "^23.2.1",
     "axios": "^1.3.4",
+    "js-base64": "^3.7.5",
     "lit": "^2.6.1",
     "lit-vaadin-helpers": "^0.3.1",
     "nanoid": "^4.0.1",

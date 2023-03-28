@@ -47,6 +47,14 @@ export class FieldBooleanArray extends LitElement implements Component {
         this.value = raw;
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 

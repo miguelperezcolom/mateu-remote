@@ -44,6 +44,14 @@ export class FieldClosedList extends LitElement implements Component {
         this.value = raw.map(v => '' + v);
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 

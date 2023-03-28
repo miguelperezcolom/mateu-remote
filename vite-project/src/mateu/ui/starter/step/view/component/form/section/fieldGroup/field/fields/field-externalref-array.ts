@@ -45,6 +45,14 @@ export class FieldExternalrefArray extends LitElement implements Component {
         this.value = value as Value[];
     }
 
+    setBaseUrl(value: string): void {
+        this.baseUrl = value
+    }
+
+    @property()
+    baseUrl = '';
+
+
     @property()
     label = '';
 
@@ -73,9 +81,8 @@ export class FieldExternalrefArray extends LitElement implements Component {
 
     @state()
     dataProvider: ComboBoxDataProvider<Value> = async (params, callback) => {
-        const baseURL = window.__MATEU_REMOTE_BASE_URL__?window.__MATEU_REMOTE_BASE_URL__:"https://remote.mateu.io/mateu/v1";
         const itemProvider = this.field?.attributes.filter(a => a.key == 'itemprovider')[0].value;
-        const API = `${baseURL}/itemproviders/${itemProvider}/items`;
+        const API = `${this.baseUrl}/itemproviders/${itemProvider}/items`;
         const { filter, page, pageSize } = params;
 
         const count = await this.getCount(params)
@@ -88,9 +95,8 @@ export class FieldExternalrefArray extends LitElement implements Component {
     };
 
     private async getCount(params: ComboBoxDataProviderParams):Promise<number> {
-        const baseURL = window.__MATEU_REMOTE_BASE_URL__?window.__MATEU_REMOTE_BASE_URL__:"https://remote.mateu.io/mateu/v1";
         const itemProvider = this.field?.attributes.filter(a => a.key == 'itemprovider')[0].value;
-        const API = `${baseURL}/itemproviders/${itemProvider}/count`;
+        const API = `${this.baseUrl}/itemproviders/${itemProvider}/count`;
         const { filter } = params;
 
         const res = await fetch(`${API}?search_text=${filter}`);

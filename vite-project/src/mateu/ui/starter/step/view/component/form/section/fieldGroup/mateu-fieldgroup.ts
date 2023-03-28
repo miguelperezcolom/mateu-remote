@@ -16,6 +16,9 @@ export class MateuFieldGroup extends LitElement {
    * Copy for the read the docs hint.
    */
   @property()
+  baseUrl!: string
+
+  @property()
   fieldGroup!: FieldGroup
 
   @property()
@@ -36,7 +39,12 @@ export class MateuFieldGroup extends LitElement {
 
         ${this.fieldGroup.caption?html`<h2>${this.fieldGroup.caption}</h2>`:''}
         
-          ${this.fieldGroup.fields.map(s => html`<mateu-field .field="${s}" @change=${this.onValueChange} .formElement=${this.formElement} .value=${this.formElement.getValue(s.id)} .fieldWrapper=${this.formElement.getFieldWrapper(s)}></mateu-field>`)}
+          ${this.fieldGroup.fields.map(s => html`<mateu-field .field="${s}" @change=${this.onValueChange}
+                                                              baseUrl=${this.baseUrl}
+                                                              .formElement=${this.formElement} 
+                                                              .value=${this.formElement.getValue(s.id)} 
+                                                              .fieldWrapper=${this.formElement.getFieldWrapper(s)}>
+          </mateu-field>`)}
         
         <slot></slot>
       </div>
