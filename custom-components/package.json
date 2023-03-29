@@ -1,0 +1,26 @@
+{
+  "name": "test-custom-components",
+  "private": false,
+  "version": "0.0.4",
+  "type": "module",
+  "main": "dist/assets/custom-elements.js",
+  "exports": {
+    ".": "dist/assets/custom-elements.js"
+  },
+  "types": "types/my-element.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "lit": "^2.6.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}

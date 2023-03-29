@@ -1,4 +1,9 @@
 export const mapInputTypeToFieldType =  (type: string, stereotype: string):string => {
+
+    if (stereotype.startsWith('custom:')) {
+        return stereotype.substring('custom:'.length)
+    }
+
     switch (stereotype) {
         case 'readonly': return 'field-readonly';
         case 'textarea': return 'field-textarea';
