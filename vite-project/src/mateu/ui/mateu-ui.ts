@@ -97,21 +97,22 @@ export class MateuUi extends LitElement {
        return html`
         ${this.ui?html`
             <vaadin-vertical-layout style="align-items: center">
-
-            <vaadin-app-layout>
-                <h3 slot="navbar" class="title ml-l mr-l" style="width: 200px;">${this.ui.title}</h3>
-                <div class="container" slot="navbar">
+                
                 ${this.ui.menu?html`
+                    <vaadin-app-layout>
+                        <h3 slot="navbar" class="title ml-l mr-l" style="width: 200px;">${this.ui.title}</h3>
+                        <div class="container" slot="navbar">
+                            ${this.ui.menu?html`
                     <vaadin-menu-bar slot="navbar"
                             .items="${this.items}"
                             @item-selected="${this.itemSelected}"
                                      theme="tertiary"
                     ></vaadin-menu-bar>
                 `:''}
-                </div>
-                <div slot="navbar" style="width: 200px;"></div>
-            </vaadin-app-layout>
-
+                        </div>
+                        <div slot="navbar" style="width: 200px;"></div>
+                    </vaadin-app-layout>
+                `:''}
 
                 <!--
                 <div class="container">

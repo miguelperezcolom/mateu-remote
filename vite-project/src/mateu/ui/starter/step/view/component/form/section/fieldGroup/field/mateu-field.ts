@@ -44,6 +44,7 @@ export class MateuField extends LitElement {
   @property()
   field!: Field
 
+
   @property()
   value!: object
 
@@ -59,9 +60,11 @@ export class MateuField extends LitElement {
   @property()
   fieldWrapper?: FieldWrapper
 
-  async updated() {
+  updated(changedProperties: Map<string, unknown>) {
     this.setupComponent();
-    // No need to call any other method here.
+    if (changedProperties.has("field")) {
+        this.paint();
+    }
   }
 
   setupComponent() {
@@ -76,6 +79,10 @@ export class MateuField extends LitElement {
   }
 
   firstUpdated() {
+    this.paint();
+  }
+
+  paint() {
     const element = document.createElement(mapInputTypeToFieldType(this.field.type, this.field.stereotype));
     element.setAttribute('id', 'field')
     const container = this.shadowRoot!.getElementById('container')!;
@@ -88,13 +95,14 @@ export class MateuField extends LitElement {
       this.dispatchEvent(change);
     }
     this.setupComponent();
-    container.appendChild(element);
+    container.replaceChildren(element);
     const wrapper = this.shadowRoot!.getElementById('wrapper') as unknown;
     if (this.fieldWrapper) {
       this.fieldWrapper.container = wrapper as HTMLElement;
     } else {
       console.log('missing wrapper for ', this.field.id)
     }
+
   }
 
   render() {
