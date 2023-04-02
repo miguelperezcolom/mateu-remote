@@ -23,6 +23,9 @@ export class JourneyStarter extends LitElement {
     loading: boolean = false;
 
     @property()
+    activeCalls = 0;
+
+    @property()
     cargando: boolean | undefined = undefined;
 
     @property()
@@ -62,15 +65,18 @@ export class JourneyStarter extends LitElement {
         super.connectedCallback();
 
         window.addEventListener('backend-called-event', () => {
-            this.loading = true
+            this.activeCalls++;
+            this.loading = this.activeCalls > 0
         })
 
         window.addEventListener('backend-succeeded-event', () => {
-            this.loading = false
+            this.activeCalls--;
+            this.loading = this.activeCalls > 0
         })
 
         window.addEventListener('backend-failed-event', (event) => {
-            this.loading = false
+            this.activeCalls--;
+            this.loading = this.activeCalls > 0
             const ce = event as CustomEvent
             this.notificationMessage = `${ce.detail.reason.code} ${ce.detail.reason.message}`;
             this.notificationOpened = true;
