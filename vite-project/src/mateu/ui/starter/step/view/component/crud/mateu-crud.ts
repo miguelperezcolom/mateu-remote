@@ -16,6 +16,9 @@ import Column from "../../../../../../api/dtos/Column";
 import '@vaadin/menu-bar';
 import MateuApiClient from "../../../../../../api/MateuApiClient";
 import {Base64} from "js-base64";
+import ConfirmationTexts from "../../../../../../api/dtos/ConfirmationTexts";
+import { dialogRenderer } from 'lit-vaadin-helpers';
+import { dialogFooterRenderer } from '@vaadin/dialog/lit';
 
 
 /**
@@ -60,6 +63,27 @@ export class MateuCrud extends LitElement {
 
   @state()
   canDownload = true;
+
+  @property()
+  confirmationOpened = false;
+
+  @property()
+  closeConfirmation = () => {
+    this.confirmationOpened = false
+  };
+
+  @property()
+  confirmationAction = () => {};
+
+  @property()
+  runConfirmedAction = () => {
+    this.confirmationAction()
+    this.confirmationOpened = false
+  };
+
+  @property()
+  confirmationTexts: ConfirmationTexts | undefined;
+
 
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
@@ -170,6 +194,16 @@ export class MateuCrud extends LitElement {
 
   async runAction(e:Event) {
     const button = e.currentTarget as Button;
+    const actionId = button.getAttribute('actionid');
+    if (!actionId) {
+      console.log('Attribute actionId is missing for ' + button)
+      return
+    }
+    const action = this.findAction(actionId!)
+    if (!action) {
+      console.log('No action with id ' + actionId)
+      return
+    }
     const grid = this.shadowRoot?.getElementById('grid') as Grid
     const obj = {
       // @ts-ignore
@@ -178,8 +212,22 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
-        button.getAttribute('actionid')!, extendedData)
+    if (action.confirmationRequired) {
+      this.confirmationAction = async () => {
+        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+            actionId, extendedData)
+      }
+      this.confirmationTexts = action.confirmationTexts
+      this.confirmationOpened = true;
+    } else {
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+          actionId, extendedData)
+    }
+  }
+
+  private findAction(actionId: string) {
+    let action = this.metadata.actions.find(a => a.id == actionId);
+    return action
   }
 
   async itemSelected(e: CustomEvent) {
@@ -346,6 +394,22 @@ export class MateuCrud extends LitElement {
           ></vaadin-menu-bar>
         </div>
       </vaadin-horizontal-layout>
+
+
+      <vaadin-dialog
+          header-title="${this.confirmationTexts?.title}"
+          .opened="${this.confirmationOpened}"
+          ${dialogRenderer(() => html`${this.confirmationTexts?.message}`, [])}
+          ${dialogFooterRenderer(
+              () => html`
+      <vaadin-button theme="primary error" @click="${this.runConfirmedAction}" style="margin-right: auto;">
+        ${this.confirmationTexts?.action}
+      </vaadin-button>
+      <vaadin-button theme="tertiary" @click="${this.closeConfirmation}">Cancel</vaadin-button>
+    `,
+              []
+          )}
+      ></vaadin-dialog>
     `
   }
 
