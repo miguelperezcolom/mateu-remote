@@ -89,6 +89,7 @@ export class JourneyStarter extends LitElement {
 
         if (this.journeyTypeId) {
             this.journeyId = nanoid()
+            console.log('connected callback with journeyTypeId', this.journeyTypeId)
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
             this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
             this.stepId = this.journey.currentStepId
@@ -99,7 +100,8 @@ export class JourneyStarter extends LitElement {
     }
 
     async updated(changedProperties: Map<string, unknown>) {
-        if (changedProperties.has("journeyTypeId")) {
+        if (changedProperties.has("journeyTypeId") && changedProperties.get("journeyTypeId")) {
+            console.log('change property journeyTypeId', changedProperties.get("journeyTypeId"))
             const journeyId = nanoid()
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, journeyId)
             this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(journeyId)
@@ -113,6 +115,7 @@ export class JourneyStarter extends LitElement {
         // @ts-ignore
         this.journeyTypeId = (event.target as HTMLElement).getAttribute('typeId');
         this.journeyId = nanoid()
+        console.log('start journey event received', this.journeyTypeId)
         await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId)
         this.stepId = this.journey.currentStepId

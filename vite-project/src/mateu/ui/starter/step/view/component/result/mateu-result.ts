@@ -81,7 +81,7 @@ export class MateuResult extends LitElement {
         <vaadin-icon icon="${this.getIcon(this.metadata.resultType)}" class="${this.getClass(this.metadata.resultType)}" size="64"></vaadin-icon>
         <div><h3>${this.metadata.message}</h3></div>
         
-        ${this.metadata.interestingLinks.length > 0?html`
+        ${this.metadata.interestingLinks?.length > 0?html`
 
           <div class="youmayalso">
             <h5>You may also be interested in:</h5>
@@ -104,7 +104,9 @@ export class MateuResult extends LitElement {
       
       <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
         <slot></slot>
-        <vaadin-button theme="primary" @click=${this.runAction} actionId=${this.metadata.nowTo.value}>${this.metadata.nowTo.description}</vaadin-button>
+        ${this.metadata.nowTo?html`
+          <vaadin-button theme="primary" @click=${this.runAction} actionId=${this.metadata.nowTo.value}>${this.metadata.nowTo.description}</vaadin-button>
+        `:''}
       </vaadin-horizontal-layout>
     `
   }
