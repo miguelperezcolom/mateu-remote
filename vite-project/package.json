@@ -1,7 +1,7 @@
 {
   "name": "mateu-ui",
   "private": false,
-  "version": "1.0.10",
+  "version": "1.0.11",
   "type": "module",
   "main": "dist/assets/index.js",
   "exports": {
@@ -26,6 +26,7 @@
     "@vaadin/context-menu": "^23.3.8",
     "@vaadin/date-picker": "^23.3.8",
     "@vaadin/date-time-picker": "^23.3.8",
+    "@vaadin/dialog": "^23.3.8",
     "@vaadin/form-layout": "^23.2.1",
     "@vaadin/horizontal-layout": "^23.2.1",
     "@vaadin/integer-field": "^23.3.8",

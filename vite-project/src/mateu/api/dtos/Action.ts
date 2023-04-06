@@ -1,4 +1,5 @@
 import {ActionType} from "./ActionType";
+import ConfirmationTexts from "./ConfirmationTexts";
 
 export default interface Action {
 
@@ -7,5 +8,11 @@ export default interface Action {
     caption: string;
 
     type: ActionType;
+
+    validationRequired: boolean;
+
+    confirmationRequired: boolean;
+
+    confirmationTexts: ConfirmationTexts;
 
 }

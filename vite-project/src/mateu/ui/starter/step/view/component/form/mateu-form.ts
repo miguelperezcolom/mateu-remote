@@ -5,7 +5,8 @@ import './section/mateu-section'
 import '@vaadin/horizontal-layout'
 import '@vaadin/vaadin-notification'
 import '@vaadin/button'
-import {notificationRenderer} from 'lit-vaadin-helpers';
+import '@vaadin/dialog'
+import {dialogRenderer, notificationRenderer} from 'lit-vaadin-helpers';
 import Rule from "../../../../../../api/dtos/Rule";
 import FieldsMap from "./FieldsMap";
 import FieldWrapper from "./FieldWrapper";
@@ -14,6 +15,8 @@ import {badge} from "@vaadin/vaadin-lumo-styles";
 import {BadgeType} from "../../../../../../api/dtos/BadgeType";
 import {ActionType} from "../../../../../../api/dtos/ActionType";
 import MateuApiClient from "../../../../../../api/MateuApiClient";
+import ConfirmationTexts from "../../../../../../api/dtos/ConfirmationTexts";
+import {dialogFooterRenderer} from "@vaadin/dialog/lit";
 
 export interface FormElement {
 
@@ -119,6 +122,27 @@ export class MateuForm extends LitElement implements FormElement {
   @property()
   fieldsMap: FieldsMap = new FieldsMap();
 
+  @property()
+  confirmationOpened = false;
+
+  @property()
+  closeConfirmation = () => {
+    this.confirmationOpened = false
+  };
+
+  @property()
+  confirmationAction = () => {};
+
+  @property()
+  runConfirmedAction = () => {
+    this.confirmationAction()
+    this.confirmationOpened = false
+  };
+
+  @property()
+  confirmationTexts: ConfirmationTexts | undefined;
+
+
 
   renderNotification = () => html`${this.notificationMessage}`;
 
@@ -139,18 +163,43 @@ export class MateuForm extends LitElement implements FormElement {
   }
 
   async runAction(event: Event) {
-    const requiredFields = this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
-        .filter(f => f.validations.length > 0);
-    // @ts-ignore
-    const missingFields = requiredFields.filter(f => !this.data[f.id]);
-    if (missingFields.length > 0) {
-      const fnames = missingFields.map(f => f.caption);
-      this.notificationMessage = 'All mandatory fields must be filled (' + fnames + ')';
-      this.notificationOpened = true;
+    const actionId = (event.target as HTMLElement).getAttribute('actionId');
+    if (!actionId) {
+      console.log('Attribute actionId is missing for ' + event.target)
+      return
+    }
+    const action = this.findAction(actionId!)
+    if (!action) {
+      console.log('No action with id ' + actionId)
+      return
+    }
+    if (action.validationRequired) {
+      const requiredFields = this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
+          .filter(f => f.validations.length > 0);
+      // @ts-ignore
+      const missingFields = requiredFields.filter(f => !this.data[f.id]);
+      if (missingFields.length > 0) {
+        const fnames = missingFields.map(f => f.caption);
+        this.notificationMessage = 'All mandatory fields must be filled (' + fnames + ')';
+        this.notificationOpened = true;
+        return
+      }
+    }
+    if (action.confirmationRequired) {
+      this.confirmationAction = async () => {
+        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
+      }
+      this.confirmationTexts = action.confirmationTexts
+      this.confirmationOpened = true;
     } else {
-      const actionId = (event.target as HTMLElement).getAttribute('actionId');
       await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
     }
+  }
+
+  private findAction(actionId: string) {
+    let action = this.metadata.actions.find(a => a.id == actionId);
+    if (!action) action = this.metadata.mainActions.find(a => a.id == actionId);
+    return action
   }
 
   render() {
@@ -194,6 +243,23 @@ export class MateuForm extends LitElement implements FormElement {
             theme="error"
             ${notificationRenderer(this.renderNotification)}
         >${this.notificationMessage}</vaadin-notification>
+        
+        
+        <vaadin-dialog
+  header-title="${this.confirmationTexts?.title}"
+  .opened="${this.confirmationOpened}"
+  ${dialogRenderer(() => html`${this.confirmationTexts?.message}`, [])}
+  ${dialogFooterRenderer(
+        () => html`
+      <vaadin-button theme="primary error" @click="${this.runConfirmedAction}" style="margin-right: auto;">
+        ${this.confirmationTexts?.action}
+      </vaadin-button>
+      <vaadin-button theme="tertiary" @click="${this.closeConfirmation}">Cancel</vaadin-button>
+    `,
+        []
+    )}
+></vaadin-dialog>
+        
       </div>
     `
   }
