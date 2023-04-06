@@ -26,7 +26,7 @@ export class MateuSection extends LitElement {
 
   render() {
     return html`
-      <div class="mateu-section">
+      <div class="mateu-section ${this.section.type}">
 
         ${this.section.caption?html`<h2>${this.section.caption}</h2>`:''}
         
@@ -59,6 +59,10 @@ export class MateuSection extends LitElement {
       padding: 2rem;  
       margin-bottom: 16px;       
       padding-top: 14px;   
+    }
+    
+    .mateu-section.Transparent {
+      border: unset;
     }
     
     .mateu-section:has(h1) {

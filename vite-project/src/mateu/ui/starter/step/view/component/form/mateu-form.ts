@@ -155,11 +155,18 @@ export class MateuForm extends LitElement implements FormElement {
     this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
         .forEach(f => this.fieldsMap.map.set(f, new FieldWrapper(f)))
     setTimeout(() => this.runRules());
+
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.setUp()
+    addEventListener('edit-field', async (event: Event) => {
+      const customEvent = event as CustomEvent
+      const fieldId = customEvent.detail.fieldId;
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+          '__editfield__' + fieldId, this.data)
+    })
   }
 
   async runAction(event: Event) {

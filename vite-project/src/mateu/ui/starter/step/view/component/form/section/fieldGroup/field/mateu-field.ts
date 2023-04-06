@@ -24,6 +24,9 @@ import './fields/field-string-array'
 import './fields/field-enum-array'
 import './fields/field-externalref-array'
 import './fields/field-closedlist'
+import './fields/field-rawcontent'
+import './fields/field-url'
+import './fields/field-object'
 import FieldWrapper from "../../../FieldWrapper";
 
 /**

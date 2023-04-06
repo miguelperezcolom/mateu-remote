@@ -7,6 +7,8 @@ export default interface Section {
 
     readOnly: boolean;
 
+    type: string;
+
     actions: Action[];
 
     fieldGroups: FieldGroup[];

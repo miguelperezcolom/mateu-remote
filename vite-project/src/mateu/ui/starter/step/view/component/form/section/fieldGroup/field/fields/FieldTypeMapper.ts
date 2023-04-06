@@ -12,6 +12,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'combobox': return 'field-combobox';
         case 'file': return 'field-file';
         case 'closedlist': return 'field-closedlist';
+        case 'rawcontent': return 'field-rawcontent';
     }
     switch (type) {
         case 'string': return 'field-text';
@@ -31,6 +32,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'string[]': return 'field-string-array';
         case 'enum[]': return 'field-enum-array';
         case 'ExternalReference[]': return 'field-externalref-array';
+        case 'URL': return 'field-url';
     }
-    return 'field-text'
+    return 'field-object'
 }

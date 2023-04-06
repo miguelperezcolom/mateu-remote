@@ -24,6 +24,7 @@
     "@vaadin/checkbox-group": "^23.3.8",
     "@vaadin/combo-box": "^23.3.8",
     "@vaadin/context-menu": "^23.3.8",
+    "@vaadin/custom-field": "^23.3.8",
     "@vaadin/date-picker": "^23.3.8",
     "@vaadin/date-time-picker": "^23.3.8",
     "@vaadin/dialog": "^23.3.8",
