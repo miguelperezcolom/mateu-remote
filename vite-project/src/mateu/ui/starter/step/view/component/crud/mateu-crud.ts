@@ -20,7 +20,6 @@ import {Base64} from "js-base64";
 import ConfirmationTexts from "../../../../../../api/dtos/ConfirmationTexts";
 import { dialogRenderer } from 'lit-vaadin-helpers';
 import { dialogFooterRenderer } from '@vaadin/dialog/lit';
-import ValueChangedEvent from "../form/section/fieldGroup/field/fields/interfaces/ValueChangedEvent";
 
 
 /**
