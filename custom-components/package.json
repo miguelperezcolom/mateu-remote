@@ -17,6 +17,12 @@
     "build": "tsc && vite build"
   },
   "dependencies": {
+    "@axa-ch/button": "^8.2.5",
+    "@axa-ch/checkbox": "^7.0.12",
+    "@axa-ch/icon": "^8.0.11",
+    "@axa-ch/input-phone": "^2.0.13",
+    "@axa-ch/spinner": "^3.0.12",
+    "@axa-ch/stepper": "^3.0.11",
     "lit": "^2.6.1"
   },
   "devDependencies": {

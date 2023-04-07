@@ -1,0 +1,7 @@
+import './my-custom-element'
+import '@axa-ch/input-phone'
+import '@axa-ch/button'
+import '@axa-ch/checkbox'
+import '@axa-ch/icon'
+import '@axa-ch/spinner'
+import '@axa-ch/stepper'

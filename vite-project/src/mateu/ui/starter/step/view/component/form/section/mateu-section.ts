@@ -24,6 +24,11 @@ export class MateuSection extends LitElement {
   @property()
   formElement!: FormElement;
 
+  getPaintableValue(value: unknown) {
+      // @ts-ignore
+      return (value && value.key)?value.key:value;
+  }
+
   render() {
     return html`
       <div class="mateu-section ${this.section.type}">
@@ -35,7 +40,7 @@ export class MateuSection extends LitElement {
               ${g.caption}
               <div class="table">
               ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div>
-                  <div class="cell value">${this.formElement.getValue(f.id)}</div></div>`)}
+                  <div class="cell value">${this.getPaintableValue(this.formElement.getValue(f.id))}</div></div>`)}
               </div>
           </div>`)}
         `:html`
