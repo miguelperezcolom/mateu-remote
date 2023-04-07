@@ -6,6 +6,7 @@ import '@vaadin/combo-box'
 import Field from "../../../../../../../../../../api/dtos/Field";
 import Value from "../../../../../../../../../../api/dtos/Value";
 import {ComboBox, ComboBoxDataProvider, ComboBoxDataProviderParams} from "@vaadin/combo-box";
+import Attribute from "../../../../../../../../../../api/dtos/Attribute";
 
 
 @customElement('field-externalref')
@@ -24,6 +25,7 @@ export class FieldExternalRef extends LitElement implements Component {
 
     setField(field: Field): void {
         this.field = field;
+        this._attributes = field.attributes;
     }
 
     setLabel(label: string): void {
@@ -35,7 +37,10 @@ export class FieldExternalRef extends LitElement implements Component {
     }
 
     onValueChanged(event: ValueChangedEvent): void {
-        console.log(event)
+        this.dispatchEvent(new CustomEvent('filterchanged', {
+            bubbles: true,
+            composed: true,
+            detail: event}))
     }
     setValue(value: unknown): void {
         this.value = value as Value;
@@ -60,7 +65,7 @@ export class FieldExternalRef extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const comboBox = e.target as ComboBox;
-        this.onValueChanged({value: comboBox.selectedItem})
+        this.onValueChanged({fieldId: this.id, value: comboBox.selectedItem})
     }
 
     @property()
@@ -72,9 +77,12 @@ export class FieldExternalRef extends LitElement implements Component {
     @property()
     field: Field | undefined;
 
+    @property()
+    _attributes: Attribute[] | undefined;
+
     @state()
     dataProvider: ComboBoxDataProvider<Value> = async (params, callback) => {
-        const itemProvider = this.field?.attributes.filter(a => a.key == 'itemprovider')[0].value;
+        const itemProvider = this._attributes?.filter(a => a.key == 'itemprovider')[0].value;
         const API = `${this.baseUrl}/itemproviders/${itemProvider}/items`;
         const { filter, page, pageSize } = params;
 
@@ -88,7 +96,7 @@ export class FieldExternalRef extends LitElement implements Component {
     };
 
     private async getCount(params: ComboBoxDataProviderParams):Promise<number> {
-        const itemProvider = this.field?.attributes.filter(a => a.key == 'itemprovider')[0].value;
+        const itemProvider = this._attributes?.filter(a => a.key == 'itemprovider')[0].value;
         const API = `${this.baseUrl}/itemproviders/${itemProvider}/count`;
         const { filter } = params;
 
@@ -113,7 +121,7 @@ export class FieldExternalRef extends LitElement implements Component {
             <vaadin-combo-box label="${this.label}" theme="vertical"
                                 @change=${this.onChange} 
                            name="${this.name}" 
-                           id="${this.name}"
+                           id="${this.id}"
                            value=${this.value}
                    ?disabled=${!this.enabled}
                                 ?required=${this.required}

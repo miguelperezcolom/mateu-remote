@@ -7,6 +7,7 @@ import "@vaadin/vaadin-grid";
 import "@vaadin/vaadin-grid/vaadin-grid-selection-column";
 import "@vaadin/vaadin-grid/vaadin-grid-sort-column";
 import "@vaadin/vaadin-grid/vaadin-grid-column";
+import "../form/section/fieldGroup/field/fields/field-externalref"
 import {columnBodyRenderer} from '@vaadin/grid/lit.js';
 import {Grid, GridDataProvider} from "@vaadin/vaadin-grid";
 import {Button} from "@vaadin/button";
@@ -19,6 +20,7 @@ import {Base64} from "js-base64";
 import ConfirmationTexts from "../../../../../../api/dtos/ConfirmationTexts";
 import { dialogRenderer } from 'lit-vaadin-helpers';
 import { dialogFooterRenderer } from '@vaadin/dialog/lit';
+import ValueChangedEvent from "../form/section/fieldGroup/field/fields/interfaces/ValueChangedEvent";
 
 
 /**
@@ -88,6 +90,8 @@ export class MateuCrud extends LitElement {
   @state()
   dataProvider: GridDataProvider<any> = async (params, callback) => {
     const { page, pageSize } = params;
+
+    console.log('data', this.data)
 
     const { rows, count } = await this.fetchData({
       page,
@@ -176,6 +180,13 @@ export class MateuCrud extends LitElement {
     const obj = {};
     // @ts-ignore
     obj[input.id] = input.value || null;
+    this.data = { ...this.data, ...obj}
+  }
+
+  valueChanged(e: CustomEvent) {
+    const obj = {};
+    // @ts-ignore
+    obj[e.detail.fieldId] = e.detail.value || null;
     this.data = { ...this.data, ...obj}
   }
 
@@ -328,7 +339,8 @@ export class MateuCrud extends LitElement {
         ${this.metadata?.searchForm.fields.slice(1).map(f => html`
           ${f.type != 'enum'
               && f.type != 'boolean'
-              && f.type != 'DatesRange'?html`
+              && f.type != 'DatesRange'
+              && f.type != 'ExternalReference'?html`
             <vaadin-text-field id="${f.id}" label="${f.caption}"
                                placeholder="${f.placeholder}"
                                @change=${this.filterChanged}></vaadin-text-field>
@@ -359,6 +371,21 @@ export class MateuCrud extends LitElement {
                               placeholder="${f.placeholder}"
             >
             </vaadin-combo-box>
+            
+            
+          `:''}
+          ${f.type == 'ExternalReference'?html`
+            
+            <field-externalref label="${f.caption}" theme="vertical"
+                           id="${f.id}"
+                               ._attributes="${f.attributes}"
+                               baseUrl="${this.baseUrl}"
+                               @filterchanged=${this.valueChanged}
+                              item-label-path="key"
+                              item-value-path="value"
+                              placeholder="${f.placeholder}"
+            >
+            </field-externalref>
             
             
           `:''}
