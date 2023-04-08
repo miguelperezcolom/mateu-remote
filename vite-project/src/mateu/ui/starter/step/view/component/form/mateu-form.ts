@@ -1,4 +1,4 @@
-import {css, html, LitElement} from 'lit'
+import {css, html, LitElement, PropertyValues} from 'lit'
 import {customElement, property} from 'lit/decorators.js'
 import Form from "../../../../../../api/dtos/Form";
 import './section/mateu-section'
@@ -75,7 +75,10 @@ export class MateuForm extends LitElement implements FormElement {
               .flatMap(g => g.fields)
               .filter(f => fieldIds.includes(f.id))
               .map(f => this.fieldsMap.map.get(f))
-              .forEach(f => f!.setVisible(false));
+              .forEach(f => {
+                console.log('hidding field', f)
+                f!.setVisible(false)
+              });
         }
       }
     } catch (e) {
@@ -146,16 +149,18 @@ export class MateuForm extends LitElement implements FormElement {
 
   renderNotification = () => html`${this.notificationMessage}`;
 
-  async updated() {
-    this.setUp()
+  async updated(changedProperties: PropertyValues) {
+    if (changedProperties.has("metadata")) {
+      this.setUp()
+    }
     // No need to call any other method here.
   }
 
   setUp() {
+    console.log('setup')
     this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
         .forEach(f => this.fieldsMap.map.set(f, new FieldWrapper(f)))
     setTimeout(() => this.runRules());
-
   }
 
   connectedCallback() {

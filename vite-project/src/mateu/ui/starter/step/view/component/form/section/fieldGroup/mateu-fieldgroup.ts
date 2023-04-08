@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js'
 import FieldGroup from "../../../../../../../../api/dtos/FieldGroup";
 import './field/mateu-field'
 import {FormElement} from "../../mateu-form";
+import Field from "../../../../../../../../api/dtos/Field";
 
 /**
  * An example element.
@@ -32,18 +33,39 @@ export class MateuFieldGroup extends LitElement {
     this.formElement.valueChanged(e.detail.key, e.detail.value)
   }
 
+  getStyle(f: Field) {
+    const width = f.attributes.find(a => a.key == 'width')?.value;
+    if (width) {
+      return 'width: ' + width + ';'
+    }
+    return 'flex-grow: 1;'
+  }
+
 
   render() {
     return html`
       <div>
 
         ${this.fieldGroup.caption?html`<h2>${this.fieldGroup.caption}</h2>`:''}
+
+        ${this.fieldGroup.lines.map(l => html`
+
+          <vaadin-horizontal-layout class="line" theme="spacing">
+            
+            ${l.fields.map(s => html`<mateu-field .field="${s}" 
+                                                  @change=${this.onValueChange}
+                                                    baseUrl=${this.baseUrl}
+                                                    .formElement=${this.formElement} 
+                                                    .value=${this.formElement.getValue(s.id)} 
+                                                    .fieldWrapper=${this.formElement.getFieldWrapper(s)}
+            style="${this.getStyle(s)}">
+
+          </vaadin-horizontal-layout>
+          
+          
         
-          ${this.fieldGroup.fields.map(s => html`<mateu-field .field="${s}" @change=${this.onValueChange}
-                                                              baseUrl=${this.baseUrl}
-                                                              .formElement=${this.formElement} 
-                                                              .value=${this.formElement.getValue(s.id)} 
-                                                              .fieldWrapper=${this.formElement.getFieldWrapper(s)}>
+        `)}
+        
           </mateu-field>`)}
         
         <slot></slot>
@@ -60,6 +82,8 @@ export class MateuFieldGroup extends LitElement {
       text-align: center;
     }
     */
+    .line {
+    }
   `
 }
 

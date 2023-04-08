@@ -3,6 +3,8 @@ import Action from "./Action";
 
 export default interface Section {
 
+    id: string;
+
     caption: string;
 
     readOnly: boolean;
