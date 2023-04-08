@@ -60,8 +60,7 @@ export class FieldObject extends LitElement implements Component {
 
     @property()
     onChange = (e:Event) => {
-        const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.value})
+        console.log(e)
     }
 
     @property()

@@ -4,6 +4,7 @@ import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/text-area'
 import Field from "../../../../../../../../../../api/dtos/Field";
+import Value from "../../../../../../../../../../api/dtos/Value";
 
 
 @customElement('field-readonly')
@@ -35,7 +36,13 @@ export class FieldReadonly extends LitElement implements Component {
         console.log(event)
     }
     setValue(value: unknown): void {
-        this.value = value as number;
+        this.value = value;
+        if (this.field?.type == 'ExternalReference[]') {
+            const values = value as Value[]
+            this.rawValue = values.map(v => v.key).join(', ');
+            return
+        }
+        this.rawValue = value as string;
     }
 
     setBaseUrl(value: string): void {
@@ -53,13 +60,18 @@ export class FieldReadonly extends LitElement implements Component {
     name = '';
 
     @property()
+    rawValue = '';
+
+    @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.value})
+        this.onValueChanged({
+            fieldId: this.field!.id,
+            value: input.value})
     }
 
     @property()
-    value: number | undefined;
+    value: unknown | undefined;
 
     @property()
     enabled = true;

@@ -134,7 +134,7 @@ export class MateuUi extends LitElement {
 
             </vaadin-vertical-layout>
         
-        `:html`<h1>No UI</h1>`}
+        `:html``}
 
 
         <vaadin-notification

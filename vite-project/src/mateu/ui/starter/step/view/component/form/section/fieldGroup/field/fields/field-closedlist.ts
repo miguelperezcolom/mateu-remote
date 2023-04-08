@@ -64,7 +64,8 @@ export class FieldClosedList extends LitElement implements Component {
     @property()
     onChange = (e:CheckboxGroupValueChangedEvent) => {
         console.log('onchange', e.detail.value)
-        this.onValueChanged({value: e.detail.value})
+        this.onValueChanged({fieldId: this.field!.id,
+            value: e.detail.value})
     }
 
     @property()

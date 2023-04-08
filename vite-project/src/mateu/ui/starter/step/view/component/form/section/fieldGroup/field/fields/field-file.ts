@@ -68,7 +68,9 @@ export class FieldFile extends LitElement implements Component {
         const input = e.target as UploadElement;
         if (e.detail.value == 100) {
             console.log('upload complete', e, input.files)
-            this.onValueChanged({value: input.files.map(uf => { return {
+            this.onValueChanged({
+                fieldId: this.field!.id,
+                value: input.files.map(uf => { return {
                     targetUrl: uf.uploadTarget,
                     id: this.fileid,
                     name: uf.name,

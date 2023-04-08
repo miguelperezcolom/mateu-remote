@@ -12,8 +12,8 @@ import {
 import {MultiSelectComboBox, MultiSelectComboBoxSelectedItemsChangedEvent} from "@vaadin/multi-select-combo-box";
 
 
-@customElement('field-externalref-array')
-export class FieldExternalrefArray extends LitElement implements Component {
+@customElement('field-externalref-checkboxes')
+export class FieldExternalrefCheckboxes extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -142,7 +142,7 @@ export class FieldExternalrefArray extends LitElement implements Component {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-externalref-array': FieldExternalrefArray
+        'field-externalref-checkboxes': FieldExternalrefCheckboxes
     }
 }
 

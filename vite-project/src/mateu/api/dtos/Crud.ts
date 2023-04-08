@@ -16,6 +16,8 @@ export default interface Crud extends ViewMetadata {
 
     columns: Column[];
 
+    canEdit: boolean;
+
     newItemForm: Form;
 
     detailForm: Form;

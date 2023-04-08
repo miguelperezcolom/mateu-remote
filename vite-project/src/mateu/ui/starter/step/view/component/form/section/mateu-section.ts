@@ -3,6 +3,8 @@ import { customElement, property } from 'lit/decorators.js'
 import Section from "../../../../../../../api/dtos/Section";
 import './fieldGroup/mateu-fieldgroup'
 import {FormElement} from "../mateu-form";
+import Field from "../../../../../../../api/dtos/Field";
+import Value from "../../../../../../../api/dtos/Value";
 
 /**
  * An example element.
@@ -24,7 +26,11 @@ export class MateuSection extends LitElement {
   @property()
   formElement!: FormElement;
 
-  getPaintableValue(value: unknown) {
+  getPaintableValue(field: Field, value: unknown) {
+      if (field.type == 'ExternalReference[]') {
+          const values = value as Value[]
+          return values.map(v => v.key).join(', ');
+      }
       // @ts-ignore
       return (value && value.key)?value.key:value;
   }
@@ -40,7 +46,7 @@ export class MateuSection extends LitElement {
               ${g.caption}
               <div class="table">
               ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div>
-                  <div class="cell value">${this.getPaintableValue(this.formElement.getValue(f.id))}</div></div>`)}
+                  <div class="cell value">${this.getPaintableValue(f, this.formElement.getValue(f.id))}</div></div>`)}
               </div>
           </div>`)}
         `:html`

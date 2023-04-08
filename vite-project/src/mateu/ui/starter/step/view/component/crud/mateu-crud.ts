@@ -112,6 +112,7 @@ export class MateuCrud extends LitElement {
 
   async updated(changedProperties: Map<string, unknown>) {
     if (changedProperties.has("journeyId")) {
+      this.setUp();
       if (changedProperties.get("journeyId") && this.journeyId) {
         this.search();
       }
@@ -157,6 +158,11 @@ export class MateuCrud extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    this.setUp()
+  }
+
+  setUp() {
+
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -342,7 +348,8 @@ export class MateuCrud extends LitElement {
               && f.type != 'ExternalReference'?html`
             <vaadin-text-field id="${f.id}" label="${f.caption}"
                                placeholder="${f.placeholder}"
-                               @change=${this.filterChanged}></vaadin-text-field>
+                               @change=${this.filterChanged}
+            ></vaadin-text-field>
           `:''}
           ${f.type == 'boolean'?html`
             <vaadin-checkbox-group id="${f.id}" label="${f.caption}"
@@ -397,14 +404,17 @@ export class MateuCrud extends LitElement {
         return this.getColumn(c)
       })}
 
-        <vaadin-grid-column
-            frozen-to-end
-            auto-width
-            flex-grow="0"
-            ${columnBodyRenderer(
-                (row) => html`<vaadin-button theme="tertiary-inline" .row="${row}" @click="${this.edit}">Edit</vaadin-button>`,
-                []
-            )}></vaadin-grid-column>
+
+        ${this.metadata.canEdit?html`
+          <vaadin-grid-column
+              frozen-to-end
+              auto-width
+              flex-grow="0"
+              ${columnBodyRenderer(
+                  (row) => html`<vaadin-button theme="tertiary-inline" .row="${row}" @click="${this.edit}">Edit</vaadin-button>`,
+                  []
+              )}></vaadin-grid-column>
+        `:''}
         
         </vaadin-grid>
       

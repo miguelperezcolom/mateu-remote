@@ -4,6 +4,9 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         return stereotype.substring('custom:'.length)
     }
 
+    if (stereotype.startsWith('element:')) {
+        return stereotype.substring('element:'.length)
+    }
     switch (stereotype) {
         case 'readonly': return 'field-readonly';
         case 'textarea': return 'field-textarea';
@@ -12,6 +15,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'combobox': return 'field-combobox';
         case 'file': return 'field-file';
         case 'closedlist': return 'field-closedlist';
+        case 'externalref-closedlist': return 'field-externalref-checkboxes';
         case 'rawcontent': return 'field-rawcontent';
     }
     switch (type) {

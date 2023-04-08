@@ -27,6 +27,7 @@ import './fields/field-closedlist'
 import './fields/field-rawcontent'
 import './fields/field-url'
 import './fields/field-object'
+import './fields/field-externalref-checkboxes'
 import FieldWrapper from "../../../FieldWrapper";
 
 /**
@@ -61,6 +62,9 @@ export class MateuField extends LitElement {
   component: Component | undefined;
 
   @property()
+  element: HTMLElement | undefined;
+
+  @property()
   fieldWrapper?: FieldWrapper
 
   updated(changedProperties: Map<string, unknown>) {
@@ -81,6 +85,18 @@ export class MateuField extends LitElement {
     }
   }
 
+  setupElement() {
+    if (this.element) {
+      console.log('value', this.value)
+      for (const a in this.value) {
+        // @ts-ignore
+        console.log('setting attribute ' + a + ' to', this.value[a])
+        // @ts-ignore
+        this.element.setAttribute(a, this.value[a])
+      }
+    }
+  }
+
   firstUpdated() {
     this.paint();
   }
@@ -89,15 +105,20 @@ export class MateuField extends LitElement {
     const element = document.createElement(mapInputTypeToFieldType(this.field.type, this.field.stereotype));
     element.setAttribute('id', 'field')
     const container = this.shadowRoot!.getElementById('container')!;
-    this.component = element as unknown as Component;
-    this.component.onValueChanged = (e) => {
-      let change = new CustomEvent('change', {detail: {
-          key: this.field.id,
-          value: e.value
-        }});
-      this.dispatchEvent(change);
+    if (this.field.stereotype.startsWith('element:')) {
+      this.element = element;
+      this.setupElement();
+    } else {
+      this.component = element as unknown as Component;
+      this.component.onValueChanged = (e) => {
+        let change = new CustomEvent('change', {detail: {
+            key: this.field.id,
+            value: e.value
+          }});
+        this.dispatchEvent(change);
+      }
+      this.setupComponent();
     }
-    this.setupComponent();
     container.replaceChildren(element);
     const wrapper = this.shadowRoot!.getElementById('wrapper') as unknown;
     if (this.fieldWrapper) {
