@@ -57,7 +57,9 @@ export class MateuForm extends LitElement implements FormElement {
   runRules() {
     this.metadata.sections
         .flatMap(s => s.fieldGroups)
-        .flatMap(g => g.fields).map(f => this.fieldsMap.map.get(f))
+        .flatMap(g => g.lines)
+        .flatMap(l => l.fields)
+        .map(f => this.fieldsMap.map.get(f))
         .filter(f => f)
         .forEach(f => f!.setVisible(true));
 
@@ -72,7 +74,8 @@ export class MateuForm extends LitElement implements FormElement {
           const fieldIds = r.data as string[];
           this.metadata.sections
               .flatMap(s => s.fieldGroups)
-              .flatMap(g => g.fields)
+              .flatMap(g => g.lines)
+              .flatMap(l => l.fields)
               .filter(f => fieldIds.includes(f.id))
               .map(f => this.fieldsMap.map.get(f))
               .forEach(f => {
@@ -158,7 +161,10 @@ export class MateuForm extends LitElement implements FormElement {
 
   setUp() {
     console.log('setup')
-    this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
+    this.metadata.sections
+        .flatMap(s => s.fieldGroups)
+        .flatMap(g => g.lines)
+        .flatMap(l => l.fields)
         .forEach(f => this.fieldsMap.map.set(f, new FieldWrapper(f)))
     setTimeout(() => this.runRules());
   }
@@ -186,8 +192,11 @@ export class MateuForm extends LitElement implements FormElement {
       return
     }
     if (action.validationRequired) {
-      const requiredFields = this.metadata.sections.flatMap(s => s.fieldGroups.flatMap(g => g.fields))
-          .filter(f => f.validations.length > 0);
+      const requiredFields = this.metadata.sections
+          .flatMap(s => s.fieldGroups
+          .flatMap(g => g.lines)
+          .flatMap(g => g.fields))
+          .filter(f => f.validations?.length > 0);
       // @ts-ignore
       const missingFields = requiredFields.filter(f => !this.data[f.id]);
       if (missingFields.length > 0) {
