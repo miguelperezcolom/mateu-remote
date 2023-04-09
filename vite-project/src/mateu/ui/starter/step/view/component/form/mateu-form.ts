@@ -203,6 +203,7 @@ export class MateuForm extends LitElement implements FormElement {
         const fnames = missingFields.map(f => f.caption);
         this.notificationMessage = 'All mandatory fields must be filled (' + fnames + ')';
         this.notificationOpened = true;
+        setTimeout(() => this.notificationOpened = false, 3000)
         return
       }
     }
