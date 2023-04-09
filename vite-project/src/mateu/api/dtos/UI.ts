@@ -12,4 +12,8 @@ export default interface UI {
 
     useJourneyTypeForId: boolean | undefined;
 
+    loginUrl: string | undefined;
+
+    logoutUrl: string | undefined;
+
 }

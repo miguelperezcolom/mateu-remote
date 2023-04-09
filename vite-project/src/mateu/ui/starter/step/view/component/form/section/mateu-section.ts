@@ -42,10 +42,10 @@ export class MateuSection extends LitElement {
         ${this.section.caption?html`<h2>${this.section.caption}</h2>`:''}
         
         ${this.section.readOnly?html`
-          ${this.section.fieldGroups.map(g => html`<div>
-              ${g.caption}
+          ${this.section.fieldGroups.map(g => html`
+              ${g.caption?html`<h3>${g.caption}</h3>`:''}
               <div class="table">
-              ${g.fields.map(f => html`<div class="field"><div class="cell caption">${f.caption}</div>
+              ${g.lines.flatMap(l => l.fields).map(f => html`<div class="field"><div class="cell caption">${f.caption}</div>
                   <div class="cell value">${this.getPaintableValue(f, this.formElement.getValue(f.id))}</div></div>`)}
               </div>
           </div>`)}
@@ -72,12 +72,38 @@ export class MateuSection extends LitElement {
       padding-top: 14px;   
     }
     
+    h2 {
+      margin-bottom: 0px;
+    }
+    
+    h3 {
+      margin-bottom: 0px;
+    }
+    
     .mateu-section.Transparent {
       border: unset;
     }
     
     .mateu-section:has(h1) {
       padding-top: 0px;
+    }
+    
+    
+    mateu-fieldgroup {
+        margin-top: 3rem;
+    }
+    
+    mateu-fieldgroup:nth-of-type(1) {
+        margin-top: unset;
+    }
+    
+    
+    .mateu-fieldgroup.readonly {
+        margin-top: 3rem;
+    }
+    
+    .mateu-fieldgroup.readonly:nth-of-type(1) {
+        margin-top: unset;
     }
     
     .table {

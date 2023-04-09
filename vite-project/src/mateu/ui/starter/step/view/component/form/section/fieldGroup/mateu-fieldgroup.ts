@@ -46,7 +46,7 @@ export class MateuFieldGroup extends LitElement {
     return html`
       <div>
 
-        ${this.fieldGroup.caption?html`<h2>${this.fieldGroup.caption}</h2>`:''}
+        ${this.fieldGroup.caption?html`<h3>${this.fieldGroup.caption}</h3>`:''}
 
         ${this.fieldGroup.lines.map(l => html`
 
@@ -83,6 +83,10 @@ export class MateuFieldGroup extends LitElement {
     }
     */
     .line {
+    }
+    
+    h3 {
+      margin-bottom: 0px;
     }
   `
 }

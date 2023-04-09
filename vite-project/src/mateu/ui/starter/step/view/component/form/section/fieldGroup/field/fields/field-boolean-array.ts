@@ -67,7 +67,9 @@ export class FieldBooleanArray extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: this.toArray(input.value)})
+        this.onValueChanged({
+            fieldId: this.field!.id,
+            value: this.toArray(input.value)})
     }
 
     toArray(raw: string | undefined): boolean[] {

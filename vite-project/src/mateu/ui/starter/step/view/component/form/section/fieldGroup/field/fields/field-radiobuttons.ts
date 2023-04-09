@@ -61,7 +61,9 @@ export class FieldRadiobuttons extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.value})
+        this.onValueChanged({
+            fieldId: this.field!.id,
+            value: input.value})
     }
 
     @property()

@@ -79,6 +79,9 @@ export class JourneyStarter extends LitElement {
             this.loading = this.activeCalls > 0
             const ce = event as CustomEvent
             this.notificationMessage = `${ce.detail.reason.code} ${ce.detail.reason.message}`;
+            if (ce.detail.reason.response?.data) {
+                this.notificationMessage = `${ce.detail.reason.response.data}`
+            }
             this.notificationOpened = true;
             setTimeout(() => this.notificationOpened = false, 3000)
         })
@@ -195,8 +198,8 @@ export class JourneyStarter extends LitElement {
 
     static styles = css`
     :host {
-      max-width: 1280px;
-      width: 800px;
+      width: 90%;
+      max-width: 800px;
       margin: 0 auto;
       padding: 2rem;    
     }

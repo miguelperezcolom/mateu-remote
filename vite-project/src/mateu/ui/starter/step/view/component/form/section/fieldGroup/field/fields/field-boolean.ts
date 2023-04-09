@@ -60,7 +60,9 @@ export class FieldBoolean extends LitElement implements Component {
     @property()
     onChange = (e:Event) => {
         const input = e.target as HTMLInputElement;
-        this.onValueChanged({value: input.checked})
+        this.onValueChanged({
+            fieldId: this.field!.id,
+            value: input.checked})
     }
 
     @property()

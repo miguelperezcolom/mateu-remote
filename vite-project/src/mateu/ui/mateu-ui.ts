@@ -92,6 +92,16 @@ export class MateuUi extends LitElement {
         window.history.pushState({},"", '#' + this.journeyTypeId!);
     }
 
+    login() {
+        // @ts-ignore
+        window.location = this.ui?.loginUrl
+    }
+
+    logout() {
+        // @ts-ignore
+        window.location = this.ui?.logoutUrl
+    }
+
 
     render() {
        return html`
@@ -109,8 +119,20 @@ export class MateuUi extends LitElement {
                                      theme="tertiary"
                     ></vaadin-menu-bar>
                 `:''}
+
+                        </div>                         
+                        <div slot="navbar" style="width: 200px; text-align: right; padding-right: 10px;">
+                                ${this.ui.loginUrl?html`
+                                    <vaadin-button theme="tertiary" 
+                                                   @click="${this.login}"
+                                    >Login</vaadin-button>
+                            `:''}
+                                ${this.ui.logoutUrl?html`
+                                    <vaadin-button theme="tertiary"
+                                                   @click="${this.logout}"
+                                    >Logout</vaadin-button>
+                            `:''}
                         </div>
-                        <div slot="navbar" style="width: 200px;"></div>
                     </vaadin-app-layout>
                 `:''}
 
@@ -167,6 +189,11 @@ export class MateuUi extends LitElement {
         font-weight: 600;
         padding-bottom: 6px;
     }
+    
+    vaadin-button {
+        padding-bottom: 4px;
+    }
+   
     
     div {
         height: 44px;
