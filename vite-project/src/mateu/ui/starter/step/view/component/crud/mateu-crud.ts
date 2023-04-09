@@ -453,12 +453,12 @@ export class MateuCrud extends LitElement {
   ${badge}
     
   [theme~='badge'][theme~='warning'] {
-    color: #C7BC1D;
+    color: #6f6800;
     background-color: #FFFCC0;
   }
   [theme~='badge'][theme~='warning'][theme~='primary'] {
     color: #ffffff;
-    background-color: #C7BC1D;
+    background-color: #6f6800;
   }
   
   .menu {
