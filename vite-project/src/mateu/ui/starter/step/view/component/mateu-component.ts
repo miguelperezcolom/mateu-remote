@@ -22,6 +22,9 @@ export class MateuComponent extends LitElement {
     component: Component | undefined;
 
     @property()
+    journeyTypeId!: string
+
+    @property()
     journeyId!: string
 
     @property()
@@ -35,6 +38,7 @@ export class MateuComponent extends LitElement {
                     html`<mateu-form 
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
+                            journeyTypeId="${this.journeyTypeId}"
                             journeyId="${this.journeyId}" 
                             stepId="${this.stepId}"
                             .rules=${this.component.rules}
@@ -46,6 +50,7 @@ export class MateuComponent extends LitElement {
                     html`<mateu-crud 
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
+                            journeyTypeId="${this.journeyTypeId}"
                             journeyId="${this.journeyId}" 
                             stepId="${this.stepId}"
                             listId="${(this.component.metadata as Crud).listId}"
@@ -58,6 +63,7 @@ export class MateuComponent extends LitElement {
                     html`<mateu-result 
                             .metadata=${this.component.metadata} 
                             .data=${this.component.data}
+                            journeyTypeId="${this.journeyTypeId}"
                             journeyId="${this.journeyId}" stepId="${this.stepId}"
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"

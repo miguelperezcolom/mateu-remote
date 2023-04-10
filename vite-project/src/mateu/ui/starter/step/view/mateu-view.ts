@@ -23,6 +23,9 @@ export class MateuView extends LitElement {
   view!: View
 
   @property()
+  journeyTypeId!: string
+
+  @property()
   journeyId!: string
 
   @property()
@@ -37,7 +40,7 @@ export class MateuView extends LitElement {
     return html`
       <div>
         ${this.view?.components.map(c => html`<mateu-component 
-            .component=${c}  journeyId="${this.journeyId}" stepId="${this.stepId}" 
+            .component=${c} journeyTypeId="${this.journeyTypeId}" journeyId="${this.journeyId}" stepId="${this.stepId}" 
             baseUrl="${this.baseUrl}"
         >
           <slot></slot></mateu-component>

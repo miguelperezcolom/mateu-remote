@@ -92,11 +92,10 @@ export class JourneyStarter extends LitElement {
 
         if (this.journeyTypeId) {
             this.journeyId = nanoid()
-            console.log('connected callback with journeyTypeId', this.journeyTypeId)
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
-            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId, this.journeyId!)
             this.stepId = this.journey.currentStepId
-            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId, this.journeyId, this.stepId)
         } else {
             this.tipos = await new MateuApiClient(this.baseUrl).fetchJourneyTypes()
         }
@@ -104,12 +103,11 @@ export class JourneyStarter extends LitElement {
 
     async updated(changedProperties: Map<string, unknown>) {
         if (changedProperties.has("journeyTypeId") && changedProperties.get("journeyTypeId")) {
-            console.log('change property journeyTypeId', changedProperties.get("journeyTypeId"))
             const journeyId = nanoid()
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, journeyId)
-            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(journeyId)
+            this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, journeyId)
             this.stepId = this.journey.currentStepId
-            this.step = await new MateuApiClient(this.baseUrl).fetchStep(journeyId, this.stepId)
+            this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, journeyId, this.stepId)
             this.journeyId = journeyId
         }
     }
@@ -120,9 +118,9 @@ export class JourneyStarter extends LitElement {
         this.journeyId = nanoid()
         console.log('start journey event received', this.journeyTypeId)
         await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
-        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId)
+        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, this.journeyId)
         this.stepId = this.journey.currentStepId
-        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId, this.stepId)
+        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, this.journeyId, this.stepId)
     }
 
     resetJourney() {
@@ -131,9 +129,9 @@ export class JourneyStarter extends LitElement {
     }
 
     async onActionCalled() {
-        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyId!)
+        this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, this.journeyId!)
         this.stepId = this.journey.currentStepId
-        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyId!, this.stepId)
+        this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId)
     }
 
     render() {
@@ -164,6 +162,7 @@ export class JourneyStarter extends LitElement {
             ${this.step?html`
                         <journey-step
                                 id="step"
+                                journeyTypeId="${this.journeyTypeId}"
                                 journeyId="${this.journeyId}" 
                                        stepId="${this.stepId}" 
                                        .step=${this.step} 

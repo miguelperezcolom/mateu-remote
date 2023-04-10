@@ -50,29 +50,28 @@ export default class MateuApiClient {
     }
 
     async createJourney(journeyType: string, journeyId: string): Promise<void> {
-        return await this.wrap<void>(axios.post(this.baseUrl + '/journeys/' + journeyId,
+        return await this.wrap<void>(axios.post(this.baseUrl + '/journeys/' + journeyType + '/' + journeyId,
             {
-                    journeyTypeId: journeyType,
                     contextData: []
                 }
             ))
     }
 
-    async fetchJourney(journeyId: string): Promise<Journey> {
-        return await this.wrap<Journey>(axios.get(this.baseUrl + '/journeys/' + journeyId)
+    async fetchJourney(journeyType: string, journeyId: string): Promise<Journey> {
+        return await this.wrap<Journey>(axios.get(this.baseUrl + '/journeys/' + journeyType + '/' + journeyId)
                 .then((response) => response.data))
     }
 
-    async fetchStep(journeyId: string, stepId: string): Promise<Step> {
+    async fetchStep(journeyType: string, journeyId: string, stepId: string): Promise<Step> {
         return await this.wrap<Step>(axios.get(this.baseUrl + '/journeys/' +
-            journeyId + '/steps/' + stepId)
+            journeyType + '/' + journeyId + '/steps/' + stepId)
                 .then((response) => response.data))
     }
 
-    async runStepAction(journeyId: string, stepId: string, actionId: string,
+    async runStepAction(journeyType: string, journeyId: string, stepId: string, actionId: string,
                         data: unknown): Promise<void> {
         return await this.wrap<void>(axios.post(this.baseUrl + '/journeys/' +
-            journeyId + '/steps/' + stepId
+            journeyType + '/' + journeyId + '/steps/' + stepId
                 + '/' + actionId, {
                     data: data
                 }
@@ -87,21 +86,21 @@ export default class MateuApiClient {
         })
     }
 
-    async fetchRows(journeyId: string, stepId: string, listId: string,
+    async fetchRows(journeyType: string, journeyId: string, stepId: string, listId: string,
                     page: number, pageSize: number,
                     sortOrders: string, filters: string
                     ): Promise<any[]> {
-        return await this.wrap<any[]>(axios.get(this.baseUrl + "/journeys/" + journeyId +
+        return await this.wrap<any[]>(axios.get(this.baseUrl + "/journeys/" + journeyType + '/' + journeyId +
             "/steps/" + stepId +
             "/lists/" + listId + "/rows?page=" + page + "&page_size=" + pageSize +
             "&ordering=" + sortOrders + "&filters=" + filters)
             .then((response) => response.data))
     }
 
-    async fetchCount(journeyId: string, stepId: string, listId: string,
+    async fetchCount(journeyType: string, journeyId: string, stepId: string, listId: string,
                      filters: string
     ): Promise<number> {
-        return await this.wrap<number>(axios.get(this.baseUrl + "/journeys/" + journeyId
+        return await this.wrap<number>(axios.get(this.baseUrl + "/journeys/" + journeyType + '/' + journeyId
             + "/steps/" + stepId +
             "/lists/" + listId + "/count?filters=" + filters)
             .then((response) => response.data))

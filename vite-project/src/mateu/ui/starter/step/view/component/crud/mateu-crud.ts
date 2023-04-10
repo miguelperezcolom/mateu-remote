@@ -38,6 +38,9 @@ export class MateuCrud extends LitElement {
   baseUrl = ''
 
   @property()
+  journeyTypeId!: string
+
+  @property()
   journeyId!: string
 
   @property()
@@ -146,13 +149,13 @@ export class MateuCrud extends LitElement {
     filters: string;
     sortOrders: string;
   }): Promise<any[]> {
-    return new MateuApiClient(this.baseUrl).fetchRows(this.journeyId,
+    return new MateuApiClient(this.baseUrl).fetchRows(this.journeyTypeId, this.journeyId,
         this.stepId, this.listId, params.page, params.pageSize,
         params.sortOrders, params.filters)
   }
 
   async fetchCount(filters: string): Promise<number> {
-    return new MateuApiClient(this.baseUrl).fetchCount(this.journeyId,
+    return new MateuApiClient(this.baseUrl).fetchCount(this.journeyTypeId, this.journeyId,
         this.stepId, this.listId, filters)
   }
 
@@ -205,7 +208,7 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     this.data = { ...this.data, ...obj}
-    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, '__list__' + this.listId + '__edit', this.data)
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId, '__list__' + this.listId + '__edit', this.data)
   }
 
   async runAction(e:Event) {
@@ -230,13 +233,13 @@ export class MateuCrud extends LitElement {
     const extendedData = { ...this.data, ...obj}
     if (action.confirmationRequired) {
       this.confirmationAction = async () => {
-        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
             actionId, extendedData)
       }
       this.confirmationTexts = action.confirmationTexts
       this.confirmationOpened = true;
     } else {
-      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
           actionId, extendedData)
     }
   }
@@ -253,7 +256,7 @@ export class MateuCrud extends LitElement {
     };
     // @ts-ignore
     const extendedData = { ...this.data, ...obj}
-    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+    await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
         '__list__' + this.listId + '__row__' + e.detail.value.id, extendedData)
   }
 

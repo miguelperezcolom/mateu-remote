@@ -25,6 +25,9 @@ export class MateuResult extends LitElement {
   baseUrl = ''
 
   @property()
+  journeyTypeId!: string
+
+  @property()
   journeyId!: string
 
   @property()
@@ -42,7 +45,7 @@ export class MateuResult extends LitElement {
 
   async runAction(e:Event) {
       const button = e.currentTarget as Button;
-      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
           button.getAttribute('actionid')!, {})
   }
 

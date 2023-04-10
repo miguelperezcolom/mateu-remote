@@ -12,6 +12,7 @@ import {MenuType} from "../api/dtos/MenuType";
 import {MenuBarItem, MenuBarItemSelectedEvent} from "@vaadin/menu-bar";
 import "@vaadin/menu-bar";
 import MateuApiClient from "../api/MateuApiClient";
+import Menu from "../api/dtos/Menu";
 
 interface MyMenuBarItem extends MenuBarItem {
 
@@ -56,19 +57,7 @@ export class MateuUi extends LitElement {
     async connectedCallback() {
         super.connectedCallback();
         this.ui = await new MateuApiClient(this.baseUrl).fetchUi(this.uiId);
-        console.log('ui', this.ui)
-        this.items = this.ui?.menu?.map(m => {
-            return {
-                journeyTypeId: m.journeyTypeId,
-                text: m.caption,
-                children: m.type == MenuType.Submenu?m.submenus?.map(s => {
-                    return {
-                        journeyTypeId: s.journeyTypeId,
-                        text: s.caption,
-                    }
-                }):undefined
-            }
-        });
+        this.items = this.ui?.menu?.map(m => this.mapToMenuBarItem(m));
         if (window.location.hash) {
             this.journeyTypeId = window.location.hash.substring(1)
         }
@@ -77,6 +66,14 @@ export class MateuUi extends LitElement {
             const w = e.target as Window
             this.journeyTypeId = w.location.hash.substring(1)
         };
+    }
+
+    private mapToMenuBarItem(m: Menu): { journeyTypeId: string | undefined; children: MenuBarItem[] | undefined; text: string } {
+        return {
+            journeyTypeId: m.journeyTypeId,
+            text: m.caption,
+            children: m.type == MenuType.Submenu?m.submenus?.map(s => this.mapToMenuBarItem(s)):undefined
+        }
     }
 
     selectJourney(event: Event) {

@@ -111,6 +111,9 @@ export class MateuForm extends LitElement implements FormElement {
   data!: object
 
   @property()
+  journeyTypeId!: string
+
+  @property()
   journeyId!: string
 
   @property()
@@ -160,7 +163,6 @@ export class MateuForm extends LitElement implements FormElement {
   }
 
   setUp() {
-    console.log('setup')
     this.metadata.sections
         .flatMap(s => s.fieldGroups)
         .flatMap(g => g.lines)
@@ -175,7 +177,7 @@ export class MateuForm extends LitElement implements FormElement {
     addEventListener('edit-field', async (event: Event) => {
       const customEvent = event as CustomEvent
       const fieldId = customEvent.detail.fieldId;
-      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId,
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
           '__editfield__' + fieldId, this.data)
     })
   }
@@ -209,12 +211,12 @@ export class MateuForm extends LitElement implements FormElement {
     }
     if (action.confirmationRequired) {
       this.confirmationAction = async () => {
-        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
+        await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId, actionId!, this.data)
       }
       this.confirmationTexts = action.confirmationTexts
       this.confirmationOpened = true;
     } else {
-      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyId, this.stepId, actionId!, this.data)
+      await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId, actionId!, this.data)
     }
   }
 
