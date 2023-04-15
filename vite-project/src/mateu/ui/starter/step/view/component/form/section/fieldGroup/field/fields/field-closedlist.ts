@@ -40,6 +40,10 @@ export class FieldClosedList extends LitElement implements Component {
     }
     setValue(value: unknown): void {
         console.log('setvalue', value)
+        if (!value) {
+            this.value = undefined
+            return
+        }
         const raw = value as [];
         this.value = raw.map(v => '' + v);
     }

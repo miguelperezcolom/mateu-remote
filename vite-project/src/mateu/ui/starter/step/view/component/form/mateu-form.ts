@@ -76,7 +76,7 @@ export class MateuForm extends LitElement implements FormElement {
               .flatMap(s => s.fieldGroups)
               .flatMap(g => g.lines)
               .flatMap(l => l.fields)
-              .filter(f => fieldIds.includes(f.id))
+              .filter(f => fieldIds?.includes(f.id))
               .map(f => this.fieldsMap.map.get(f))
               .forEach(f => {
                 console.log('hidding field', f)
