@@ -118,7 +118,7 @@ export class MateuResult extends LitElement {
       <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
         <slot></slot>
         ${!this.metadata.nowTo && this.previousStepId?html`
-          <vaadin-button theme="secondary" @click=${this.goBack}>Cancel</vaadin-button>
+          <vaadin-button theme="secondary" @click=${this.goBack}>Back</vaadin-button>
         `:''}
         ${this.metadata.nowTo?html`
           <vaadin-button theme="primary" @click=${this.runAction} actionId=${this.metadata.nowTo.value}>${this.metadata.nowTo.description}</vaadin-button>

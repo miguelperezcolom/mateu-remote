@@ -99,6 +99,11 @@ export class MateuUi extends LitElement {
         window.location = this.ui?.logoutUrl
     }
 
+    goHome() {
+        // @ts-ignore
+        window.location = ''
+    }
+
 
     render() {
        return html`
@@ -107,7 +112,7 @@ export class MateuUi extends LitElement {
                 
                 ${this.ui.menu?html`
                     <vaadin-app-layout>
-                        <h3 slot="navbar" class="title ml-l mr-l" style="width: 200px;">${this.ui.title}</h3>
+                        <h3 slot="navbar" class="title ml-l mr-l" style="width: 200px;" @click=${this.goHome}>${this.ui.title}</h3>
                         <div class="container" slot="navbar">
                             ${this.ui.menu?html`
                     <vaadin-menu-bar slot="navbar"
@@ -139,7 +144,7 @@ export class MateuUi extends LitElement {
                 </div>
                 -->
                 
-                ${this.ui.homeJourneyTypeId?html`
+                ${this.ui.homeJourneyTypeId && !this.journeyTypeId?html`
 
                     <journey-starter journeytypeid="${this.ui.homeJourneyTypeId}" baseUrl="${this.baseUrl}"></journey-starter>
                     

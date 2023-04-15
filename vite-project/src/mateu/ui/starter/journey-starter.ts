@@ -63,43 +63,48 @@ export class JourneyStarter extends LitElement {
 
     renderNotification = () => html`${this.notificationMessage}`;
 
+    onBackendCalled = () => {
+        this.activeCalls++;
+        this.loading = this.activeCalls > 0
+    }
+
+    onBackendSucceeded = () => {
+        this.activeCalls--;
+        this.loading = this.activeCalls > 0
+    }
+
+    onBackendFailed = (event: Event) => {
+        this.activeCalls--;
+        this.loading = this.activeCalls > 0
+        const ce = event as CustomEvent
+        this.notificationMessage = `${ce.detail.reason.code} ${ce.detail.reason.message}`;
+        if (ce.detail.reason.response?.data) {
+            this.notificationMessage = `${ce.detail.reason.response.data}`
+        }
+        this.notificationOpened = true;
+        setTimeout(() => this.notificationOpened = false, 3000)
+    }
+
+
+    onBackRequested = async (event: Event) => {
+        const ce = event as CustomEvent
+        this.stepId = ce.detail;
+        this.step = await new MateuApiClient(this.baseUrl)
+            .fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId!)
+        this.previousStepId = this.step.previousStepId
+    }
+
 
     async connectedCallback() {
         super.connectedCallback();
 
-        window.addEventListener('backend-called-event', () => {
-            this.activeCalls++;
-            this.loading = this.activeCalls > 0
-        })
+        console.log('connected', 'journey starter');
 
-        window.addEventListener('backend-succeeded-event', () => {
-            this.activeCalls--;
-            this.loading = this.activeCalls > 0
-        })
-
-        window.addEventListener('backend-failed-event', (event) => {
-            this.activeCalls--;
-            this.loading = this.activeCalls > 0
-            const ce = event as CustomEvent
-            this.notificationMessage = `${ce.detail.reason.code} ${ce.detail.reason.message}`;
-            if (ce.detail.reason.response?.data) {
-                this.notificationMessage = `${ce.detail.reason.response.data}`
-            }
-            this.notificationOpened = true;
-            setTimeout(() => this.notificationOpened = false, 3000)
-        })
-
-        window.addEventListener('action-called', () => {
-            this.onActionCalled()
-        })
-
-        window.addEventListener('back-requested', async (event) => {
-            const ce = event as CustomEvent
-            this.stepId = ce.detail;
-            this.step = await new MateuApiClient(this.baseUrl)
-                .fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId!)
-            this.previousStepId = this.step.previousStepId
-        })
+        window.addEventListener('backend-called-event', this.onBackendCalled)
+        window.addEventListener('backend-succeeded-event', this.onBackendSucceeded)
+        window.addEventListener('backend-failed-event', this.onBackendFailed)
+        window.addEventListener('action-called', this.onActionCalled)
+        window.addEventListener('back-requested', this.onBackRequested)
 
         if (this.journeyTypeId) {
             this.journeyId = nanoid()
@@ -111,6 +116,19 @@ export class JourneyStarter extends LitElement {
         } else {
             this.tipos = await new MateuApiClient(this.baseUrl).fetchJourneyTypes()
         }
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+
+        console.log('disconnected', 'journey starter');
+
+        window.removeEventListener('backend-called-event', this.onBackendCalled)
+        window.removeEventListener('backend-succeeded-event', this.onBackendSucceeded)
+        window.removeEventListener('backend-failed-event', this.onBackendFailed)
+        window.removeEventListener('action-called', this.onActionCalled)
+        window.removeEventListener('back-requested', this.onBackRequested)
+
     }
 
     async updated(changedProperties: Map<string, unknown>) {
@@ -143,7 +161,7 @@ export class JourneyStarter extends LitElement {
         this.journeyTypeId = undefined
     }
 
-    async onActionCalled() {
+    onActionCalled = async () => {
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, this.journeyId!)
         this.stepId = this.journey.currentStepId
         this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId)
