@@ -44,6 +44,9 @@ export class JourneyStarter extends LitElement {
     stepId: string | undefined = undefined;
 
     @property()
+    previousStepId: string | undefined = undefined;
+
+    @property()
     step: Step | undefined = undefined;
 
     @property()
@@ -90,12 +93,21 @@ export class JourneyStarter extends LitElement {
             this.onActionCalled()
         })
 
+        window.addEventListener('back-requested', async (event) => {
+            const ce = event as CustomEvent
+            this.stepId = ce.detail;
+            this.step = await new MateuApiClient(this.baseUrl)
+                .fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId!)
+            this.previousStepId = this.step.previousStepId
+        })
+
         if (this.journeyTypeId) {
             this.journeyId = nanoid()
             await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
             this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId, this.journeyId!)
             this.stepId = this.journey.currentStepId
             this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId, this.journeyId, this.stepId)
+            this.previousStepId = this.step.previousStepId
         } else {
             this.tipos = await new MateuApiClient(this.baseUrl).fetchJourneyTypes()
         }
@@ -109,6 +121,7 @@ export class JourneyStarter extends LitElement {
             this.stepId = this.journey.currentStepId
             this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, journeyId, this.stepId)
             this.journeyId = journeyId
+            this.previousStepId = this.step.previousStepId
         }
     }
 
@@ -120,7 +133,9 @@ export class JourneyStarter extends LitElement {
         await new MateuApiClient(this.baseUrl).createJourney(this.journeyTypeId!, this.journeyId)
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, this.journeyId)
         this.stepId = this.journey.currentStepId
+        this.previousStepId = undefined
         this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, this.journeyId, this.stepId)
+        this.previousStepId = this.step.previousStepId
     }
 
     resetJourney() {
@@ -132,6 +147,7 @@ export class JourneyStarter extends LitElement {
         this.journey = await new MateuApiClient(this.baseUrl).fetchJourney(this.journeyTypeId!, this.journeyId!)
         this.stepId = this.journey.currentStepId
         this.step = await new MateuApiClient(this.baseUrl).fetchStep(this.journeyTypeId!, this.journeyId!, this.stepId)
+        this.previousStepId = this.step.previousStepId
     }
 
     render() {

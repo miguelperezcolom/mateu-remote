@@ -7,5 +7,4 @@ export default interface Result extends ViewMetadata {
     message: string
     interestingLinks: Destination[]
     nowTo: Destination
-
 }

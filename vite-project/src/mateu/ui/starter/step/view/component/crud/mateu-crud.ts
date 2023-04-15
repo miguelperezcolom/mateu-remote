@@ -47,6 +47,9 @@ export class MateuCrud extends LitElement {
   stepId!: string
 
   @property()
+  previousStepId!: string
+
+  @property()
   listId!: string
 
   @property()

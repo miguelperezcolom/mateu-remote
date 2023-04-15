@@ -34,6 +34,9 @@ export class MateuResult extends LitElement {
   stepId!: string
 
   @property()
+  previousStepId!: string
+
+  @property()
   metadata!: Result
 
   @property()
@@ -41,6 +44,13 @@ export class MateuResult extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+  }
+
+  async goBack() {
+    this.dispatchEvent(new CustomEvent('back-requested', {
+      bubbles: true,
+      composed: true,
+      detail: this.previousStepId}))
   }
 
   async runAction(e:Event) {
@@ -107,6 +117,9 @@ export class MateuResult extends LitElement {
       
       <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
         <slot></slot>
+        ${!this.metadata.nowTo && this.previousStepId?html`
+          <vaadin-button theme="secondary" @click=${this.goBack}>Cancel</vaadin-button>
+        `:''}
         ${this.metadata.nowTo?html`
           <vaadin-button theme="primary" @click=${this.runAction} actionId=${this.metadata.nowTo.value}>${this.metadata.nowTo.description}</vaadin-button>
         `:''}

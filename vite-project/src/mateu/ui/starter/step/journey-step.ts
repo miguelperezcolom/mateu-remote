@@ -32,6 +32,7 @@ export class JourneyStep extends LitElement {
                 journeyId="${this.journeyId}" 
                 stepId="${this.stepId}"
                 baseUrl="${this.baseUrl}"
+                previousStepId="${this.step?.previousStepId}"
         ><slot></slot></mateu-view>`
     }
 

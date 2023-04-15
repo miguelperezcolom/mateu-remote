@@ -31,6 +31,9 @@ export class MateuView extends LitElement {
   @property()
   stepId!: string
 
+  @property()
+  previousStepId!: string
+
 
   connectedCallback() {
     super.connectedCallback();
@@ -42,6 +45,7 @@ export class MateuView extends LitElement {
         ${this.view?.components.map(c => html`<mateu-component 
             .component=${c} journeyTypeId="${this.journeyTypeId}" journeyId="${this.journeyId}" stepId="${this.stepId}" 
             baseUrl="${this.baseUrl}"
+            previousStepId="${this.previousStepId}"
         >
           <slot></slot></mateu-component>
         `)}</div>`

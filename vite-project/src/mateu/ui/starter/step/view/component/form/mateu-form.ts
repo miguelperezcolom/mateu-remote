@@ -120,6 +120,9 @@ export class MateuForm extends LitElement implements FormElement {
   stepId!: string
 
   @property()
+  previousStepId!: string
+
+  @property()
   rules!: Rule[]
 
   @property()
@@ -180,6 +183,13 @@ export class MateuForm extends LitElement implements FormElement {
       await new MateuApiClient(this.baseUrl).runStepAction(this.journeyTypeId, this.journeyId, this.stepId,
           '__editfield__' + fieldId, this.data)
     })
+  }
+
+  async goBack() {
+    this.dispatchEvent(new CustomEvent('back-requested', {
+      bubbles: true,
+      composed: true,
+      detail: this.previousStepId}))
   }
 
   async runAction(event: Event) {
@@ -255,6 +265,9 @@ export class MateuForm extends LitElement implements FormElement {
 
         <vaadin-horizontal-layout style="justify-content: end;" theme="spacing">
           <slot></slot>
+          ${this.previousStepId?html`
+            <vaadin-button theme="secondary" @click=${this.goBack}>Back</vaadin-button>
+          `:''}
           ${this.metadata.mainActions.map(a => html`
             <vaadin-button theme="${ActionType.Primary == a.type?'primary':'secondary'}" @click=${this.runAction} actionId=${a.id}>${a.caption}</vaadin-button>
           `)}

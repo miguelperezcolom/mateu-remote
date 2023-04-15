@@ -30,6 +30,9 @@ export class MateuComponent extends LitElement {
     @property()
     stepId!: string
 
+    @property()
+    previousStepId: string | undefined
+
 
     render() {
         return html`
@@ -43,6 +46,7 @@ export class MateuComponent extends LitElement {
                             stepId="${this.stepId}"
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
+                            previousStepId="${this.previousStepId}"
                     ><slot></slot></mateu-form>`
                     :html``}
 
@@ -56,6 +60,7 @@ export class MateuComponent extends LitElement {
                             listId="${(this.component.metadata as Crud).listId}"
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
+                            previousStepId="${this.previousStepId}"
                     ><slot></slot></mateu-crud>`
                     :html``}
 
@@ -67,6 +72,7 @@ export class MateuComponent extends LitElement {
                             journeyId="${this.journeyId}" stepId="${this.stepId}"
                             .rules=${this.component.rules}
                             baseUrl="${this.baseUrl}"
+                            previousStepId="${this.previousStepId}"
                     ><slot></slot></mateu-result>`
                     :html``}
 
