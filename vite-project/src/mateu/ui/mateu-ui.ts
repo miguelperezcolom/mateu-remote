@@ -110,7 +110,7 @@ export class MateuUi extends LitElement {
         ${this.ui?html`
             <vaadin-vertical-layout style="align-items: center">
                 
-                ${this.ui.menu?html`
+                ${this.ui.menu && this.ui.menu.length > 0?html`
                     <vaadin-app-layout>
                         <h3 slot="navbar" class="title ml-l mr-l" style="width: 200px;" @click=${this.goHome}>${this.ui.title}</h3>
                         <div class="container" slot="navbar">
