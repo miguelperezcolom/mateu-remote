@@ -208,7 +208,7 @@ export class JourneyStarter extends LitElement {
                                                 >Back to the beginning</vaadin-button>`:''}
                         </journey-step>
 
-                    `:html`<h1>No step</h1>`}
+                    `:html``}
             
             ${this.completed?html`<h1>Done!</h1>
 
