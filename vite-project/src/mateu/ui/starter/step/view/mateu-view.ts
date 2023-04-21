@@ -42,7 +42,7 @@ export class MateuView extends LitElement {
   render() {
     return html`
       <div>
-        ${this.view?.components.map(c => html`<mateu-component 
+        ${this.view?.main.components.map(c => html`<mateu-component 
             .component=${c} journeyTypeId="${this.journeyTypeId}" journeyId="${this.journeyId}" stepId="${this.stepId}" 
             baseUrl="${this.baseUrl}"
             previousStepId="${this.previousStepId}"

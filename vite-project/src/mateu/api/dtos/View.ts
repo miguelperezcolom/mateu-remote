@@ -1,7 +1,11 @@
-import Component from "./Component";
+import ViewPart from "./ViewPart";
 
 export default interface View {
 
-    components: Component[]
+    left: ViewPart
+
+    middle: ViewPart
+
+    right: ViewPart
 
 }
