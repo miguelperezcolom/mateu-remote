@@ -1,15 +1,14 @@
 import {customElement, property} from "lit/decorators.js";
-import {html, LitElement} from "lit";
+import {css, html, LitElement} from "lit";
 import Component from "./interfaces/Component";
 import ValueChangedEvent from "./interfaces/ValueChangedEvent";
 import '@vaadin/vaadin-radio-button'
 import '@vaadin/radio-group'
 import Field from "../../../../../../../../../../api/dtos/Field";
-import Value from "../../../../../../../../../../api/dtos/Value";
 
 
-@customElement('field-radiobuttons')
-export class FieldRadiobuttons extends LitElement implements Component {
+@customElement('field-boolean-radio-buttons')
+export class FieldBooleanRadioButtons extends LitElement implements Component {
 
     @property()
     required: boolean = false;
@@ -78,7 +77,7 @@ export class FieldRadiobuttons extends LitElement implements Component {
 
     render() {
         return html`
-            <vaadin-radio-group label="${this.label}" theme="vertical"
+            <vaadin-radio-group label="${this.label}" theme="horizontal"
                                 @change=${this.onChange} 
                            name="${this.name}" 
                            id="${this.name}"
@@ -87,18 +86,23 @@ export class FieldRadiobuttons extends LitElement implements Component {
                                 ?required=${this.required}
                                 placeholder="${this.placeholder}"
             >
-                ${this.field!.attributes.filter(a => a.key == 'choice').map(a => a.value as Value).map(v => html`
-                    <vaadin-radio-button value=${v.value} label=${v.key}></vaadin-radio-button>
-                    `)}
+                    <vaadin-radio-button value=true label="Yes" style="width: 50%;"></vaadin-radio-button>
+                    <vaadin-radio-button value=false label="No" style="width: 49%;"></vaadin-radio-button>
             </vaadin-radio-group>
             `
     }
+
+    static styles = css`
+        vaadin-radio-group {
+            width: 100%;
+        }        
+    `
 
 }
 
 declare global {
     interface HTMLElementTagNameMap {
-        'field-radiobuttons': FieldRadiobuttons
+        'field-boolean-radio-buttons': FieldBooleanRadioButtons
     }
 }
 

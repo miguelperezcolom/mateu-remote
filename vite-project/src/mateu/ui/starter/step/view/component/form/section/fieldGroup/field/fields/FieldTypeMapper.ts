@@ -7,10 +7,13 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
     if (stereotype.startsWith('element:')) {
         return stereotype.substring('element:'.length)
     }
+    if (type == 'boolean' && stereotype == 'radiobuttons') {
+        return 'field-boolean-radio-buttons';
+    }
     switch (stereotype) {
         case 'readonly': return 'field-readonly';
         case 'textarea': return 'field-textarea';
-        case 'radiobuttons': return 'field-radiobuttons';
+        case 'radiobuttons': return 'field-radio-buttons';
         case 'toggle': return 'field-toggle';
         case 'combobox': return 'field-combobox';
         case 'file': return 'field-file';
@@ -23,7 +26,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'long': return 'field-number';
         case 'int': return 'field-number';
         case 'double': return 'field-double';
-        case 'enum': return 'field-radiobuttons';
+        case 'enum': return 'field-radio-buttons';
         case 'boolean': return 'field-boolean';
         case 'date': return 'field-date';
         case 'datetime': return 'field-datetime';
@@ -37,6 +40,7 @@ export const mapInputTypeToFieldType =  (type: string, stereotype: string):strin
         case 'enum[]': return 'field-enum-array';
         case 'ExternalReference[]': return 'field-externalref-array';
         case 'URL': return 'field-url';
+        case 'Stepper': return 'field-stepper';
     }
     return 'field-object'
 }

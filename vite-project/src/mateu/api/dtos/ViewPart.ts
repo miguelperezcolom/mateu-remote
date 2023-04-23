@@ -2,7 +2,7 @@ import Component from "./Component";
 
 export default interface ViewPart {
 
-    classes: string | undefined
+    cssClasses: string | undefined
 
     components: Component[]
 

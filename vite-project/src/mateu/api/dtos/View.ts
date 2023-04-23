@@ -4,7 +4,7 @@ export default interface View {
 
     left: ViewPart
 
-    middle: ViewPart
+    main: ViewPart
 
     right: ViewPart
 

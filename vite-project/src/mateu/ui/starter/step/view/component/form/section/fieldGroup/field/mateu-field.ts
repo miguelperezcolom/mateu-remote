@@ -6,7 +6,7 @@ import {mapInputTypeToFieldType} from "./fields/FieldTypeMapper";
 import './fields/field-text'
 import './fields/field-number'
 import './fields/field-double'
-import './fields/field-radiobuttons'
+import './fields/field-radio-buttons'
 import './fields/field-boolean'
 import './fields/field-date'
 import './fields/field-datetime'
@@ -28,6 +28,8 @@ import './fields/field-rawcontent'
 import './fields/field-url'
 import './fields/field-object'
 import './fields/field-externalref-checkboxes'
+import './fields/field-boolean-radio-buttons'
+import './fields/field-stepper'
 import FieldWrapper from "../../../FieldWrapper";
 
 /**
