@@ -164,7 +164,7 @@ export class MateuUi extends LitElement {
         <vaadin-notification
                 .opened=${this.notificationOpened}
                 position="bottom-end"
-                duration="5000"
+                duration="10000"
                 theme="error"
                 ${notificationRenderer(this.renderNotification)}
         >${this.notificationMessage}</vaadin-notification>

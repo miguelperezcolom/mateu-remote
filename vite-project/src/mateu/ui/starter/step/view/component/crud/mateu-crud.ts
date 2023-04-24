@@ -339,7 +339,7 @@ export class MateuCrud extends LitElement {
       </vaadin-horizontal-layout>
       <vaadin-horizontal-layout style="align-items: baseline;" theme="spacing">
         ${this.metadata?.searchForm.fields.slice(0,1).map(f => html`
-          <vaadin-text-field autofocus id="${f.id}" label="${f.caption}" @change=${this.filterChanged}
+          <vaadin-text-field id="${f.id}" label="${f.caption}" @change=${this.filterChanged}
                              placeholder="${f.placeholder}"
                              style="flex-grow: 1;"></vaadin-text-field>
         `)}
